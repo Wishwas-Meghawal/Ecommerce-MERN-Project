@@ -1,0 +1,89 @@
+body{
+    font-family: "Montserrat", sans-serif;
+    background: #f1f1f1;
+}
+
+.MuiBadge-badge{
+    background: #ff5252 !important;
+}
+
+.ReactCollapse--collapse {
+  transition: height 300ms;
+} 
+
+::-webkit-scrollbar{
+  width: 10px !important;
+  height: 10px !important;
+}
+::-webkit-scrollbar-thumb{
+  background: #ccc !important;
+}
+.btn{
+  padding: 8px 20px !important;
+}
+.btn-sm{
+  padding: 6px 20px !important;
+  font-size: 13px !important;
+}
+.btn-blue{
+  background: #3872fa !important;
+  color: #fff !important;
+  padding: 8px 20px !important;
+}
+.btn-blue:hover{
+  background: #3067e5 !important;
+}
+
+.MuiAppBar-colorPrimary{
+  background: #e6e6e6 !important;
+}
+
+
+/* Main container */
+.react-international-phone-input-container {
+  width: 100%;
+  height: 40px;
+  border: 1px solid #cbd5e1;
+  border-radius: 5px;
+  background-color: #f8fafc;
+  display: flex;
+  align-items: center;
+  transition: all 0.2s ease;
+}
+
+/* Focus effect (MUI style) */
+.react-international-phone-input-container:focus-within {
+  border: 2px solid #3b82f6;
+}
+
+/* Country selector button */
+.react-international-phone-country-selector-button {
+  width: 50px !important;
+  height: 100%;
+  border: none !important;
+  background: transparent !important;
+  border-right: 1px solid #e2e8f0 !important;
+}
+
+/* Input field */
+.react-international-phone-input {
+  width: 100% !important;
+  height: 100%;
+  border: none !important;
+  background: transparent !important;
+  font-size: 14px;
+  padding-left: 10px;
+  outline: none !important;
+}
+
+/* Remove default shadow */
+.react-international-phone-input:focus {
+  box-shadow: none !important;
+}
+
+
+
+
+
+
+

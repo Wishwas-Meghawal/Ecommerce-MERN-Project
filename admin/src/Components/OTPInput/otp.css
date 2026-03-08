@@ -1,0 +1,129 @@
+/* otp.css */
+.otp-container {
+  width: 100%;
+  margin-bottom: 1.5rem;
+}
+
+.otp-box {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+  margin-bottom: 16px;
+  cursor: pointer;
+}
+
+.otp-input {
+  width: 56px;
+  height: 56px;
+  border: 2px solid #e5e7eb;
+  border-radius: 12px;
+  text-align: center;
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: #1f2937;
+  background: white;
+  transition: all 0.2s ease;
+  outline: none;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.otp-input:hover:not(:disabled) {
+  border-color: #8b5cf6;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(139, 92, 246, 0.15);
+}
+
+.otp-input:focus {
+  border-color: #8b5cf6;
+  box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.1);
+  transform: translateY(-2px);
+}
+
+.otp-input.active {
+  border-color: #8b5cf6;
+  background-color: rgba(139, 92, 246, 0.02);
+}
+
+.otp-input.filled {
+  border-color: #10b981;
+  background-color: rgba(16, 185, 129, 0.05);
+}
+
+.otp-input:disabled {
+  background-color: #f9fafb;
+  cursor: not-allowed;
+  opacity: 0.7;
+}
+
+.otp-input::selection {
+  background-color: rgba(139, 92, 246, 0.3);
+}
+
+/* OTP Actions */
+.otp-actions {
+  display: flex;
+  justify-content: center;
+  gap: 16px;
+  margin-top: 8px;
+}
+
+.otp-reset-btn,
+.otp-paste-btn {
+  display: flex;
+  align-items: center;
+  padding: 8px 16px;
+  border: none;
+  border-radius: 8px;
+  font-size: 0.875rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  background: transparent;
+  color: #6b7280;
+}
+
+.otp-reset-btn:hover {
+  color: #ef4444;
+  background-color: rgba(239, 68, 68, 0.05);
+}
+
+.otp-paste-btn:hover {
+  color: #8b5cf6;
+  background-color: rgba(139, 92, 246, 0.05);
+}
+
+/* Responsive Design */
+@media (max-width: 480px) {
+  .otp-input {
+    width: 48px;
+    height: 48px;
+    font-size: 1.25rem;
+  }
+  
+  .otp-box {
+    gap: 8px;
+  }
+}
+
+/* Animation for OTP validation */
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  10%, 30%, 50%, 70%, 90% { transform: translateX(-2px); }
+  20%, 40%, 60%, 80% { transform: translateX(2px); }
+}
+
+.otp-input.error {
+  border-color: #ef4444;
+  animation: shake 0.5s ease-in-out;
+}
+
+/* Success animation */
+@keyframes successPulse {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.4); }
+  50% { box-shadow: 0 0 0 4px rgba(16, 185, 129, 0); }
+}
+
+.otp-input.success {
+  border-color: #10b981;
+  animation: successPulse 1s ease;
+}

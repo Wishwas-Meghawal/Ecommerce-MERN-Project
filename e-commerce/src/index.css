@@ -1,0 +1,448 @@
+@import "tailwindcss";
+@theme{
+    --color-primary:#ff5252
+}
+
+/* *{
+    margin: 0px;
+    padding: 0px;
+    box-sizing: border-box;
+} */
+body{
+    font-family: "Montserrat", sans-serif;
+    font-optical-sizing: auto;
+    background: #f5f0f0;
+    color: rgba(0, 0, 0, 0.9);
+    overflow-x: hidden;
+}
+p{
+  font-size: 14px;
+  line-height: 25px;
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+h1,h2,h3,h4,h5,h6{
+  font-weight: 600;
+}
+
+/* main Scroll bar */
+::-webkit-scrollbar{
+  width: 6px !important;
+  height: 6px !important;
+
+}
+::-webkit-scrollbar-thumb{
+  background-color: #d1d5db; /* light gray */
+  border-radius: 10px;
+}
+::-webkit-scrollbar-track{
+    background: transparent;
+}
+.container{width: 95%;margin: auto;}
+
+.btn-org{
+  background: #ff5252 !important;
+  color: #fff !important;
+  font-weight: 500;
+  font-size: 1;
+  padding: 10px 20px !important;
+  margin-bottom: 8px !important;
+}
+.btn-org:hover{
+  background: #000 !important;
+}
+.btn-org.btn-border{
+  background: none !important;
+  color: #ff5252 !important;
+  border: 1px solid #ff5252 !important;
+  font-weight: 500;
+  font-size: 1;
+  margin-bottom: 8px !important;
+}
+.btn-org.btn-border:hover{
+  background: #171717 !important;
+  color: #fff !important;
+   border: 1px solid #171717 !important;
+}
+.btn-lg{
+  font-size: 18px;
+  padding: 10px 20px !important;
+}
+.btn-sm{
+  font-size: 12px !important; 
+  padding: 5px 20px !important;
+}
+.link:hover{
+    color: #ff5252;
+}
+
+.MuiBadge-badge{
+    background-color: #ff5252 !important;
+}
+
+nav ul button{
+    text-transform: capitalize !important;
+}
+
+nav ul button:hover{
+  background: none !important;
+}
+
+
+
+/* Default Swiper arrows hide */
+.swiper-button-prev,
+.swiper-button-next {
+  display: none !important;
+}
+
+.sliderHome {
+  position: relative;
+}
+
+/* ---------- Navigation Buttons ---------- */
+.custom-prev,
+.custom-next  {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 36px;
+  height: 36px;
+  background: rgba(255, 255, 255, 0.95); 
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 20;
+  cursor: pointer;
+
+
+  /* Premium look */
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  box-shadow: 0 8px 18px rgba(0, 0, 0, 0.15);
+
+  /* Smooth animation */
+  transition: 
+    transform 0.35s cubic-bezier(0.4, 0, 0.2, 1),
+    box-shadow 0.35s ease, background 0.35s ease;
+}
+
+/* Icon */
+.custom-prev svg,
+.custom-next svg {
+  overflow: inherit;
+  font-size: 20px;
+  color: rgba(0, 0, 0, 0.7);
+  transition: transform 0.3s ease;
+}
+
+/* Position */
+.custom-prev {
+  left: 14px;
+}
+
+.custom-next {
+  right: 14px;
+}
+
+
+/* Hover animation */
+.custom-prev:hover,
+.custom-next:hover {
+  transform: translateY(-50%) scale(1.12);
+  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.25);
+  background: #fff;
+}
+
+/* Icon move effect */
+.custom-prev:hover svg {
+  transform: translateX(-2px);
+}
+
+.custom-next:hover svg {
+  transform: translateX(2px);
+}
+
+/* Click animation */
+.custom-prev:active,
+.custom-next:active {
+  transform: translateY(-50%) scale(0.95);
+}
+
+
+
+/* Home Cat Salider css */
+
+/* .homecatSlider .item:hover img{
+  translate: scale(1.1) !important;
+} */
+
+.homecatSlider .item {
+  background: #fff;
+  border-radius: 10px;
+  padding: 28px 12px;
+  border: 1px solid #eee;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
+  overflow: visible; /* 🔥 VERY IMPORTANT */
+}
+
+.cat-img {
+  width: 80px;
+  height: 80px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  transition: transform 0.3s ease;
+}
+
+.cat-img img {
+  width: 65px;
+}
+
+
+.cat-img:hover {
+  transform: scale(1.15);
+}
+
+
+
+
+/* Custom scrollbar (light & small) */
+.custom-scrollbar::-webkit-scrollbar {
+  width: 6px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background-color: #d1d5db; /* light gray */
+  border-radius: 10px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background-color: #9ca3af; /* slightly darker on hover */
+}
+
+/* Firefox support */
+.custom-scrollbar {
+  scrollbar-width: thin;
+  scrollbar-color: #d1d5db transparent;
+}
+
+
+.itemViewActions button.active svg{color: #d1d5db !important; opacity: 1;}
+
+
+.Mui-selected.MuiPaginationItem-page{background: #ff5252 !important; color: #fff !important;}
+
+
+
+
+.zoomProductSliderThumb .swiper-slide{height: auto !important;}
+
+
+
+
+/* swiper height */
+.thumb-swiper {
+  height: 520px;
+}
+
+/* prevent slide stretch */
+.thumb-swiper .swiper-slide {
+  height: auto !important;
+  display: flex;
+  justify-content: center;
+}
+
+/* thumbnail box */
+.thumb-item {
+  width: 100%;
+  height: 95px;
+  padding: 5px;
+  background: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+
+.thumb-item img {
+  max-height: 85px;
+  width: auto;
+  object-fit: contain;
+}
+
+/* top & bottom buttons */
+.thumb-nav-btn {
+  width: 100%;
+  height: 36px;
+  background: #f5f5f5;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+  color: #374151;
+  transition: 0.2s;
+}
+
+.thumb-nav-btn:hover {
+  background: #ef4444;
+  color: #fff;
+}
+
+
+
+/* QtyButton Input nohide number css */
+
+/*
+Source - https://stackoverflow.com/a
+Posted by Josh Crozier, modified by community. See post 'Timeline' for change history
+Retrieved 2025-12-21, License - CC BY-SA 3.0
+*/
+
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button{
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+}
+
+
+/* review scroll bar css */
+
+.reviewScroll::-webkit-scrollbar {
+  width: 6px;
+}
+
+.reviewScroll::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 10px;
+}
+
+.reviewScroll::-webkit-scrollbar-thumb {
+  background: #c7c7c7;
+  border-radius: 10px;
+}
+
+.reviewScroll::-webkit-scrollbar-thumb:hover {
+  background: #a8a8a8;
+}
+
+
+/* cartpanel */
+
+.cartPanel .MuiPaper-root {
+  width: 400px;
+  overflow: hidden;
+}
+
+/* hr */
+
+hr{
+  border: none; 
+  height: 0.8px;
+  background-color: rgba(0, 0, 0, 0.1);
+}
+
+
+#sizeMenu .MuiButtonBase-root{
+  font-size: 12px !important;
+}
+
+
+#account-menu .MuiPaper-root{
+  width: 200px;
+}
+
+.myAccounttabs li a{
+  position: relative;
+  display: block;
+}
+.myAccounttabs li a:before{
+  content: '';
+  width: 3px;
+  height: 50%;
+  position: 100%;
+  position: absolute;
+  top: 50%;
+  left: 0px;
+  background: #ff5252;
+  transition: all 0.3s ease-in-out;
+  opacity: 0;
+}
+.myAccounttabs li a.active::before{
+  height: 100%;
+  opacity: 1;
+  top: 0px;
+}
+.myAccounttabs li a.active button svg{
+  color: #ff5252 !important;
+  opacity: 1 !important;
+}
+
+button .MuiCircularProgress-root{
+  width: 20px !important;
+  height: 20px !important;
+}
+
+
+/* Wrapper - MUI Outlined Look */
+.mui-phone-wrapper {
+  position: relative;
+  width: 100%;
+  height: 40px; /* same as TextField size="small" */
+  border: 1px solid #c4c4c4;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  transition: all 0.2s ease;
+  background-color: #fff;
+}
+
+/* Hover effect like MUI */
+.mui-phone-wrapper:hover {
+  border-color: #000;
+}
+
+/* Focus effect like MUI */
+.mui-phone-wrapper:focus-within {
+  border-color: #1976d2;
+  border-width: 2px;
+}
+
+/* Country selector */
+.react-international-phone-country-selector-button {
+  height: 100% !important;
+  border: none !important;
+  background: transparent !important;
+  border-right: 1px solid #e0e0e0 !important;
+  padding: 0 8px !important;
+}
+
+/* Phone input */
+.react-international-phone-input {
+  width: 100% !important;
+  height: 100% !important;
+  border: none !important;
+  background: transparent !important;
+  font-size: 14px !important;
+  padding-left: 10px !important;
+  outline: none !important;
+}
+
+/* Remove shadow */
+.react-international-phone-input:focus {
+  box-shadow: none !important;
+}
