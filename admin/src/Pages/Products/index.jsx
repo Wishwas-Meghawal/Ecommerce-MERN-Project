@@ -107,28 +107,33 @@ const Products = () => {
   //Main Category handle
   const handleChangeProductCat = (event) => {
     setProductCat(event.target.value);
-    formFields.catId = event.target.value;
-    formFields.category = event.target.value;
+
+    fetchDataFromApi(`/api/product/getAllProductsByCatId/${event.target.value}`).then((res)=>{
+      if (res?.error === false) {
+        setProductData(res?.products);
+      }
+    })
   };
-  const selectCatByName = (name) => {
-    formFields.catName = name;
-  };
+  
 
   // Sub Category handle
   const handleChangeProductSubCat = (event) => {
     setProductSubCat(event.target.value);
-    formFields.subCatId = event.target.value;
+    fetchDataFromApi(`/api/product/getAllProductsBySubCatId/${event.target.value}`).then((res)=>{
+      if (res?.error === false) {
+        setProductData(res?.products);
+      }
+    })
   };
-  const selectSubCatByName = (name) => {
-    formFields.subCat = name;
-  };
+
   // Sub Third lavel Category handle
   const handleChangeProductThirdLavelCat = (event) => {
     setProductThirdLavelCat(event.target.value);
-    formFields.thirdsubCatId = event.target.value;
-  };
-  const selectThirdLavelCatByName = (name) => {
-    formFields.thirdsubCat = name;
+    fetchDataFromApi(`/api/product/getAllProductsByThirdLavelCatId/${event.target.value}`).then((res)=>{
+      if (res?.error === false) {
+        setProductData(res?.products);
+      }
+    })
   };
 
   return (
@@ -279,16 +284,7 @@ const Products = () => {
                       value={productCat}
                       onChange={handleChangeProductCat}
                       displayEmpty
-                      renderValue={(selected) => {
-                        if (!selected) {
-                          return (
-                            <span className="text-gray-500 font-medium">
-                              All Categories
-                            </span>
-                          );
-                        }
-                        return selected;
-                      }}
+                      
                       sx={{
                         borderRadius: "12px",
                         "& .MuiOutlinedInput-notchedOutline": {
@@ -312,7 +308,6 @@ const Products = () => {
                         return (
                           <MenuItem
                             value={cat?._id}
-                            onClick={() => selectCatByName(cat?.name)}
                           >
                             <div className="flex items-center gap-2 py-1">
                               <FcFolder />
@@ -351,16 +346,7 @@ const Products = () => {
                       value={productSubCat}
                       onChange={handleChangeProductSubCat}
                       displayEmpty
-                      renderValue={(selected) => {
-                        if (!selected) {
-                          return (
-                            <span className="text-gray-500 font-medium">
-                              Sub Categories
-                            </span>
-                          );
-                        }
-                        return selected;
-                      }}
+                      
                       sx={{
                         borderRadius: "12px",
                         "& .MuiOutlinedInput-notchedOutline": {
@@ -387,7 +373,6 @@ const Products = () => {
                             return (
                               <MenuItem
                                 value={subCat?._id}
-                                onClick={() => selectSubCatByName(subCat?.name)}
                               >
                                 <div className="flex items-center gap-2 py-1">
                                   <FcFolder />
@@ -430,16 +415,6 @@ const Products = () => {
                       value={productThirdLavelCat}
                       onChange={handleChangeProductThirdLavelCat}
                       displayEmpty
-                      renderValue={(selected) => {
-                        if (!selected) {
-                          return (
-                            <span className="text-gray-500 font-medium">
-                              Third Lavel Categories
-                            </span>
-                          );
-                        }
-                        return selected;
-                      }}
                       sx={{
                         borderRadius: "12px",
                         "& .MuiOutlinedInput-notchedOutline": {
@@ -470,11 +445,8 @@ const Products = () => {
                                   <MenuItem
                                     value={thirdCat?._id}
                                     key={index}
-                                    onClick={() =>
-                                      selectThirdLavelCatByName(thirdCat?.name)
-                                    }
                                   >
-                                    <div className="flex items-center gap-2 py-2">
+                                    <div className="flex items-center gap-2 py-1">
                                       <FcFolder />
                                       <span className="font-medium">{thirdCat?.name}</span>
                                     </div>
@@ -723,31 +695,26 @@ const Products = () => {
                               >
                                 <MdEdit className="text-green-600 text-lg" />
                               </IconButton>
-                              <IconButton
-                                size="small"
-                                onClick={() =>
-                                  context.setIsOpenFullScreenPanel({
-                                    open: true,
-                                    model: "Edit Category",
-                                    id: item?._id,
-                                  })
-                                }
-                                sx={{
-                                  border: "1px solid #e5e7eb",
-                                  borderRadius: "10px",
-                                  padding: "8px",
-                                  backgroundColor: "white",
-                                  transition: "all 0.2s",
-                                  "&:hover": {
-                                    backgroundColor: "#f0fdf4",
-                                    borderColor: "#22c55e",
-                                    transform: "translateY(-2px)",
-                                    boxShadow: "0 4px 8px rgba(34,197,94,0.2)",
-                                  },
-                                }}
-                              >
-                                <MdVisibility className="text-green-600 text-lg" />
-                              </IconButton>
+                              <Link to={`/product/${product?._id}`}>
+                                <IconButton
+                                  size="small"
+                                  sx={{
+                                    border: "1px solid #e5e7eb",
+                                    borderRadius: "10px",
+                                    padding: "8px",
+                                    backgroundColor: "white",
+                                    transition: "all 0.2s",
+                                    "&:hover": {
+                                      backgroundColor: "#f0fdf4",
+                                      borderColor: "#22c55e",
+                                      transform: "translateY(-2px)",
+                                      boxShadow: "0 4px 8px rgba(34,197,94,0.2)",
+                                    },
+                                  }}
+                                >
+                                  <MdVisibility className="text-green-600 text-lg" />
+                                </IconButton>
+                              </Link>
 
                               <IconButton
                                 size="small"
