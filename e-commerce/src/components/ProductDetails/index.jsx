@@ -9,7 +9,6 @@ import QtyBox from "../../components/QtyBox";
 
 const ProductDetailsComponent = () => {
     const [activeSize, setActiveSize] = useState(null);
-    const [qty, setQty] = useState(1);
   return (
     <>
       {/* Title */}
