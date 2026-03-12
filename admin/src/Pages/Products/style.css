@@ -1,11 +1,12 @@
 .iiz {
   max-width: 100%;
+  width: 100% !important;
+  height: 400px;
   margin: 0;
   position: relative;
   overflow: hidden;
   display: inline-block;
   cursor: -webkit-zoom-in;
-  cursor: zoom-in;
 }
 
 .iiz--drag .iiz__zoom-img--visible {
@@ -20,6 +21,9 @@
   pointer-events: none;
   visibility: visible;
   opacity: 1;
+  width: 100% !important;
+  height: 100% !important;
+  object-fit: contain;
 }
 
 .iiz__img--hidden {
@@ -133,3 +137,6 @@
   -webkit-transform: rotate(45deg);
   transform: rotate(45deg);
 }
+
+
+

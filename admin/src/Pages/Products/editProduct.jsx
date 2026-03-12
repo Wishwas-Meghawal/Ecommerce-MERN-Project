@@ -111,8 +111,15 @@ const EditProduct = () => {
   const [preview, setPreview] = useState([]);
 
   const setPreviewFun = (previewsArr) => {
-    setPreview(previewsArr);
-    formFields.images = previewsArr;
+    const imageArr = preview;
+    for(let i = 0; i<previewsArr.length; i++){
+      imageArr.push(previewsArr[i])
+    }
+    setPreview([]);
+    setTimeout(()=>{
+      setPreview(imageArr)
+      formFields.images = imageArr
+    },10);
   };
 
   const removeImg = (image, index) => {
