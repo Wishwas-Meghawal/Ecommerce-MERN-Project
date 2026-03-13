@@ -139,4 +139,21 @@ export const deleteData = async (url) => {
 };
 
 
+// delete multiplProduct 
+export const deleteMultipleData = async (url ,data) =>{
+    try{
+        const response = await axios.delete(apiUrl + url,{
+            data: data,
+            headers: {
+                Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+                "Content-Type": "application/json",
+            },
+        });
+        return response.data;
+    }catch(error){
+        console.log(error.response?.data || error.message);
+        throw error;
+    }
+};
+
 

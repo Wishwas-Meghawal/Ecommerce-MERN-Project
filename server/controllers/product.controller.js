@@ -691,7 +691,7 @@ export async function deleteProduct(request, response) {
 export async function deleteMultipleProduct(request, response) {
   const { ids } = request.body;
 
-  if (!ids || Array.isArray(ids)) {
+  if (!ids || !Array.isArray(ids)){
     return response.status(400).json({
       message: "Invalid Input",
       error: true,
@@ -709,7 +709,7 @@ export async function deleteMultipleProduct(request, response) {
       const imgUrl = img;
       const urlArr = imgUrl.split("/");
       const image = urlArr[urlArr.length - 1];
-
+ 
       const imageName = image.split(".")[0];
 
       if (imageName) {

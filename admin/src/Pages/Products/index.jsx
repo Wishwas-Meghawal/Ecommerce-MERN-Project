@@ -25,19 +25,23 @@ import {
 
 import { AiOutlineEdit, AiOutlineSearch } from "react-icons/ai";
 import { FaRegEye } from "react-icons/fa";
-import { BsDownload, BsTrash3 } from "react-icons/bs";
+import { BsDownload, BsTrash, BsTrash3 } from "react-icons/bs";
 import SearchBox from "../../Components/SearchBox";
 import { MyContext } from "../../App";
 import { FcAddDatabase, FcFolder, FcSearch } from "react-icons/fc";
 import { MdDelete, MdEdit, MdVisibility } from "react-icons/md";
 import { useEffect } from "react";
-import { deleteData, fetchDataFromApi } from "../../utils/api";
+import { deleteData, deleteMultipleData, fetchDataFromApi } from "../../utils/api";
 import { Link } from "react-router-dom";
 
 import { LazyLoadImage } from "react-lazy-load-image-component";
 import "react-lazy-load-image-component/src/effects/blur.css";
 
 import { motion, AnimatePresence } from "framer-motion";
+import { Delete, Flag } from "lucide-react";
+import { Label } from "recharts";
+
+
 
 // Dummy ProgressBar (replace with your own)
 const ProgressBar = ({ value }) => (
@@ -53,31 +57,33 @@ const Products = () => {
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
   const [dense, setDense] = useState(false);
-  const [selected, setSelected] = useState([]);
-  const [categoryFilterVal, setCategoryFilterVal] = useState();
   const [productData, setProductData] = useState([]);
   const [productCat, setProductCat] = useState("");
   const [productSubCat, setProductSubCat] = useState("");
   const [productThirdLavelCat, setProductThirdLavelCat] = useState("");
+  const [sortedIds, setSortedIds] = useState([]);
 
   const context = useContext(MyContext);
 
-  useEffect(() => {
-    getProducts();
-  }, [context?.isOpenFullScreenPanel]);
-
   const getProducts = async () => {
     fetchDataFromApi("/api/product/getAllProducts").then((res) => {
+      let productArr = [];
       if (res?.error === false) {
-        setProductData(res?.products);
+        for(let i = 0; i < res?.products?.length; i++){
+          productArr[i] = res?.products[i];
+          productArr[i].checked = false;
+        }
+        setProductData(productArr);
       }
     });
   };
 
-  const handleChangeCatFilter = (event) => {
-    setCategoryFilterVal(event.target.value);
-  };
+   useEffect(() => {
+    getProducts();
+  }, [context?.isOpenFullScreenPanel]);
 
+
+  //🔹Delete Product
   const deleteProduct = (id) => {
     deleteData(`/api/product/${id}`).then((res) => {
       if (res?.error === false) {
@@ -89,19 +95,64 @@ const Products = () => {
     });
   };
 
+  //Delete Multiple Product
+  const deleteMultipleProduct = async() =>{
+
+    if(sortedIds.length === 0){
+      context.alertBox("Please select items to delete","error");
+      return;
+    }
+
+   try {
+    const res = await deleteMultipleData("/api/product/deleteMultiple", {
+      ids: sortedIds,
+    });
+
+    if (res?.success) {
+      getProducts();
+      context.alertBox("Products deleted successfully", "success");
+    }
+
+  } catch (error) {
+    context.alertBox("Error deleting items", "error");
+  }
+  }
+
   // 🔹 checkbox logic
-  const handleSelectAll = (event) => {
-    if (event.target.checked) {
-      setSelected(["row1", "row2", "row3", "row4"]);
-    } else {
-      setSelected([]);
+  const handleSelectAll = (e) => {
+    const isChecked = e.target.checked;
+
+    // Update all items checked status
+    const updatedItems = productData.map((item) =>({
+      ...item,
+      checked: isChecked,
+    }));
+    setProductData(updatedItems);
+    
+    // Update the sorted Ids state
+    if(isChecked){
+      const ids = updatedItems.map((item) =>  item._id).sort((a,b) => a-b);
+      console.log(ids);
+      setSortedIds(ids);
+    }
+    else{
+      setSortedIds([]);
     }
   };
 
-  const handleSelectRow = (id) => {
-    setSelected((prev) =>
-      prev.includes(id) ? prev.filter((item) => item !== id) : [...prev, id],
+  // Handler to toggle individual checkboxes
+  const handleCheckboxChange = (e, id, index)=>{
+    const updatedItems = productData.map((item) =>
+      item._id === id ? { ...item, checked: !item.checked } : item
     );
+    setProductData(updatedItems);
+
+    //Updated the sorted Ids state
+    const selectedIds = updatedItems
+      .filter((item) => item.checked)
+      .map((item)=>item._id)
+      .sort((a,b)=> a-b);
+    setSortedIds(selectedIds);
   };
 
   //Main Category handle
@@ -174,6 +225,26 @@ const Products = () => {
             animate={{ x: 0, opacity: 1 }}
             className="flex gap-3 mt-4 md:mt-0"
           >
+            {
+              sortedIds?.length !== 0 &&
+              <Tooltip title="Delete Data" arrow>
+              <IconButton
+                sx={{
+                  border: "1px solid #e5e7eb",
+                  borderRadius: "14px",
+                  padding: "10px 16px",
+                  backgroundColor: "#fee2e2",
+                  "&:hover": {
+                    backgroundColor: "#e0f2fe",
+                    borderColor: "#0284c7",
+                  },
+                }}
+                onClick={deleteMultipleProduct}
+              >
+                <BsTrash className="text-gray-600" />
+              </IconButton>
+            </Tooltip>
+            }
             <Tooltip title="Export Data" arrow>
               <IconButton
                 sx={{
@@ -474,9 +545,8 @@ const Products = () => {
                 <TableRow className="bg-gradient-to-r from-gray-50 to-gray-100/80">
                   <TableCell padding="checkbox" className="bg-transparent">
                     <Checkbox
-                      checked={selected.length === 4}
-                      indeterminate={selected.length > 0 && selected.length < 4}
                       onChange={handleSelectAll}
+                      checked={productData?.length > 0 ? productData.every((item) => item.checked):false}
                       sx={{
                         color: "#94a3b8",
                         "&.Mui-checked": {
@@ -565,10 +635,8 @@ const Products = () => {
                         >
                           <TableCell padding="checkbox">
                             <Checkbox
-                              checked={selected.includes(`row${index + 1}`)}
-                              onChange={() =>
-                                handleSelectRow(`row${index + 1}`)
-                              }
+                            checked={product.checked === true ? true : false}
+                            onChange={(e)=> handleCheckboxChange(e,product._id,index)}
                               sx={{
                                 color: "#9ca3af",
                                 "&.Mui-checked": {
