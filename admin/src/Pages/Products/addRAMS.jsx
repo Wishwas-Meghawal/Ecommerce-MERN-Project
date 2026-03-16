@@ -1,0 +1,302 @@
+import React, { useCallback, useContext, useState } from "react";
+import { FcAddDatabase } from "react-icons/fc";
+import { MdEdit, MdDelete, MdSave, MdCancel } from "react-icons/md";
+import { FaMicrochip } from "react-icons/fa";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+  Paper,
+  TextField,
+  IconButton,
+  InputAdornment,
+  Box,
+  Typography,
+  Chip,
+  Checkbox,
+} from "@mui/material";
+import Tooltip from "@mui/material/Tooltip";
+import Zoom from "@mui/material/Zoom";
+
+import { MyContext} from '../../App'
+import { postData } from "../../utils/api";
+
+const label = { slotProps: { input: { "aria-label": "Checkbox demo" } } };
+
+const AddRAMS = () => {
+  const context = useContext(MyContext);
+
+  
+  const [name, setName] = useState();
+
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+
+    if(name === ""){
+      context.alertBox("Please enter Product RAM","error");
+    }
+
+    postData(`/api/product/productRAMS/create`,{
+      name: name
+    }).then((res)=>{
+       
+    })
+
+  }
+
+  return (
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 p-6">
+      {/* Header Section */}
+      <div className="max-w-7xl mx-auto">
+        <div className="flex flex-col md:flex-row md:items-center justify-between mb-8">
+          <div className="flex items-center gap-4">
+            <div className="relative">
+              <div className="p-4 bg-gradient-to-br from-purple-600 to-indigo-700 rounded-2xl shadow-lg">
+                <FcAddDatabase className="text-3xl text-white brightness-0 invert" />
+              </div>
+            </div>
+
+            <div>
+              <h1 className="text-4xl font-bold bg-gradient-to-r from-purple-600 to-indigo-700 bg-clip-text text-transparent">
+                Add Product RAM
+              </h1>
+              <p className="text-gray-600 mt-2 flex items-center gap-2">
+                <FaMicrochip className="text-purple-500" />
+                Add and manage RAM specifications for laptops, mobiles &
+                electronics
+              </p>
+            </div>
+          </div>
+        </div>
+
+        {/* Add RAM Form */}
+        <div className="bg-white rounded-2xl shadow-xl border border-purple-100 p-6 mb-6 animate-fadeIn">
+          <h3 className="text-lg font-semibold text-gray-800 mb-4">
+            Add New RAM
+          </h3>
+          <form className="form py-3 p-6" onSubmit={handleSubmit}>
+            <div className="flex flex-col md:flex-row gap-4">
+              <div className="flex-1">
+                <input
+                  type="text"
+                  placeholder="Enter RAM size (e.g., 8GB, 16GB)"
+                  className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-purple-500 focus:border-transparent outline-none transition"
+                  onChange={(e)=>setName(e.target.value)} value={name}
+                />
+              </div>
+                <button className="px-6 py-3 bg-gradient-to-r from-purple-600 to-indigo-600 text-white rounded-xl hover:shadow-lg hover:shadow-purple-200 transition-all font-medium flex items-center gap-2 cursor-pointer">
+                  <MdSave /> Save
+                </button>
+            </div>
+          </form>
+        </div>
+
+        {/* Material UI Table */}
+        <TableContainer
+          component={Paper}
+          elevation={0}
+          sx={{
+            borderRadius: 3,
+            border: "1px solid #f3e8ff",
+            overflow: "hidden",
+            boxShadow:
+              "0 20px 25px -5px rgba(0,0,0,0.05), 0 10px 10px -5px rgba(0,0,0,0.01)",
+          }}
+        >
+          <Table>
+            {/* Table Header */}
+            <TableHead>
+              <TableRow
+                sx={{
+                  background: "linear-gradient(to right, #faf5ff, #f5f3ff)",
+                  borderBottom: "2px solid #f3e8ff",
+                }}
+              >
+                <TableCell
+                  sx={{ fontWeight: 600, color: "#1f2937", py: 2 }}
+                  width={"10%"}
+                >
+                  <div className="w-[60px]">
+                    <Checkbox {...label} size="small" />
+                  </div>
+                </TableCell>
+                <TableCell
+                  sx={{ fontWeight: 600, color: "#1f2937", py: 2 }}
+                  width={"60%"}
+                >
+                  <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
+                    <FaMicrochip className="text-purple-500" />
+                    RAM Size
+                  </Box>
+                </TableCell>
+                <TableCell
+                  sx={{ fontWeight: 600, color: "#1f2937", py: 2 }}
+                  width={"30%"}
+                >
+                  Actions
+                </TableCell>
+              </TableRow>
+            </TableHead>
+
+            {/* Table Body */}
+            <TableBody>
+              <TableRow
+                sx={{
+                  "&:hover": {
+                    backgroundColor: "#faf5ff",
+                    transition: "all 0.2s",
+                  },
+                  "&:last-child td, &:last-child th": { border: 0 },
+                }}
+              >
+                {/* {editingId === ram.id ? (
+                    // Edit Mode
+                    <>
+                      <TableCell sx={{ py: 2 }}>
+                        <TextField
+                          fullWidth
+                          size="small"
+                          value={editValue.size}
+                          onChange={(e) =>
+                            setEditValue({ ...editValue, size: e.target.value })
+                          }
+                          placeholder="Enter RAM size"
+                          variant="outlined"
+                          sx={{
+                            "& .MuiOutlinedInput-root": {
+                              borderRadius: 2,
+                              "&:hover fieldset": {
+                                borderColor: "#a78bfa",
+                              },
+                              "&.Mui-focused fieldset": {
+                                borderColor: "#8b5cf6",
+                              },
+                            },
+                          }}
+                          InputProps={{
+                            startAdornment: (
+                              <InputAdornment position="start">
+                                <FaMicrochip className="text-purple-400" />
+                              </InputAdornment>
+                            ),
+                          }}
+                        />
+                      </TableCell>
+                      <TableCell sx={{ py: 2 }}>
+                        <Box sx={{ display: "flex", gap: 1 }}>
+                          <Tooltip
+                            title="Save Changes"
+                            placement="top"
+                            arrow
+                            TransitionComponent={Zoom}
+                          >
+                            <IconButton
+                              onClick={() => handleSaveEdit(ram.id)}
+                              size="small"
+                              sx={{
+                                color: "#16a34a",
+                                "&:hover": { backgroundColor: "#f0fdf4" },
+                              }}
+                            >
+                              <MdSave size={20} />
+                            </IconButton>
+                          </Tooltip>
+                          <Tooltip
+                            title="Cancel"
+                            placement="top"
+                            arrow
+                            TransitionComponent={Zoom}
+                          >
+                            <IconButton
+                              onClick={cancelEdit}
+                              size="small"
+                              sx={{
+                                color: "#6b7280",
+                                "&:hover": { backgroundColor: "#f3f4f6" },
+                              }}
+                            >
+                              <MdCancel size={20} />
+                            </IconButton>
+                          </Tooltip>
+                        </Box>
+                      </TableCell>
+                    </>
+                  ) : ( */}
+                {/* // View Mode */}
+                <>
+                  <TableCell sx={{ py: 2 }}>
+                    <div className="w-[60px]">
+                      <Checkbox {...label} size="small" />
+                    </div>
+                  </TableCell>
+                  <TableCell sx={{ py: 2 }}>
+                    <Box
+                      sx={{
+                        display: "flex",
+                        alignItems: "center",
+                        gap: 1.5,
+                      }}
+                    >
+                      <Chip
+                        icon={<FaMicrochip className="text-purple-400" />}
+                        size="small"
+                        sx={{
+                          backgroundColor: "#f5f3ff",
+                          color: "#6d28d9",
+                          fontWeight: 500,
+                          "& .MuiChip-icon": { color: "#8b5cf6" },
+                        }}
+                      />
+                    </Box>
+                  </TableCell>
+                  <TableCell sx={{ py: 2 }}>
+                    <Box sx={{ display: "flex", gap: 1 }}>
+                      <Tooltip
+                        title="Edit RAM"
+                        placement="top"
+                        arrow
+                        TransitionComponent={Zoom}
+                      >
+                        <IconButton
+                          size="small"
+                          sx={{
+                            color: "#6d28d9",
+                            "&:hover": { backgroundColor: "#ede9fe" },
+                          }}
+                        >
+                          <MdEdit size={20} />
+                        </IconButton>
+                      </Tooltip>
+                      <Tooltip
+                        title="Delete RAM"
+                        placement="top"
+                        arrow
+                        TransitionComponent={Zoom}
+                      >
+                        <IconButton
+                          size="small"
+                          sx={{
+                            color: "#dc2626",
+                            "&:hover": { backgroundColor: "#fee2e2" },
+                          }}
+                        >
+                          <MdDelete size={20} />
+                        </IconButton>
+                      </Tooltip>
+                    </Box>
+                  </TableCell>
+                </>
+              </TableRow>
+            </TableBody>
+          </Table>
+        </TableContainer>
+      </div>
+    </div>
+  );
+};
+
+export default AddRAMS;
