@@ -7,7 +7,6 @@ import {
   Typography,
 } from "@mui/material";
 import React, { useContext, useState } from "react";
-import { FaPlus } from "react-icons/fa6";
 import {
   Table,
   TableBody,
@@ -22,13 +21,10 @@ import {
   TextField,
   InputAdornment,
 } from "@mui/material";
-
-import { AiOutlineEdit, AiOutlineSearch } from "react-icons/ai";
-import { FaRegEye } from "react-icons/fa";
 import { BsDownload, BsTrash, BsTrash3 } from "react-icons/bs";
 import SearchBox from "../../Components/SearchBox";
 import { MyContext } from "../../App";
-import { FcAddDatabase, FcFolder, FcSearch } from "react-icons/fc";
+import { FcAddDatabase, FcFolder} from "react-icons/fc";
 import { MdDelete, MdEdit, MdVisibility } from "react-icons/md";
 import { useEffect } from "react";
 import { deleteData, deleteMultipleData, fetchDataFromApi } from "../../utils/api";
@@ -38,9 +34,9 @@ import { LazyLoadImage } from "react-lazy-load-image-component";
 import "react-lazy-load-image-component/src/effects/blur.css";
 
 import { motion, AnimatePresence } from "framer-motion";
-import { Delete, Flag } from "lucide-react";
-import { Label } from "recharts";
-
+import CircularProgress from '@mui/material/CircularProgress';
+import { FaLeaf } from "react-icons/fa";
+import { FlareSharp } from "@mui/icons-material";
 
 
 // Dummy ProgressBar (replace with your own)
@@ -62,10 +58,12 @@ const Products = () => {
   const [productSubCat, setProductSubCat] = useState("");
   const [productThirdLavelCat, setProductThirdLavelCat] = useState("");
   const [sortedIds, setSortedIds] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
 
   const context = useContext(MyContext);
 
   const getProducts = async () => {
+    setIsLoading(true);
     fetchDataFromApi("/api/product/getAllProducts").then((res) => {
       let productArr = [];
       if (res?.error === false) {
@@ -73,7 +71,10 @@ const Products = () => {
           productArr[i] = res?.products[i];
           productArr[i].checked = false;
         }
-        setProductData(productArr);
+        setTimeout(() =>{
+          setProductData(productArr);
+          setIsLoading(false);
+        },1500)
       }
     });
   };
@@ -158,10 +159,15 @@ const Products = () => {
   //Main Category handle
   const handleChangeProductCat = (event) => {
     setProductCat(event.target.value);
-
+    setProductSubCat('');
+    setProductThirdLavelCat('');
+    setIsLoading(true);
     fetchDataFromApi(`/api/product/getAllProductsByCatId/${event.target.value}`).then((res)=>{
       if (res?.error === false) {
         setProductData(res?.products);
+        setTimeout(() =>{
+          setIsLoading(false);
+        },1500)
       }
     })
   };
@@ -170,9 +176,15 @@ const Products = () => {
   // Sub Category handle
   const handleChangeProductSubCat = (event) => {
     setProductSubCat(event.target.value);
+    setProductCat('');
+    setProductThirdLavelCat('');
+    setIsLoading(true);
     fetchDataFromApi(`/api/product/getAllProductsBySubCatId/${event.target.value}`).then((res)=>{
       if (res?.error === false) {
         setProductData(res?.products);
+        setTimeout(() =>{
+          setIsLoading(false);
+        },1500)
       }
     })
   };
@@ -180,9 +192,15 @@ const Products = () => {
   // Sub Third lavel Category handle
   const handleChangeProductThirdLavelCat = (event) => {
     setProductThirdLavelCat(event.target.value);
+    setProductCat('');
+    setProductSubCat('');
+    setIsLoading(true);
     fetchDataFromApi(`/api/product/getAllProductsByThirdLavelCatId/${event.target.value}`).then((res)=>{
       if (res?.error === false) {
         setProductData(res?.products);
+        setTimeout(() =>{
+          setIsLoading(false);
+        },1500)
       }
     })
   };
@@ -623,7 +641,9 @@ const Products = () => {
 
               {/* Table Body */}
               <TableBody>
-                {productData?.length !== 0 &&
+
+               {
+                  isLoading=== false ? productData?.length !== 0 &&
                   productData
                     .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                     ?.map((product, index) => {
@@ -807,7 +827,20 @@ const Products = () => {
                           </TableCell>
                         </TableRow>
                       );
-                    })}
+                    })
+                    :
+                    <>
+                      <TableRow>
+                        <TableCell colSpan={8}>
+                          <div className="flex items-center justify-center w-full min-h-[400px]">
+                      <CircularProgress color="inherit"/>
+                    </div>
+                        </TableCell>
+                      </TableRow>
+                    </>
+               }
+                      
+                
               </TableBody>
             </Table>
           </TableContainer>
