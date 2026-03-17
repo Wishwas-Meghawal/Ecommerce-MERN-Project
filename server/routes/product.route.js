@@ -30,11 +30,11 @@ productRouter.delete('/:id',deleteProduct);
 productRouter.get('/:id',getProduct);
 productRouter.delete("/deleteImage", auth, removeImageFromCloudinary);
 productRouter.put("/updateProduct/:id", auth, updateProduct);
-productRouter.put("/productRAMS/create", auth, createProductRAMS);
-productRouter.delete('productRAMS/deleteMultipleRams',deleteMultipleProductRAMS);
-productRouter.delete('productRAMS/:id',deleteProductRAMS);
+productRouter.post("/productRAMS/create", auth, createProductRAMS);
+productRouter.delete('/productRAMS/deleteMultipleRams',deleteMultipleProductRAMS);
+productRouter.delete('/productRAMS/:id',deleteProductRAMS);
 productRouter.put("/updateProductRAMS/:id", auth, updateProductRAMS);
-productRouter.get("/productRAMS/" ,getPtoductRAMS);
+productRouter.get("/productRAMS/get" ,getPtoductRAMS);
 
 
 
