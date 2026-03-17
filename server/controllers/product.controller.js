@@ -959,3 +959,27 @@ export async function getPtoductRAMS(request, response) {
     });
   }
 }
+
+export async function getPtoductRAMSById(request, response) {
+  try {
+    const productRAM = await ProductRAMSModel.find({_id:request.body.id});
+
+    if (!productRAM) {
+      return response.status(500).json({
+        error: true,
+        success: false,
+      });
+    }
+    return response.status(200).json({
+      error: false,
+      success: true,
+      data: productRAM
+    });
+  } catch (error) {
+    return response.status(500).json({
+      message: error.message || error,
+      error: true,
+      success: false,
+    });
+  }
+}
