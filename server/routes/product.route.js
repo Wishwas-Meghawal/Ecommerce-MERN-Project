@@ -30,6 +30,8 @@ productRouter.delete('/:id',deleteProduct);
 productRouter.get('/:id',getProduct);
 productRouter.delete("/deleteImage", auth, removeImageFromCloudinary);
 productRouter.put("/updateProduct/:id", auth, updateProduct);
+
+//Product Rams Route
 productRouter.post("/productRAMS/create", auth, createProductRAMS);
 productRouter.delete('/productRAMS/deleteMultipleRams',deleteMultipleProductRAMS);
 productRouter.delete('/productRAMS/:id',deleteProductRAMS);
