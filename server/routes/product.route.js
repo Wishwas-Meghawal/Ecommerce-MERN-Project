@@ -33,7 +33,7 @@ productRouter.put("/updateProduct/:id", auth, updateProduct);
 productRouter.post("/productRAMS/create", auth, createProductRAMS);
 productRouter.delete('/productRAMS/deleteMultipleRams',deleteMultipleProductRAMS);
 productRouter.delete('/productRAMS/:id',deleteProductRAMS);
-productRouter.put("/updateProductRAMS/:id", auth, updateProductRAMS);
+productRouter.put("/productRAMS/:id", auth, updateProductRAMS);
 productRouter.get("/productRAMS/get" ,getPtoductRAMS);
 productRouter.get("/productRAMS/:id" ,getPtoductRAMSById);
 
