@@ -962,7 +962,7 @@ export async function getPtoductRAMS(request, response) {
 
 export async function getPtoductRAMSById(request, response) {
   try {
-    const productRAM = await ProductRAMSModel.find({_id:request.body.id});
+    const productRAM = await ProductRAMSModel.findById({_id:request.body.id});
 
     if (!productRAM) {
       return response.status(500).json({
