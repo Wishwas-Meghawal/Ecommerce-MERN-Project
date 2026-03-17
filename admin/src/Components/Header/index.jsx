@@ -21,7 +21,6 @@ import AddCategory from "../../Pages/Category/AddCategory.jsx";
 import AddSubCategory from "../../Pages/Category/AddSubCategory.jsx";
 import EditCategory from "../../Pages/Category/EditCategory.jsx";
 
-
 import Dialog from "@mui/material/Dialog";
 import AppBar from "@mui/material/AppBar";
 import Toolbar from "@mui/material/Toolbar";
@@ -76,16 +75,12 @@ const Header = () => {
     history("/login");
   };
 
-
-
-  
-
   return (
     <>
       <header
-        className={`w-full h-auto py-2 pl ${
-          context.isSidebarOpen === true ? "pl-72" : "pl-8"
-        } shadow-md pr-7 bg-[#fff]  flex items-center justify-between transition-all`}
+        className={`h-auto py-2 pr-7 bg-[#fff] flex items-center justify-between shadow-md transition-all 
+  sticky top-0 z-50
+  ${context.isSidebarOpen ? "left-70 w-[calc(100%-18%)]" : "left-0 w-full"}`}
       >
         <div className="part1">
           <Button
@@ -261,7 +256,6 @@ const Header = () => {
         {context?.isOpenFullScreenPanel?.model === "Edit Category" && (
           <EditCategory />
         )}
-
 
         {context?.isOpenFullScreenPanel?.model === "Edit Product" && (
           <EditProduct />
