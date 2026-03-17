@@ -692,7 +692,7 @@ export async function deleteProduct(request, response) {
 export async function deleteMultipleProduct(request, response) {
   const { ids } = request.body;
 
-  if (!ids || !Array.isArray(ids)){
+  if (!ids || !Array.isArray(ids)) {
     return response.status(400).json({
       message: "Invalid Input",
       error: true,
@@ -710,7 +710,7 @@ export async function deleteMultipleProduct(request, response) {
       const imgUrl = img;
       const urlArr = imgUrl.split("/");
       const image = urlArr[urlArr.length - 1];
- 
+
       const imageName = image.split(".")[0];
 
       if (imageName) {
@@ -826,7 +826,6 @@ export async function createProductRAMS(request, response) {
       });
     }
 
-
     return response.status(200).json({
       message: "Product RAMS Created Successfully",
       error: false,
@@ -844,7 +843,7 @@ export async function createProductRAMS(request, response) {
 
 // delete  product Rams
 export async function deleteProductRAMS(request, response) {
-  const productRAMS = await ProductRAMSModel.findById(request.params.id)
+  const productRAMS = await ProductRAMSModel.findById(request.params.id);
 
   if (!productRAMS) {
     response.status(404).json({
@@ -854,7 +853,9 @@ export async function deleteProductRAMS(request, response) {
     });
   }
 
-  const deleteProductRAMS = await ProductRAMSModel.findByIdAndDelete(request.params.id);
+  const deleteProductRAMS = await ProductRAMSModel.findByIdAndDelete(
+    request.params.id,
+  );
 
   if (!deleteProductRAMS) {
     response.status(404).json({
@@ -875,14 +876,13 @@ export async function deleteProductRAMS(request, response) {
 export async function deleteMultipleProductRAMS(request, response) {
   const { ids } = request.body;
 
-  if (!ids || !Array.isArray(ids)){
+  if (!ids || !Array.isArray(ids)) {
     return response.status(400).json({
       message: "Invalid Input",
       error: true,
       success: false,
     });
   }
-
 
   try {
     await ProductRAMSModel.deleteMany({
@@ -926,6 +926,30 @@ export async function updateProductRAMS(request, response) {
       message: "The product Ram is updated",
       error: false,
       success: true,
+    });
+  } catch (error) {
+    return response.status(500).json({
+      message: error.message || error,
+      error: true,
+      success: false,
+    });
+  }
+}
+
+export async function getPtoductRAMS(request, response) {
+  try {
+    const productRAM = await ProductRAMSModel.find();
+
+    if (!productRAM) {
+      return response.status(500).json({
+        error: true,
+        success: false,
+      });
+    }
+    return response.status(200).json({
+      error: false,
+      success: true,
+      data: productRAM
     });
   } catch (error) {
     return response.status(500).json({
