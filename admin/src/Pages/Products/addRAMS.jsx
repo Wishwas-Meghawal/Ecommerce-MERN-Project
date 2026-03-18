@@ -14,13 +14,18 @@ import {
   Box,
   Chip,
   Checkbox,
-  CircularProgress
+  CircularProgress,
 } from "@mui/material";
 import Tooltip from "@mui/material/Tooltip";
 import Zoom from "@mui/material/Zoom";
 
 import { MyContext } from "../../App";
-import { deleteData, editData, fetchDataFromApi, postData } from "../../utils/api";
+import {
+  deleteData,
+  editData,
+  fetchDataFromApi,
+  postData,
+} from "../../utils/api";
 
 const label = { slotProps: { input: { "aria-label": "Checkbox demo" } } };
 
@@ -30,7 +35,7 @@ const AddRAMS = () => {
   const [name, setName] = useState();
   const [data, setData] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
-  const [editId, seteditId] = useState('');
+  const [editId, seteditId] = useState("");
 
   useEffect(() => {
     getData();
@@ -53,45 +58,39 @@ const AddRAMS = () => {
       context.alertBox("Please enter Product RAM", "error");
     }
 
-
-    if(editId=== ""){
+    if (editId === "") {
       postData(`/api/product/productRAMS/create`, {
-      name: name,
-    }).then((res) => {
-      if(res?.error === false){
-        context.alertBox(res?.message,"success");
-        setTimeout(()=>{
-          setIsLoading(false);
-          getData();
-          setName("")
-        },[500])
-        
-      } else{
-        context.alertBox(res?.message,"error"); 
-      }
-      
-    });
+        name: name,
+      }).then((res) => {
+        if (res?.error === false) {
+          context.alertBox(res?.message, "success");
+          setTimeout(() => {
+            setIsLoading(false);
+            getData();
+            setName("");
+          }, [500]);
+        } else {
+          context.alertBox(res?.message, "error");
+        }
+      });
     }
 
-    if(editId!== ""){
+    if (editId !== "") {
       editData(`/api/product/productRAMS/${editId}`, {
-      name: name,
-    }).then((res) => {
-      if(res?.data?.error === false){
-        context.alertBox(res?.data?.message,"success");
-        setTimeout(()=>{
-          setIsLoading(false);
-          getData();
-          setName("")
-        },[500])
-        
-      } else{
-        context.alertBox(res?.data?.message,"error"); 
-      }
-      
-    });
+        name: name,
+      }).then((res) => {
+        if (res?.data?.error === false) {
+          context.alertBox(res?.data?.message, "success");
+          setTimeout(() => {
+            setIsLoading(false);
+            getData();
+            setName("");
+          }, [500]);
+        } else {
+          context.alertBox(res?.data?.message, "error");
+        }
+      });
     }
-    
   };
 
   const deleteItem = (id) => {
@@ -101,13 +100,12 @@ const AddRAMS = () => {
     });
   };
 
-  const editItem = (id) =>{
-    fetchDataFromApi(`/api/product/productRAMS/${id}`).then((res) =>{
+  const editItem = (id) => {
+    fetchDataFromApi(`/api/product/productRAMS/${id}`).then((res) => {
       setName(res?.data?.name);
-      seteditId(res?.data?._id); 
-    })
-  }
-  
+      seteditId(res?.data?._id);
+    });
+  };
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 p-6 rounded-2xl">
@@ -151,14 +149,13 @@ const AddRAMS = () => {
                 />
               </div>
               <button className="px-6 py-3 bg-gradient-to-r from-purple-600 to-indigo-600 text-white rounded-xl hover:shadow-lg hover:shadow-purple-200 transition-all font-medium flex items-center gap-2 cursor-pointer">
-                {
-                  isLoading === true ? <CircularProgress color="inherit"/>
-                  :
+                {isLoading === true ? (
+                  <CircularProgress color="inherit" />
+                ) : (
                   <>
                     <MdSave /> Save
                   </>
-                }
-                
+                )}
               </button>
             </div>
           </form>
@@ -241,13 +238,17 @@ const AddRAMS = () => {
                           }}
                         >
                           <Chip
-                            icon={<FaMicrochip className="text-purple-400" />}
+                            label={
+                              <div className="flex items-center gap-1">
+                                <FaMicrochip className="text-purple-400" />
+                                RAM
+                              </div>
+                            }
                             size="small"
                             sx={{
                               backgroundColor: "#f5f3ff",
                               color: "#6d28d9",
                               fontWeight: 500,
-                              "& .MuiChip-icon": { color: "#8b5cf6" },
                             }}
                           />
                           {item.name}
@@ -267,7 +268,7 @@ const AddRAMS = () => {
                                 color: "#6d28d9",
                                 "&:hover": { backgroundColor: "#ede9fe" },
                               }}
-                              onClick={()=>editItem(item?._id)}
+                              onClick={() => editItem(item?._id)}
                             >
                               <MdEdit size={20} />
                             </IconButton>
