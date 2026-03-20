@@ -1,5 +1,6 @@
 import ProductModel from "../models/product.model.js";
 import ProductRAMSModel from "../models/productRAMS.model.js";
+import ProductWEIGHTModel from "../models/productWEIGHT.js";
 
 import { v2 as cloudinary } from "cloudinary";
 import { error } from "console";
@@ -811,7 +812,7 @@ export async function updateProduct(request, response) {
 
 
 
-// Product RAMS Controller
+// Product RAMS Controllers
 
 // create productRAMS
 export async function createProductRAMS(request, response) {
@@ -941,7 +942,7 @@ export async function updateProductRAMS(request, response) {
 }
 
 //get Product Rams
-export async function getPtoductRAMS(request, response) {
+export async function getProductRAMS(request, response) {
   try {
     const productRAM = await ProductRAMSModel.find();
 
@@ -966,7 +967,7 @@ export async function getPtoductRAMS(request, response) {
 }
 
 //get Product Rams by id
-export async function getPtoductRAMSById(request, response) {
+export async function getProductRAMSById(request, response) {
   try {
     const productRAM = await ProductRAMSModel.findById(request.params.id);
 
@@ -980,6 +981,187 @@ export async function getPtoductRAMSById(request, response) {
       error: false,
       success: true,
       data: productRAM
+    });
+  } catch (error) {
+    return response.status(500).json({
+      message: error.message || error,
+      error: true,
+      success: false,
+    });
+  }
+}
+
+
+
+// Product Weight Controllers 
+
+// create productWEIGHT
+export async function createProductWEIGHT(request, response) {
+  try {
+    let productWEIGHT = new ProductWEIGHTModel({
+      name: request.body.name,
+    });
+
+    productWEIGHT = await productWEIGHT.save();
+
+    if (!productWEIGHT) {
+      response.status(500).json({
+        error: true,
+        success: false,
+        message: "Product WEIGHT Not Created",
+      });
+    }
+
+    return response.status(200).json({
+      message: "Product WEIGHT Created Successfully",
+      error: false,
+      success: true,
+      productWEIGHT: productWEIGHT,
+    });
+  } catch (error) {
+    return response.status(500).json({
+      message: error.message || error,
+      error: true,
+      success: false,
+    });
+  }
+}
+
+// delete  product Weights
+export async function deleteProductWEIGHT(request, response) {
+  const productWEIGHT = await ProductWEIGHTModel.findById(request.params.id);
+
+  if (!productWEIGHT) {
+    response.status(404).json({
+      message: "Item Not Found.",
+      error: true,
+      success: false,
+    });
+  }
+
+  const deleteProductWEIGHT = await ProductWEIGHTModel.findByIdAndDelete(
+    request.params.id,
+  );
+
+  if (!deleteProductWEIGHT) {
+    response.status(404).json({
+      message: "Item not deleted!",
+      success: false,
+      error: true,
+    });
+  }
+
+  return response.status(200).json({
+    success: true,
+    error: false,
+    message: "Product WEIGHT Deleted",
+  });
+}
+
+//delete multiple products Weights
+export async function deleteMultipleProductWEIGHT(request, response) {
+  const { ids } = request.body;
+
+  if (!ids || !Array.isArray(ids)) {
+    return response.status(400).json({
+      message: "Invalid Input",
+      error: true,
+      success: false,
+    });
+  }
+
+  try {
+    await ProductWEIGHTModel.deleteMany({
+      _id: { $in: ids },
+    });
+
+    return response.status(200).json({
+      message: "Products Weight deleted successfully",
+      error: false,
+      success: true,
+    });
+  } catch (error) {
+    return response.status(500).json({
+      message: error.message || "Error deleting products",
+      error: true,
+      success: false,
+    });
+  }
+}
+
+//update product Weights
+export async function updateProductWEIGHT(request, response) {
+  try {
+    const productWEIGHT = await ProductWEIGHTModel.findByIdAndUpdate(
+      request.params.id,
+      {
+        name: request.body.name,
+      },
+
+      { new: true },
+    );
+
+    if (!productWEIGHT) {
+      return response.status(404).json({
+        message: "The Product Weigth can not be updated!",
+        status: false,
+      });
+    }
+
+    return response.status(200).json({
+      message: "The Product Weight is updated",
+      error: false,
+      success: true,
+    });
+  } catch (error) {
+    return response.status(500).json({
+      message: error.message || error,
+      error: true,
+      success: false,
+    });
+  }
+}
+
+//get Product Weights
+export async function getProductWEIGHT(request, response) {
+  try {
+    const productWEIGHT = await ProductWEIGHTModel.find();
+
+    if (!productWEIGHT) {
+      return response.status(500).json({
+        error: true,
+        success: false,
+      });
+    }
+    return response.status(200).json({
+      error: false,
+      success: true,
+      data: productWEIGHT
+    });
+  } catch (error) {
+    return response.status(500).json({
+      message: error.message || error,
+      error: true,
+      success: false,
+    });
+  }
+}
+
+//get Product Weight by id
+export async function getProductWEIGHTById(request, response) {
+  try {
+    const productWEIGHT = await ProductWEIGHTModel.findById(request.params.id);
+
+    if (!productWEIGHT) {
+      return response.status(500).json({
+        error: true,
+        success: false,
+      });
+    }
+    return response.status(200).json({
+      error: false,
+      success: true,
+      data: productWEIGHT
     });
   } catch (error) {
     return response.status(500).json({
