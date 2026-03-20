@@ -809,6 +809,10 @@ export async function updateProduct(request, response) {
   }
 }
 
+
+
+// Product RAMS Controller
+
 // create productRAMS
 export async function createProductRAMS(request, response) {
   try {
@@ -936,6 +940,7 @@ export async function updateProductRAMS(request, response) {
   }
 }
 
+//get Product Rams
 export async function getPtoductRAMS(request, response) {
   try {
     const productRAM = await ProductRAMSModel.find();
@@ -960,6 +965,7 @@ export async function getPtoductRAMS(request, response) {
   }
 }
 
+//get Product Rams by id
 export async function getPtoductRAMSById(request, response) {
   try {
     const productRAM = await ProductRAMSModel.findById(request.params.id);
