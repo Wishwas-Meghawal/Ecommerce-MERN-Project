@@ -68,6 +68,7 @@ const AddWEIGHT = () => {
             setIsLoading(false);
             getData();
             setName("");
+            
           }, [500]);
         } else {
           context.alertBox(res?.message, "error");
@@ -85,6 +86,7 @@ const AddWEIGHT = () => {
             setIsLoading(false);
             getData();
             setName("");
+            seteditId("");
           }, [500]);
         } else {
           context.alertBox(res?.data?.message, "error");

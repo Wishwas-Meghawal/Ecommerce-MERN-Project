@@ -85,6 +85,7 @@ const AddSIZE = () => {
             setIsLoading(false);
             getData();
             setName("");
+            seteditId("");
           }, [500]);
         } else {
           context.alertBox(res?.data?.message, "error");
