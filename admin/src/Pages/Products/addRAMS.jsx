@@ -197,14 +197,14 @@ const AddRAMS = () => {
                   >
                     <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
                       <FaMicrochip className="text-purple-500" />
-                      RAM Size
+                      RAM SIZE
                     </Box>
                   </TableCell>
                   <TableCell
                     sx={{ fontWeight: 600, color: "#1f2937", py: 2 }}
                     width={"30%"}
                   >
-                    Actions
+                    ACTIONS
                   </TableCell>
                 </TableRow>
               </TableHead>

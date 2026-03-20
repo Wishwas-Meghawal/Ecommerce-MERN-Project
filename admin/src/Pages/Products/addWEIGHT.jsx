@@ -1,7 +1,7 @@
 import React, { useCallback, useContext, useEffect, useState } from "react";
 import { FcAddDatabase } from "react-icons/fc";
 import { MdEdit, MdDelete, MdSave, MdCancel } from "react-icons/md";
-import { FaMicrochip } from "react-icons/fa";
+import { FaMicrochip, FaWeightHanging } from "react-icons/fa";
 import {
   Table,
   TableBody,
@@ -42,7 +42,7 @@ const AddWEIGHT = () => {
   }, []);
 
   const getData = () => {
-    fetchDataFromApi("/api/product/productWEIGTH/get").then((res) => {
+    fetchDataFromApi("/api/product/productWEIGHT/get").then((res) => {
       if (res?.error === false) {
         setData(res?.data);
       }
@@ -59,7 +59,7 @@ const AddWEIGHT = () => {
     }
 
     if (editId === "") {
-      postData(`/api/product/productWEIGTH/create`, {
+      postData(`/api/product/productWEIGHT/create`, {
         name: name,
       }).then((res) => {
         if (res?.error === false) {
@@ -76,7 +76,7 @@ const AddWEIGHT = () => {
     }
 
     if (editId !== "") {
-      editData(`/api/product/productWEIGTH/${editId}`, {
+      editData(`/api/product/productWEIGHT/${editId}`, {
         name: name,
       }).then((res) => {
         if (res?.data?.error === false) {
@@ -94,14 +94,14 @@ const AddWEIGHT = () => {
   };
 
   const deleteItem = (id) => {
-    deleteData(`/api/product/productWEIGTH/${id}`).then((res) => {
+    deleteData(`/api/product/productWEIGHT/${id}`).then((res) => {
       getData();
       context.alertBox("Item deleted", "success");
     });
   };
 
   const editItem = (id) => {
-    fetchDataFromApi(`/api/product/productWEIGTH/${id}`).then((res) => {
+    fetchDataFromApi(`/api/product/productWEIGHT/${id}`).then((res) => {
       setName(res?.data?.name);
       seteditId(res?.data?._id);
     });
@@ -124,24 +124,25 @@ const AddWEIGHT = () => {
                 Add Product WEIGHT
               </h1>
               <p className="text-gray-600 mt-2 flex items-center gap-2">
-                <FaMicrochip className="text-purple-500" />
-                Add and manage product weight details for items measured by weight
+                 <FaWeightHanging className="text-purple-400" />
+                Add and manage product weight details for items measured by
+                weight
               </p>
             </div>
           </div>
         </div>
 
-        {/* Add RAM Form */}
+        {/* Add WEIGHT Form */}
         <div className="bg-white rounded-2xl shadow-xl border border-purple-100 p-6 mb-6 animate-fadeIn">
           <h3 className="text-lg font-semibold text-gray-800 mb-4">
-            Add New RAM
+            Add New WEIGHT
           </h3>
           <form className="form py-3 p-6" onSubmit={handleSubmit}>
             <div className="flex flex-col md:flex-row gap-4">
               <div className="flex-1">
                 <input
                   type="text"
-                  placeholder="Enter RAM size (e.g., 8GB, 16GB)"
+                  placeholder="Enter Product Weight (e.g., 2KG, 5KG)"
                   className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-purple-500 focus:border-transparent outline-none transition"
                   onChange={(e) => setName(e.target.value)}
                   value={name}
@@ -195,15 +196,15 @@ const AddWEIGHT = () => {
                     width={"60%"}
                   >
                     <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
-                      <FaMicrochip className="text-purple-500" />
-                      RAM Size
+                      <FaWeightHanging className="text-purple-400" />
+                      PRODUCT WEIGHT
                     </Box>
                   </TableCell>
                   <TableCell
                     sx={{ fontWeight: 600, color: "#1f2937", py: 2 }}
                     width={"30%"}
                   >
-                    Actions
+                    ACTIONS
                   </TableCell>
                 </TableRow>
               </TableHead>
@@ -239,8 +240,8 @@ const AddWEIGHT = () => {
                           <Chip
                             label={
                               <div className="flex items-center gap-1">
-                                <FaMicrochip className="text-purple-400" />
-                                RAM
+                                <FaWeightHanging className="text-purple-400" />
+                                WEIGHT
                               </div>
                             }
                             size="small"

@@ -1,6 +1,6 @@
 import React, { useCallback, useContext, useEffect, useState } from "react";
 import { FcAddDatabase } from "react-icons/fc";
-import { MdEdit, MdDelete, MdSave, MdCancel } from "react-icons/md";
+import { MdEdit, MdDelete, MdSave, MdCancel, MdStraighten } from "react-icons/md";
 import { FaMicrochip } from "react-icons/fa";
 import {
   Table,
@@ -124,8 +124,9 @@ const AddSIZE = () => {
                 Add Product SIZE
               </h1>
               <p className="text-gray-600 mt-2 flex items-center gap-2">
-                <FaMicrochip className="text-purple-500" />
-                Add and manage product sizes for accurate selection and categorization
+                <MdStraighten className="text-purple-400" />
+                Add and manage product sizes for accurate selection and
+                categorization
               </p>
             </div>
           </div>
@@ -195,15 +196,15 @@ const AddSIZE = () => {
                     width={"60%"}
                   >
                     <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
-                      <FaMicrochip className="text-purple-500" />
-                      RAM Size
+                      <MdStraighten className="text-purple-400" />
+                      PRODUCT SIZE
                     </Box>
                   </TableCell>
                   <TableCell
                     sx={{ fontWeight: 600, color: "#1f2937", py: 2 }}
                     width={"30%"}
                   >
-                    Actions
+                    ACTIONS
                   </TableCell>
                 </TableRow>
               </TableHead>
@@ -239,8 +240,8 @@ const AddSIZE = () => {
                           <Chip
                             label={
                               <div className="flex items-center gap-1">
-                                <FaMicrochip className="text-purple-400" />
-                                RAM
+                                <MdStraighten className="text-purple-400" />
+                                SIZE
                               </div>
                             }
                             size="small"
