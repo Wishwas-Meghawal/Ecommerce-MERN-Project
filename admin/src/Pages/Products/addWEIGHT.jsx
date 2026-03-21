@@ -187,14 +187,6 @@ const AddWEIGHT = () => {
                 >
                   <TableCell
                     sx={{ fontWeight: 600, color: "#1f2937", py: 2 }}
-                    width={"10%"}
-                  >
-                    <div className="w-[60px]">
-                      <Checkbox {...label} size="small" />
-                    </div>
-                  </TableCell>
-                  <TableCell
-                    sx={{ fontWeight: 600, color: "#1f2937", py: 2 }}
                     width={"60%"}
                   >
                     <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
@@ -225,12 +217,6 @@ const AddWEIGHT = () => {
                       }}
                     >
                       {/* // View Mode */}
-
-                      <TableCell sx={{ py: 2 }}>
-                        <div className="w-[60px]">
-                          <Checkbox {...label} size="small" />
-                        </div>
-                      </TableCell>
                       <TableCell sx={{ py: 2 }}>
                         <Box
                           sx={{

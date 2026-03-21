@@ -878,36 +878,6 @@ export async function deleteProductRAMS(request, response) {
   });
 }
 
-//delete multiple products Rams
-export async function deleteMultipleProductRAMS(request, response) {
-  const { ids } = request.body;
-
-  if (!ids || !Array.isArray(ids)) {
-    return response.status(400).json({
-      message: "Invalid Input",
-      error: true,
-      success: false,
-    });
-  }
-
-  try {
-    await ProductRAMSModel.deleteMany({
-      _id: { $in: ids },
-    });
-
-    return response.status(200).json({
-      message: "Products Rams deleted successfully",
-      error: false,
-      success: true,
-    });
-  } catch (error) {
-    return response.status(500).json({
-      message: error.message || "Error deleting products",
-      error: true,
-      success: false,
-    });
-  }
-}
 
 //update product Rams
 export async function updateProductRAMS(request, response) {
@@ -1059,36 +1029,6 @@ export async function deleteProductWEIGHT(request, response) {
   });
 }
 
-//delete multiple products Weights
-export async function deleteMultipleProductWEIGHT(request, response) {
-  const { ids } = request.body;
-
-  if (!ids || !Array.isArray(ids)) {
-    return response.status(400).json({
-      message: "Invalid Input",
-      error: true,
-      success: false,
-    });
-  }
-
-  try {
-    await ProductWEIGHTModel.deleteMany({
-      _id: { $in: ids },
-    });
-
-    return response.status(200).json({
-      message: "Products Weight deleted successfully",
-      error: false,
-      success: true,
-    });
-  } catch (error) {
-    return response.status(500).json({
-      message: error.message || "Error deleting products",
-      error: true,
-      success: false,
-    });
-  }
-}
 
 //update product Weights
 export async function updateProductWEIGHT(request, response) {
@@ -1241,36 +1181,6 @@ export async function deleteProductSIZE(request, response) {
   });
 }
 
-// delete multiple product SIZE
-export async function deleteMultipleProductSIZE(request, response) {
-  const { ids } = request.body;
-
-  if (!ids || !Array.isArray(ids)) {
-    return response.status(400).json({
-      message: "Invalid Input",
-      error: true,
-      success: false,
-    });
-  }
-
-  try {
-    await ProductSIZEModel.deleteMany({
-      _id: { $in: ids },
-    });
-
-    return response.status(200).json({
-      message: "Products SIZE deleted successfully",
-      error: false,
-      success: true,
-    });
-  } catch (error) {
-    return response.status(500).json({
-      message: error.message || "Error deleting products",
-      error: true,
-      success: false,
-    });
-  }
-}
 
 // update product SIZE
 export async function updateProductSIZE(request, response) {
