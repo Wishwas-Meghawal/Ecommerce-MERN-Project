@@ -289,8 +289,7 @@ export async function deleteCategory(request, response){
   })
 }
 
-export async function updateCategory(request, response) {
-  try {
+export async function updateCategory(request, response) { 
     const category = await CategoryModel.findByIdAndUpdate(
       request.params.id,
       {
@@ -304,7 +303,7 @@ export async function updateCategory(request, response) {
 
     if(!category){
       return response.status(500).json({
-        message: "Categoty cannot br updated!",
+        message: "Categoty cannot be updated!",
         success: false,
         error: true
       });
@@ -318,13 +317,4 @@ export async function updateCategory(request, response) {
       error: false,
       category: category
     })
-
-
-  } catch (error) {
-    response.status(500).json({
-      success: false,
-      error: true,
-      message: "Category Deleted!"
-    })
-  }
 }
