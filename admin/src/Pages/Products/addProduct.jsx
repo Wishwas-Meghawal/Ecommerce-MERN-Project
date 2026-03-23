@@ -104,10 +104,10 @@ const AddProduct = () => {
   const [productThirdLavelCat, setProductThirdLavelCat] = useState("");
   const [productFeatured, setProductFeatured] = useState("");
   const [productRams, setProductRams] = useState([]);
-  const [productRamsData, setProductRamsData] = useState([]);
   const [productWeight, setProductWeight] = useState([]);
-  const [productWeightData, setProductWeightData] = useState([]);
   const [productSize, setProductSize] = useState([]);
+  const [productRamsData, setProductRamsData] = useState([]);
+  const [productWeightData, setProductWeightData] = useState([]);
   const [productSizeData, setProductSizeData] = useState([]);
 
   const [isLoading, setIsLoading] = useState(false);
