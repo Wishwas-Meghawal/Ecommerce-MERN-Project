@@ -13,7 +13,7 @@ import UploadBox from "../../Components/UploadBox";
 import { MyContext } from "../../App";
 import { FcAddDatabase, FcEditImage, FcFolder } from "react-icons/fc";
 import { WidthFull } from "@mui/icons-material";
-import { deleteImages, editData, fetchDataFromApi, postData } from "../../utils/api";
+import { deleteImages, editData, fetchDataFromApi } from "../../utils/api";
 import { IoMdClose } from "react-icons/io";
 import { useNavigate, useParams } from "react-router-dom";
 import Category from "../Category";
@@ -110,16 +110,20 @@ const EditProduct = () => {
 
   const [preview, setPreview] = useState([]);
 
+  const [productRamsData, setProductRamsData] = useState([]);
+  const [productWeightData, setProductWeightData] = useState([]);
+  const [productSizeData, setProductSizeData] = useState([]);
+
   const setPreviewFun = (previewsArr) => {
     const imageArr = preview;
-    for(let i = 0; i<previewsArr.length; i++){
-      imageArr.push(previewsArr[i])
+    for (let i = 0; i < previewsArr.length; i++) {
+      imageArr.push(previewsArr[i]);
     }
     setPreview([]);
-    setTimeout(()=>{
-      setPreview(imageArr)
-      formFields.images = imageArr
-    },10);
+    setTimeout(() => {
+      setPreview(imageArr);
+      formFields.images = imageArr;
+    }, 10);
   };
 
   const removeImg = (image, index) => {
@@ -142,6 +146,24 @@ const EditProduct = () => {
   const history = useNavigate();
 
   useEffect(() => {
+    fetchDataFromApi("/api/product/productRAMS/get").then((res) => {
+      if (res?.error === false) {
+        setProductRamsData(res?.data);
+      }
+    });
+
+    fetchDataFromApi("/api/product/productWEIGHT/get").then((res) => {
+      if (res?.error === false) {
+        setProductWeightData(res?.data);
+      }
+    });
+
+    fetchDataFromApi("/api/product/productSIZE/get").then((res) => {
+      if (res?.error === false) {
+        setProductSizeData(res?.data);
+      }
+    });
+
     fetchDataFromApi(`/api/product/${context?.isOpenFullScreenPanel?.id}`).then(
       (res) => {
         setFormFields({
@@ -321,7 +343,10 @@ const EditProduct = () => {
       return false;
     }
 
-    editData(`/api/product/updateProduct/${context?.isOpenFullScreenPanel?.id}`, formFields).then((res) => {
+    editData(
+      `/api/product/updateProduct/${context?.isOpenFullScreenPanel?.id}`,
+      formFields,
+    ).then((res) => {
       if (res?.data?.error === false) {
         context.alertBox(res?.data?.message, "success");
         setTimeout(() => {
@@ -815,66 +840,81 @@ const EditProduct = () => {
                       <label className="text-sm font-medium text-gray-700">
                         Product RAM (GB)
                       </label>
-                      <FormControl fullWidth size="small" sx={selectStyles}>
-                        <Select
-                          multiple
-                          variant="outlined"
-                          value={productRams}
-                          onChange={handleChangeProductRams}
-                          SelectProps={{
-                            renderValue: (selected) => selected.join(", "),
-                          }}
-                        >
-                          <MenuItem value={"4GB"}>4GB</MenuItem>
-                          <MenuItem value={"6GB"}>6GB</MenuItem>
-                          <MenuItem value={"8GB"}>8GB</MenuItem>
-                        </Select>
-                      </FormControl>
+                      {productRamsData?.length !== 0 && (
+                        <FormControl fullWidth size="small" sx={selectStyles}>
+                          <Select
+                            multiple
+                            variant="outlined"
+                            value={productRams}
+                            onChange={handleChangeProductRams}
+                            SelectProps={{
+                              renderValue: (selected) => selected.join(", "),
+                            }}
+                          >
+                            {productRamsData?.map((item, index) => {
+                              return (
+                                <MenuItem key={index} value={item.name}>
+                                  {item.name}
+                                </MenuItem>
+                              );
+                            })}
+                          </Select>
+                        </FormControl>
+                      )}
                     </div>
 
                     <div className="space-y-2">
                       <label className="text-sm font-medium text-gray-700">
                         Product Weight (kg)
                       </label>
-                      <FormControl fullWidth size="small" sx={selectStyles}>
-                        <Select
-                          multiple
-                          variant="outlined"
-                          value={productWeight}
-                          onChange={handleChangeProductWeight}
-                          SelectProps={{
-                            renderValue: (selected) => selected.join(", "),
-                          }}
-                        >
-                          <MenuItem value={"2KG"}>2KG</MenuItem>
-                          <MenuItem value={"4KG"}>4KG</MenuItem>
-                          <MenuItem value={"6KG"}>6KG</MenuItem>
-                        </Select>
-                      </FormControl>
+                      {productWeightData?.length !== 0 && (
+                        <FormControl fullWidth size="small" sx={selectStyles}>
+                          <Select
+                            multiple
+                            variant="outlined"
+                            value={productWeight}
+                            onChange={handleChangeProductWeight}
+                            SelectProps={{
+                              renderValue: (selected) => selected.join(", "),
+                            }}
+                          >
+                            {productWeightData?.map((item, index) => {
+                              return (
+                                <MenuItem key={index} value={item.name}>
+                                  {item.name}
+                                </MenuItem>
+                              );
+                            })}
+                          </Select>
+                        </FormControl>
+                      )}
                     </div>
 
                     <div className="space-y-2">
                       <label className="text-sm font-medium text-gray-700">
                         Product Size
                       </label>
-                      <FormControl fullWidth size="small" sx={selectStyles}>
-                        <Select
-                          multiple
-                          variant="outlined"
-                          value={productSize}
-                          onChange={handleChangeProductSize}
-                          SelectProps={{
-                            renderValue: (selected) => selected.join(", "),
-                          }}
-                        >
-                          <MenuItem value={"xs"}>XS</MenuItem>
-                          <MenuItem value={"s"}>S</MenuItem>
-                          <MenuItem value={"m"}>M</MenuItem>
-                          <MenuItem value={"l"}>L</MenuItem>
-                          <MenuItem value={"xl"}>XL</MenuItem>
-                          <MenuItem value={"xxl"}>XXL</MenuItem>
-                        </Select>
-                      </FormControl>
+                      {productSizeData?.length !== 0 && (
+                        <FormControl fullWidth size="small" sx={selectStyles}>
+                          <Select
+                            multiple
+                            variant="outlined"
+                            value={productSize}
+                            onChange={handleChangeProductSize}
+                            SelectProps={{
+                              renderValue: (selected) => selected.join(", "),
+                            }}
+                          >
+                            {productSizeData?.map((item, index) => {
+                              return (
+                                <MenuItem key={index} value={item.name}>
+                                  {item.name}
+                                </MenuItem>
+                              );
+                            })}
+                          </Select>
+                        </FormControl>
+                      )}
                     </div>
 
                     {/* RATING COMPONENT - ADDED HERE */}
