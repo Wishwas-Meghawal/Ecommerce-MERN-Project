@@ -16,7 +16,7 @@ import { MyContext } from "../../App";
 import { Link, useNavigate } from "react-router-dom";
 import { fetchDataFromApi } from "../../utils/api.js";
 import AddProduct from "../../Pages/Products/addProduct.jsx";
-import AddHomeSlider from "../../Pages/HomeSliderBanners/addHomeSlide.jsx";
+import AddHomeSlide from "../../Pages/HomeSliderBanners/AddHomeSlide.jsx";
 import AddCategory from "../../Pages/Category/AddCategory.jsx";
 import AddSubCategory from "../../Pages/Category/AddSubCategory.jsx";
 import EditCategory from "../../Pages/Category/EditCategory.jsx";
@@ -242,7 +242,7 @@ const Header = () => {
         )}
 
         {context?.isOpenFullScreenPanel?.model === "Add Home Slider" && (
-          <AddHomeSlider />
+          <AddHomeSlide />
         )}
 
         {context?.isOpenFullScreenPanel?.model === "Add Category" && (

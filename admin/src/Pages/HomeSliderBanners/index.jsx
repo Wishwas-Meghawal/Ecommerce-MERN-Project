@@ -50,7 +50,7 @@ const HomeSliderBanners = () => {
             onClick={() =>
               context.setIsOpenFullScreenPanel({
                 open: true,
-                model: "Add Home Slide",
+                model: "Add Home Slider",
               })
             }
           >
