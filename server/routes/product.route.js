@@ -25,7 +25,7 @@ productRouter.get('/getAllProductsByPrice',getAllProductsByPrice);
 productRouter.get('/getAllProductsByRating',getAllProductsByRating);
 productRouter.get('/getAllProductsCount',getProductsCount);
 productRouter.get('/getAllFeaturedProducts',getAllFeaturedProducts);
-productRouter.delete('/deleteMultiple',deleteMultipleProduct);
+productRouter.delete('/deleteMultiple',auth,deleteMultipleProduct);
 productRouter.delete('/:id',deleteProduct);
 productRouter.get('/:id',getProduct);
 productRouter.delete("/deleteImage", auth, removeImageFromCloudinary);
