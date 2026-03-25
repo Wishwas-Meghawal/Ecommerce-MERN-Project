@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import {
   FcImageFile,
   FcSettings,
@@ -13,11 +13,126 @@ import {
   MdMoreVert,
 } from "react-icons/md";
 import { FaImage, FaLink } from "react-icons/fa";
-import { Button, IconButton } from "@mui/material";
+import { Button, IconButton, TablePagination, Tooltip } from "@mui/material";
 import { MyContext } from "../../App";
+import {
+  deleteData,
+  deleteMultipleData,
+  fetchDataFromApi,
+} from "../../utils/api";
+
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+  Paper,
+  Checkbox,
+} from "@mui/material";
+import { BsTrash } from "react-icons/bs";
 
 const HomeSliderBanners = () => {
   const context = useContext(MyContext);
+  const [slidesData, setSlidesData] = useState([]);
+  const [page, setPage] = useState(0);
+  const [rowsPerPage, setRowsPerPage] = useState(5);
+  const [sortedIds, setSortedIds] = useState([]);
+
+  // Pagination handlers
+  const handleChangePage = (event, newPage) => {
+    setPage(newPage);
+  };
+
+  const handleChangeRowsPerPage = (event) => {
+    setRowsPerPage(parseInt(event.target.value, 10));
+    setPage(0);
+  };
+
+  // 🔹 checkbox logic
+  const handleSelectAll = (e) => {
+    const isChecked = e.target.checked;
+
+    // Update all items checked status
+    const updatedItems = slidesData.map((item) => ({
+      ...item,
+      checked: isChecked,
+    }));
+    setSlidesData(updatedItems);
+
+    // Update the sorted Ids state
+    if (isChecked) {
+      const ids = updatedItems.map((item) => item._id).sort((a, b) => a - b);
+      console.log(ids);
+      setSortedIds(ids);
+    } else {
+      setSortedIds([]);
+    }
+  };
+
+  // Handler to toggle individual checkboxes
+  const handleCheckboxChange = (e, id, index) => {
+    const updatedItems = slidesData.map((item) =>
+      item._id === id ? { ...item, checked: !item.checked } : item,
+    );
+    setSlidesData(updatedItems);
+
+    //Updated the sorted Ids state
+    const selectedIds = updatedItems
+      .filter((item) => item.checked)
+      .map((item) => item._id)
+      .sort((a, b) => a - b);
+    setSortedIds(selectedIds);
+  };
+
+  useEffect(() => {
+    getData();
+  }, [context?.isOpenFullScreenPanel]);
+
+  const getData = () => {
+    fetchDataFromApi("/api/homeSlides").then((res) => {
+      let arr = [];
+      if (res?.error === false) {
+        for (let i = 0; i < res?.data?.length; i++) {
+          arr[i] = res?.data[i];
+          arr[i].checked = false;
+        }
+        setTimeout(() => {
+          setSlidesData(arr);
+        }, 300);
+      }
+    });
+  };
+
+  const deleteSlide = (id) => {
+    deleteData(`/api/homeSlides/${id}`).then((res) => {
+      context.alertBox("Slide deleted", "success");
+      getData();
+    });
+  };
+
+  //Delete Multiple Product
+  const deleteMultipleProduct = async () => {
+    if (sortedIds.length === 0) {
+      context.alertBox("Please select items to delete", "error");
+      return;
+    }
+
+    try {
+      const res = await deleteMultipleData("/api/homeSlides/deleteMultiple", {
+        ids: sortedIds,
+      });
+
+      if (res?.success) {
+        getData();
+        context.alertBox("Slides deleted successfully", "success");
+      }
+    } catch (error) {
+      context.alertBox("Error deleting items", "error");
+    }
+  };
+
   return (
     <div className="p-6 rounded-xl bg-white shadow-lg border border-gray-200">
       {/* Header */}
@@ -37,6 +152,25 @@ const HomeSliderBanners = () => {
         </div>
 
         <div className="flex gap-3">
+          {sortedIds?.length !== 0 && (
+            <Tooltip title="Delete Data" arrow>
+              <IconButton
+                sx={{
+                  border: "1px solid #e5e7eb",
+                  borderRadius: "14px",
+                  padding: "10px 16px",
+                  backgroundColor: "#fee2e2",
+                  "&:hover": {
+                    backgroundColor: "#e0f2fe",
+                    borderColor: "#0284c7",
+                  },
+                }}
+                onClick={deleteMultipleProduct}
+              >
+                <BsTrash className="text-gray-600" />
+              </IconButton>
+            </Tooltip>
+          )}
           <Button
             variant="contained"
             startIcon={<FcAddDatabase className="text-white" />}
@@ -56,158 +190,129 @@ const HomeSliderBanners = () => {
           >
             Add New Banner
           </Button>
-          <Button
-            variant="outlined"
-            startIcon={<FcSettings />}
-            className="border-gray-300 hover:bg-gray-50"
-            sx={{
-              borderRadius: "12px",
-              padding: "10px 20px",
-              textTransform: "none",
-              fontWeight: 500,
-            }}
-          >
-            Settings
-          </Button>
         </div>
       </div>
 
       {/* Table */}
-      <div className="overflow-x-auto rounded-xl border border-gray-200 shadow-sm">
-        <table className="min-w-full divide-y divide-gray-200">
-          <thead className="bg-gradient-to-r from-gray-50 to-gray-100">
-            <tr>
-              <th className="px-6 py-4 text-left text-sm font-semibold text-gray-700 uppercase tracking-wider">
-                <div className="flex items-center gap-3">
-                  <MdDragIndicator className="text-gray-500 text-lg" />
-                  <span>Image Preview</span>
-                </div>
-              </th>
-              <th className="px-6 py-4 text-left text-sm font-semibold text-gray-700 uppercase tracking-wider">
-                Actions
-              </th>
-            </tr>
-          </thead>
-          <tbody className="bg-white divide-y divide-gray-200">
-            {/* Banner 1 - Summer Sale */}
-            <tr className="hover:bg-gray-50">
-              <td className="px-6 py-5">
-                <div className="w-64 h-32 rounded-lg overflow-hidden border">
-                  <img
-                    src="/homebanner2.jpg"
-                    alt="Flash Deal Banner"
-                    className="w-full h-full object-cover"
+      <Paper
+        sx={{
+          width: "100%",
+          borderRadius: "16px",
+          overflow: "hidden",
+          border: "1px solid #e5e7eb",
+        }}
+      >
+        <TableContainer>
+          <Table>
+            {/* Header */}
+            <TableHead>
+              <TableRow sx={{ backgroundColor: "#f9fafb" }}>
+                <TableCell padding="checkbox">
+                  <Checkbox
+                    onChange={handleSelectAll}
+                    checked={
+                      slidesData?.length > 0
+                        ? slidesData.every((item) => item.checked)
+                        : false
+                    }
+                    sx={{
+                      color: "#94a3b8",
+                      "&.Mui-checked": {
+                        color: "#2563eb",
+                      },
+                      "&.MuiCheckbox-indeterminate": {
+                        color: "#2563eb",
+                      },
+                    }}
                   />
-                </div>
-              </td>
-              <td className="px-6 py-5">
-                <div className="flex flex-col gap-3 w-48">
-                  {/* Action Row 1 */}
-                  <div className="flex gap-2">
-                    <button className="flex-1 px-3 py-2 bg-blue-600 text-white text-sm rounded-lg hover:bg-blue-700 flex items-center justify-center gap-2">
-                      <MdEdit className="text-base" />
-                      Edit
-                    </button>
-                    <button className="px-3 py-2 border border-gray-300 text-gray-700 text-sm rounded-lg hover:bg-gray-100 flex items-center gap-2">
-                      <MdVisibility className="text-base" />
-                    </button>
-                  </div>
+                </TableCell>
 
-                  {/* Action Row 2 */}
-                  <div className="flex gap-2">
-                    <button className="flex-1 px-3 py-2 border border-gray-300 text-gray-700 text-sm rounded-lg hover:bg-gray-100 flex items-center justify-center gap-2">
-                      <FcImageFile className="text-base" />
-                      Change
-                    </button>
-                    <button className="px-3 py-2 border border-gray-300 text-gray-700 text-sm rounded-lg hover:bg-gray-100 flex items-center gap-2">
-                      <MdMoreVert className="text-base" />
-                    </button>
-                  </div>
+                <TableCell sx={{ fontWeight: 600 }}>Image Preview</TableCell>
 
-                  {/* Delete Button */}
-                  <button className="px-3 py-2 border border-red-300 text-red-600 text-sm rounded-lg hover:bg-red-50 hover:border-red-400 flex items-center justify-center gap-2">
-                    <MdDelete className="text-base" />
-                    Delete Banner
-                  </button>
-                </div>
-              </td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-      {/* Footer */}
-      <div className="flex flex-col md:flex-row md:items-center justify-between mt-8 pt-6 border-t border-gray-200 gap-4">
-        <div className="text-sm text-gray-600">
-          Showing <span className="font-semibold">4</span> banners •
-          <span className="ml-3 px-3 py-1.5 bg-gradient-to-r from-green-100 to-green-50 text-green-700 text-xs font-medium rounded-lg">
-            All Active
-          </span>
-        </div>
+                <TableCell sx={{ fontWeight: 600 }}>Actions</TableCell>
+              </TableRow>
+            </TableHead>
 
-        <div className="flex items-center gap-4">
-          <div className="flex items-center gap-2">
-            <span className="text-sm text-gray-600">Banners per page:</span>
-            <select className="px-3 py-2 border border-gray-300 rounded-lg text-sm bg-white shadow-sm">
-              <option>5</option>
-              <option>10</option>
-              <option>20</option>
-            </select>
-          </div>
+            {/* Body */}
+            <TableBody>
+              {slidesData
+                .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                .map((item) => {
+                  return (
+                    <TableRow key={item._id} hover>
+                      {/* Checkbox */}
+                      <TableCell padding="checkbox">
+                        <Checkbox
+                          checked={item.checked === true ? true : false}
+                          onChange={(e) =>
+                            handleCheckboxChange(e, item._id, index)
+                          }
+                          sx={{
+                            color: "#9ca3af",
+                            "&.Mui-checked": {
+                              color: "#3b82f6",
+                            },
+                          }}
+                        />
+                      </TableCell>
 
-          <div className="flex items-center gap-2">
-            <Button
-              variant="outlined"
-              size="small"
-              className="border-gray-300 hover:bg-gray-50 shadow-sm"
-              sx={{
-                borderRadius: "10px",
-                textTransform: "none",
-                padding: "8px 16px",
-              }}
-            >
-              Previous
-            </Button>
-            <Button
-              variant="contained"
-              size="small"
-              className="bg-gradient-to-r from-blue-500 to-blue-600 shadow-sm"
-              sx={{
-                borderRadius: "10px",
-                textTransform: "none",
-                minWidth: "40px",
-                padding: "8px",
-              }}
-            >
-              1
-            </Button>
-            <Button
-              variant="outlined"
-              size="small"
-              className="border-gray-300 hover:bg-gray-50 shadow-sm"
-              sx={{
-                borderRadius: "10px",
-                textTransform: "none",
-                minWidth: "40px",
-                padding: "8px",
-              }}
-            >
-              2
-            </Button>
-            <Button
-              variant="outlined"
-              size="small"
-              className="border-gray-300 hover:bg-gray-50 shadow-sm"
-              sx={{
-                borderRadius: "10px",
-                textTransform: "none",
-                padding: "8px 16px",
-              }}
-            >
-              Next
-            </Button>
-          </div>
-        </div>
-      </div>
+                      {/* Image */}
+                      <TableCell>
+                        <div className="w-64 h-32 rounded-lg overflow-hidden border">
+                          <img
+                            src={item.images[0]}
+                            alt="banner"
+                            className="w-full h-full object-cover"
+                          />
+                        </div>
+                      </TableCell>
+
+                      {/* Actions */}
+                      <TableCell>
+                        <div className="flex flex-col gap-2 w-40">
+                          <Button
+                            variant="contained"
+                            startIcon={<MdEdit />}
+                            sx={{
+                              borderRadius: "10px",
+                              textTransform: "none",
+                            }}
+                          >
+                            Edit
+                          </Button>
+
+                          <Button
+                            variant="outlined"
+                            color="error"
+                            startIcon={<MdDelete />}
+                            onClick={() => deleteSlide(item._id)}
+                            sx={{
+                              borderRadius: "10px",
+                              textTransform: "none",
+                            }}
+                          >
+                            Delete
+                          </Button>
+                        </div>
+                      </TableCell>
+                    </TableRow>
+                  );
+                })}
+            </TableBody>
+          </Table>
+        </TableContainer>
+
+        {/* Pagination */}
+        <TablePagination
+          component="div"
+          count={slidesData.length}
+          page={page}
+          onPageChange={handleChangePage}
+          rowsPerPage={rowsPerPage}
+          onRowsPerPageChange={handleChangeRowsPerPage}
+          rowsPerPageOptions={[5, 10, 20]}
+        />
+      </Paper>
     </div>
   );
 };
