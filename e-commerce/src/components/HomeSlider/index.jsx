@@ -6,7 +6,7 @@ import Button from "@mui/material/Button";
 import { Navigation, Autoplay } from "swiper/modules";
 import { FiChevronLeft, FiChevronRight } from "react-icons/fi";
 
-const HomeSlider = () => {
+const HomeSlider = (props) => {
   const prevRef = useRef(null);
   const nextRef = useRef(null);
   return (
@@ -40,87 +40,20 @@ const HomeSlider = () => {
             }}
             className="sliderHome"
           >
-            <SwiperSlide>
-              <div className="item  overflow-hidden ">
-                <img
-                  src="https://serviceapi.spicezgold.com/download/1763051442252_34296.jpg"
-                  alt="Banner slide"
-                  className="w-full"
-                />
-              </div>
-            </SwiperSlide>
-            <SwiperSlide>
-              <div className="item  overflow-hidden ">
-                <img
-                  src="https://serviceapi.spicezgold.com/download/1763051442252_34296.jpg"
-                  alt="Banner slide"
-                  className="w-full"
-                />
-              </div>
-            </SwiperSlide>
-            <SwiperSlide>
-              <div className="item  overflow-hidden ">
-                <img
-                  src="https://serviceapi.spicezgold.com/download/1763051442252_34296.jpg"
-                  alt="Banner slide"
-                  className="w-full"
-                />
-              </div>
-            </SwiperSlide>
-            <SwiperSlide>
-              <div className="item  overflow-hidden ">
-                <img
-                  src="https://serviceapi.spicezgold.com/download/1763051442252_34296.jpg"
-                  alt="Banner slide"
-                  className="w-full"
-                />
-              </div>
-            </SwiperSlide>
-            <SwiperSlide>
-              <div className="item  overflow-hidden ">
-                <img
-                  src="https://serviceapi.spicezgold.com/download/1763051442252_34296.jpg"
-                  alt="Banner slide"
-                  className="w-full"
-                />
-              </div>
-            </SwiperSlide>
-            <SwiperSlide>
-              <div className="item  overflow-hidden">
-                <img
-                  src="https://serviceapi.spicezgold.com/download/1763812170460_homeslides2.jpg"
-                  alt="Banner slide"
-                  className="w-full"
-                />
-              </div>
-            </SwiperSlide>
-            <SwiperSlide>
-              <div className="item overflow-hidden">
-                <img
-                  src="https://serviceapi.spicezgold.com/download/1748955932914_NewProject(1).jpg"
-                  alt="Banner slide"
-                  className="w-full"
-                />
-              </div>
-            </SwiperSlide>
-            <SwiperSlide>
-              <div className="item  overflow-hidden">
-                <img
-                  src="https://serviceapi.spicezgold.com/download/1751685130717_NewProject(8).jpg"
-                  alt="Banner slide"
-                  className="w-full"
-                />
-              </div>
-            </SwiperSlide>
-            <SwiperSlide>
-              <div className="item  overflow-hidden">
-                <img
-                  src="https://serviceapi.spicezgold.com/download/1759938751802_30744.jpg"
-                  alt="Banner slide"
-                  className="w-full"
-                />
-              </div>
-            </SwiperSlide>
+            {props?.data?.length !== 0 &&
+              props?.data?.map((item, index) => {
+                return (
+                  <SwiperSlide key={index}>
+                    <div className="item  overflow-hidden ">
+                      <img
+                        src={item?.images[0]}
+                        alt="Banner slide"
+                        className="w-full"
+                      />
+                    </div>
+                  </SwiperSlide>
+                );
+              })}
           </Swiper>
         </div>
       </div>
