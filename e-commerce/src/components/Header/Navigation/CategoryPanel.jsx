@@ -19,7 +19,10 @@ const CategoryPanel = (props) => {
         />
       </h3>
 
-      <CategoryCollapse/>
+      {
+        props?.data?.length!==0 &&  <CategoryCollapse data={props?.data}/>
+      }
+      
     </Box>
   );
   return (
