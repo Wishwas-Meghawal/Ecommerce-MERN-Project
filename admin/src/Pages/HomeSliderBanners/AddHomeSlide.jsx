@@ -1,4 +1,5 @@
 import React, { useDeferredValue, useEffect } from "react";
+import {  useNavigate } from "react-router-dom";
 import { FcImageFile, FcUpload } from "react-icons/fc";
 import { MdImage, MdInfo } from "react-icons/md";
 import { Button } from "@mui/material";
@@ -11,6 +12,7 @@ import { IoMdClose } from "react-icons/io";
 
 const AddHomeSlider = () => {
   const context = useContext(MyContext);
+  const history = useNavigate()
 
   const [formFields, setFormFields] = useState({
     images: [],
@@ -60,6 +62,7 @@ const AddHomeSlider = () => {
           context.setIsOpenFullScreenPanel({
             open: false,
           });
+          history("/homeSlider/list")
         }, 2500);
       });
     };
