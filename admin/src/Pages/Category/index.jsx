@@ -23,38 +23,27 @@ import {
   MdMoreVert,
   MdFilterList,
 } from "react-icons/md";
-import { FaBox, FaTags } from "react-icons/fa";
 import { MyContext } from "../../App";
 import { useState } from "react";
 import { useEffect } from "react";
 import { deleteData, fetchDataFromApi } from "../../utils/api";
 
 const Category = () => {
-  
   const context = useContext(MyContext);
 
-  
-  useEffect(()=>{
+  useEffect(() => {
     fetchDataFromApi("/api/category").then((res) => {
-        context?.setCatData(res?.data);
+      context?.setCatData(res?.data);
     });
-  },[context?.isOpenFullScreenPanel])
-  // Table columns
-  const columns = [
-    { id: "select", label: "", minWidth: 60 },
-    { id: "image", label: "Image", minWidth: 60 },
-    { id: "name", label: "Category Name", minWidth: 200 },
-    { id: "actions", label: "Actions", minWidth: 150 },
-  ];
-
-
-  const deleteCategory = (id)=>{
-    deleteData(`/api/category/${id}`).then((res)=>{
+  }, [context?.isOpenFullScreenPanel]);
+ 
+  const deleteCategory = (id) => {
+    deleteData(`/api/category/${id}`).then((res) => {
       fetchDataFromApi("/api/category").then((res) => {
         context?.setCatData(res?.data);
+      });
     });
-    })
-  }
+  };
 
   return (
     <div className="p-6 rounded-xl bg-white shadow-xl border border-gray-200">
@@ -143,40 +132,36 @@ const Category = () => {
         <TableContainer sx={{ maxHeight: 440 }}>
           <Table stickyHeader aria-label="category table">
             <TableHead>
-              <TableRow>
-                {columns.map((column) => (
-                  <TableCell
-                    key={column.id}
-                    align={column.align || "left"}
-                    sx={{
-                      backgroundColor: "#f9fafc",
-                      color: "#1e293b",
-                      fontWeight: 700,
-                      fontSize: "0.85rem",
-                      textTransform: "uppercase",
-                      letterSpacing: "0.3px",
-                      borderBottom: "2px solid #e9edf2",
-                      padding:
-                        column.id === "select" ? "8px 16px" : "16px 20px",
-                      whiteSpace: "nowrap",
-                    }}
-                  >
-                    {column.id === "select" ? (
-                      <Checkbox
-                        size="small"
-                        sx={{
-                          padding: "4px",
-                          color: "#cbd5e1",
-                          "&.Mui-checked": {
-                            color: "#3b82f6",
-                          },
-                        }}
-                      />
-                    ) : (
-                      column.label
-                    )}
-                  </TableCell>
-                ))}
+              <TableRow className="bg-gradient-to-r from-gray-50 to-gray-100/80">
+                <TableCell
+                  className="font-semibold! text-[15px]! text-gray-700 bg-transparent py-4"
+                  sx={{ width: "28%" }}
+                >
+                  <div className="flex items-center gap-2">
+                    <span className="w-1 h-5 bg-blue-500 rounded-full"></span>
+                    Category Image
+                  </div>
+                </TableCell>
+
+                <TableCell
+                  className="font-semibold! text-[15px]! text-gray-700 bg-transparent py-4"
+                  sx={{ width: "15%" }}
+                >
+                  <div className="flex items-center gap-2">
+                    <span className="w-1 h-5 bg-purple-500 rounded-full"></span>
+                    Category Name
+                  </div>
+                </TableCell>
+
+                <TableCell
+                  className="font-semibold! text-[15px]! text-gray-700 bg-transparent py-4"
+                  sx={{ width: "10%" }}
+                >
+                  <div className="flex items-center gap-2">
+                    <span className="w-1 h-5 bg-red-500 rounded-full"></span>
+                    Actions
+                  </div>
+                </TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
@@ -197,25 +182,6 @@ const Category = () => {
                         "&:last-child td": { borderBottom: 0 },
                       }}
                     >
-                      {/* Checkbox Cell */}
-                      <TableCell
-                        sx={{
-                          padding: "8px 16px",
-                          width: "60px",
-                        }}
-                      >
-                        <Checkbox
-                          size="small"
-                          sx={{
-                            padding: "4px",
-                            color: "#cbd5e1",
-                            "&.Mui-checked": {
-                              color: "#3b82f6",
-                            },
-                          }}
-                        />
-                      </TableCell>
-
                       {/* Category Image Cell - Improved */}
                       <TableCell
                         sx={{
@@ -267,7 +233,7 @@ const Category = () => {
                               context.setIsOpenFullScreenPanel({
                                 open: true,
                                 model: "Edit Category",
-                                id:item?._id
+                                id: item?._id,
                               })
                             }
                             sx={{
@@ -289,7 +255,7 @@ const Category = () => {
 
                           <IconButton
                             size="small"
-                            onClick={()=>deleteCategory(item._id)}
+                            onClick={() => deleteCategory(item._id)}
                             sx={{
                               border: "1px solid #e5e7eb",
                               borderRadius: "10px",
