@@ -237,9 +237,9 @@ const HomeSliderBanners = () => {
             <TableBody>
               {slidesData
                 .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                .map((item) => {
+                .map((item,index) => {
                   return (
-                    <TableRow key={item._id} hover>
+                    <TableRow key={index} hover>
                       {/* Checkbox */}
                       <TableCell padding="checkbox">
                         <Checkbox
