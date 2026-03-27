@@ -31,10 +31,11 @@ import Orders from "./Pages/Orders";
 import { fetchDataFromApi } from "./utils/api.js";
 import AddressForm from "./Pages/MyAccount/AddressForm";
 
-
-
 function App() {
-  const [openProductDetailsModal, setOpenProductDetailsModal] = useState(false);
+  const [openProductDetailsModal, setOpenProductDetailsModal] = useState({
+    open: false,
+    item: {},
+  });
   const [fullWidth, setFullWidth] = useState(true);
 
   const [openCartPanel, setOpenCartPanel] = useState(false);
@@ -50,9 +51,18 @@ function App() {
   const [catData, setCatData] = useState([]);
   const apiUrl = import.meta.env.VITE_API_URL;
 
+  const handleOpenProductDetailsModal = (status, item) => {
+    setOpenProductDetailsModal({
+      open: status,
+      item: item,
+    });
+  };
 
   const handleCloseProductDetailsModal = () => {
-    setOpenProductDetailsModal(false);
+    setOpenProductDetailsModal({
+      open: false,
+      item: {},
+    });
   };
 
   const toggleCartpanel = (newOpen) => () => {
@@ -90,12 +100,12 @@ function App() {
   }, [isLogin]);
 
   useEffect(() => {
-      fetchDataFromApi("/api/category").then((res) => {
-        if (res?.error === false) {
-          setCatData(res?.data);
-        }
-      });
-    }, []);
+    fetchDataFromApi("/api/category").then((res) => {
+      if (res?.error === false) {
+        setCatData(res?.data);
+      }
+    });
+  }, []);
 
   const alertBox = (msg, type) => {
     if (type === "success") {
@@ -107,6 +117,7 @@ function App() {
   };
   const values = {
     setOpenProductDetailsModal,
+    handleOpenProductDetailsModal,
     setOpenCartPanel,
     openCartPanel,
     toggleCartpanel,
@@ -118,7 +129,7 @@ function App() {
     address,
     setAddress,
     setCatData,
-    catData
+    catData,
   };
 
   return (
@@ -152,14 +163,13 @@ function App() {
             <Route path={"/my-list"} exact={true} element={<MyList />} />
             <Route path={"/my-orders"} exact={true} element={<Orders />} />
             <Route path={"/address"} exact={true} element={<AddressForm />} />
-
           </Routes>
           <Footer />
         </MyContext.Provider>
       </BrowserRouter>
 
       <Dialog
-        open={openProductDetailsModal}
+        open={openProductDetailsModal.open}
         fullWidth={fullWidth}
         maxWidth={maxWidth}
         onClose={handleCloseProductDetailsModal}
@@ -175,13 +185,18 @@ function App() {
             >
               <IoCloseSharp className="text-[20px] " />
             </Button>
-            <div className="col1 w-[40%]">
-              <ProductZoom />
-            </div>
 
-            <div className="col2 w-[60%] py-8 px-8">
-              <ProductDetailsComponent />
-            </div>
+            {openProductDetailsModal?.item?.length !== 0 && (
+              <>
+                <div className="col1 w-[40%]">
+                  <ProductZoom images={openProductDetailsModal?.item?.images} />
+                </div>
+
+                <div className="col2 w-[60%] py-8 px-8">
+                  <ProductDetailsComponent item={openProductDetailsModal?.item}/>
+                </div>
+              </>
+            )}
           </div>
         </DialogContent>
       </Dialog>

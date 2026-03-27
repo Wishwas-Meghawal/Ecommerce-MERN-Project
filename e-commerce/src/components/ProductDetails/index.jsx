@@ -7,20 +7,22 @@ import { HiOutlineArrowsRightLeft } from "react-icons/hi2";
 import { MdOutlineShoppingCart } from "react-icons/md";
 import QtyBox from "../../components/QtyBox";
 
-const ProductDetailsComponent = () => {
-    const [activeSize, setActiveSize] = useState(null);
+const ProductDetailsComponent = (props) => {
+  const [activeSize, setActiveSize] = useState(null);
   return (
     <>
       {/* Title */}
       <h1 className="text-[28px] font-semibold text-gray-800 mb-2">
-        Men Pure Cotton Striped Casual Shirt
+        {props?.item?.name}
       </h1>
 
       {/* Brand + Rating */}
       <div className="flex items-center gap-3 mb-4">
         <span className="text-sm text-gray-500">
           Brand :
-          <span className="font-medium text-gray-800 ml-1">Flying Machine</span>
+          <span className="font-medium text-gray-800 ml-1">
+            {props?.item?.brand}
+          </span>
         </span>
 
         <Rating value={4.5} precision={0.5} readOnly size="small" />
@@ -29,57 +31,135 @@ const ProductDetailsComponent = () => {
 
       {/* Price */}
       <div className="flex items-center gap-4 mb-5">
-        <span className="text-gray-400 line-through text-lg">₹1500</span>
-        <span className="text-red-500 text-2xl font-semibold">₹1200</span>
+        <span className="text-gray-400 line-through text-lg">
+          ₹{props?.item?.oldPrice}
+        </span>
+        <span className="text-red-500 text-2xl font-semibold">
+          ₹{props?.item?.price}
+        </span>
         <span className="text-green-600 text-sm font-medium">
-          In Stock: <b>45 Items</b>
+          In Stock: <b>{props?.item?.coutInStock} Items</b>
         </span>
       </div>
 
       {/* Description */}
-      <p className="text-gray-600 leading-7 mb-3">
-        Lorem Ipsum is simply dummy text of the printing and typesetting
-        industry. It has been the industry standard dummy text. Lorem Ipsum is
-        simply dummy text of the printing and typesetting industry. It has been
-        the industry standard dummy text. Lorem Ipsum is simply dummy text of
-        the printing and typesetting industry. It has been the industry standard
-        dummy text.
-      </p>
+      <p className="text-gray-600 leading-7 mb-3">{props.item?.description}</p>
 
       {/* SIZE (Flipkart Style) */}
-      <div className=" flex items-center  gap-3 mb-6">
-        <p className="text-[18px] font-semibold text-gray-700 ">SIZE:</p>
 
-        <div className="flex items-center  gap-1">
-          {["S", "M", "L", "XL"].map((size) => (
-            <Button
-              className="border! border-[rgba(0,0,0,0.1)]!"
-              key={size}
-              variant={activeSize === size ? "contained" : "outlined"}
-              onClick={() => setActiveSize(size)}
-              sx={{
-                minWidth: "46px",
-                height: "42px",
-                borderRadius: "5px",
-                fontWeight: 600,
+      {props?.item?.productRam?.length !== 0 && (
+        <div className=" flex items-center  gap-3 mb-6">
+          <p className="text-[18px] font-semibold text-gray-700 ">RAM:</p>
 
-                // CONDITION BASED COLOR
-                backgroundColor:
-                  activeSize === size ? "#ff5252" : "transparent",
-                color: activeSize === size ? "#fff" : "#111",
-                border: "1px solid rgba(0,0,0,0.15)",
+          <div className="flex items-center  gap-1">
+            {props?.item?.productRam?.map((item, index) => {
+              return (
+                <Button
+                  className="border! border-[rgba(0,0,0,0.1)]!"
+                  key={index}
+                  variant={activeSize === index ? "contained" : "outlined"}
+                  onClick={() => setActiveSize(index)}
+                  sx={{
+                    minWidth: "46px",
+                    height: "42px",
+                    borderRadius: "5px",
+                    fontWeight: 600,
 
-                "&:hover": {
-                  backgroundColor:
-                    activeSize === size ? "#e04848" : "rgba(0,0,0,0.04)",
-                },
-              }}
-            >
-              {size}
-            </Button>
-          ))}
+                    // CONDITION BASED COLOR
+                    backgroundColor:
+                      activeSize === index ? "#ff5252" : "transparent",
+                    color: activeSize === index ? "#fff" : "#111",
+                    border: "1px solid rgba(0,0,0,0.15)",
+
+                    "&:hover": {
+                      backgroundColor:
+                        activeSize === index ? "#e04848" : "rgba(0,0,0,0.04)",
+                    },
+                  }}
+                >
+                  {itme}
+                </Button>
+              );
+            })}
+          </div>
         </div>
-      </div>
+      )}
+
+      {props?.item?.productWeight?.length !== 0 && (
+        <div className=" flex items-center  gap-3 mb-6">
+          <p className="text-[18px] font-semibold text-gray-700 ">WEIGHT:</p>
+
+          <div className="flex items-center  gap-1">
+            {props?.item?.productWeight?.map((item, index) => {
+              return (
+                <Button
+                  className="border! border-[rgba(0,0,0,0.1)]!"
+                  key={index}
+                  variant={activeSize === index ? "contained" : "outlined"}
+                  onClick={() => setActiveSize(index)}
+                  sx={{
+                    minWidth: "46px",
+                    height: "42px",
+                    borderRadius: "5px",
+                    fontWeight: 600,
+
+                    // CONDITION BASED COLOR
+                    backgroundColor:
+                      activeSize === index ? "#ff5252" : "transparent",
+                    color: activeSize === index ? "#fff" : "#111",
+                    border: "1px solid rgba(0,0,0,0.15)",
+
+                    "&:hover": {
+                      backgroundColor:
+                        activeSize === index ? "#e04848" : "rgba(0,0,0,0.04)",
+                    },
+                  }}
+                >
+                  {item}
+                </Button>
+              );
+            })}
+          </div>
+        </div>
+      )}
+
+      {props?.item?.size?.length !== 0 && (
+        <div className=" flex items-center  gap-3 mb-6">
+          <p className="text-[18px] font-semibold text-gray-700 ">SIZE:</p>
+
+          <div className="flex items-center  gap-1">
+            {props?.item?.size?.map((item, index) => {
+              return (
+                <Button
+                  className="border! border-[rgba(0,0,0,0.1)]!"
+                  key={index}
+                  variant={activeSize === index ? "contained" : "outlined"}
+                  onClick={() => setActiveSize(index)}
+                  sx={{
+                    minWidth: "46px",
+                    height: "42px",
+                    borderRadius: "5px",
+                    fontWeight: 600,
+
+                    // CONDITION BASED COLOR
+                    backgroundColor:
+                      activeSize === index ? "#ff5252" : "transparent",
+                    color: activeSize === index ? "#fff" : "#111",
+                    border: "1px solid rgba(0,0,0,0.15)",
+
+                    "&:hover": {
+                      backgroundColor:
+                        activeSize === index ? "#e04848" : "rgba(0,0,0,0.04)",
+                    },
+                  }}
+                >
+                  {item}
+                </Button>
+              );
+            })}
+          </div>
+        </div>
+      )}
 
       {/* Shipping */}
       <p className="flex items-center gap-2 text-gray-700 mb-6">

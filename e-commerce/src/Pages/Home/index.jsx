@@ -14,6 +14,9 @@ import { MyContext } from "../../App";
 const Home = () => {
   const [value, setValue] = useState(0);
   const [homeSLidesData, setHomeSlideData] = useState([]);
+  const [popularProductData, setPopularProductData] = useState([]);
+  const [productData, setProductData] =  useState([]);
+  const [featuredProducts,setFeaturedProducts] = useState([]);
 
   const context = useContext(MyContext);
 
@@ -21,11 +24,39 @@ const Home = () => {
     fetchDataFromApi("/api/homeslides").then((res)=>{
       setHomeSlideData(res?.data)
     })
+
+    fetchDataFromApi("/api/product/getAllProducts").then((res)=>{
+      setProductData(res?.products)
+    })
+
+    fetchDataFromApi("/api/product/getAllFeaturedProducts").then((res)=>{
+      setFeaturedProducts(res?.products)
+    })
+
+    
   },[]);
+
+  useEffect(()=>{
+    fetchDataFromApi(`/api/product/getAllProductsByCatId/${context?.catData[0]?._id}`).then((res)=>{
+      if(res?.error === false){
+        setPopularProductData(res?.products)
+      }
+    })
+  },[context?.catData])
+
+
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
   };
+
+  const filterByCatId = (id)=>{
+    fetchDataFromApi(`/api/product/getAllProductsByCatId/${id}`).then((res)=>{
+      if(res?.error === false){
+        setPopularProductData(res?.products)
+      }
+    })
+  }
 
   return (
     <>
@@ -58,19 +89,22 @@ const Home = () => {
                 allowScrollButtonsMobile
                 aria-label="scrollable force tabs example"
               >
-                <Tab label="Fashion" />
-                <Tab label="Electronics" />
-                <Tab label="Bags" />
-                <Tab label="Footwear" />
-                <Tab label="Groceries" />
-                <Tab label="Beauty" />
-                <Tab label="Wellness" />
-                <Tab label="Jewellery" />
+                {
+                  context?.catData?.length!==0 && 
+                  context?.catData?.map((cat,index)=>{
+                    return(
+                      <Tab label={cat?.name} onClick={()=>filterByCatId(ca?._id)} />
+                    )
+                  })
+                }
               </Tabs>
             </div>
           </div>
 
-          <ProductsSlider items={5}/>
+                {
+                  popularProductData?.length !== 0 && <ProductsSlider items={5} data={popularProductData}/>
+                }
+          
         </div>
       </section>
 
@@ -100,7 +134,11 @@ const Home = () => {
       <section className="py-5 pt-0 bg-white">
         <div className="container">
           <h2 className="text-[20px] font-semibold">Latest Products</h2>
-          <ProductsSlider items={5}/>
+
+          {
+            productData?.length!==0 && <ProductsSlider items={5} data={productData}/>
+          }
+          
 
           <AdsBannerSlider items={3} />
         </div>
@@ -109,7 +147,10 @@ const Home = () => {
       <section className="py-5 pt-0 bg-white">
         <div className="container">
           <h2 className="text-[20px] font-semibold">Featured Products</h2>
-          <ProductsSlider items={5}/>
+          {
+            featuredProducts?.length!==0 && <ProductsSlider items={5} data={featuredProducts}/>
+          }
+          
 
           <AdsBannerSlider items={3} />
         </div>

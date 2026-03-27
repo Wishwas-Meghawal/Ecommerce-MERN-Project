@@ -9,180 +9,110 @@ import Tooltip from "@mui/material/Tooltip";
 import { useContext } from "react";
 import { MyContext } from "../../App";
 
-const ProductItem = () => {
+const ProductItem = (props) => {
   const context = useContext(MyContext);
   return (
-    <div className="relative bg-white border border-gray-200  group transition-shadow duration-300 hover:shadow-xl">
-      {/* Discount badge */}
-      <span className="absolute top-3 left-3 bg-red-500 text-white text-xs px-2 py-1 rounded z-10">
-        -4%
+    <div className="group relative bg-white/70 backdrop-blur-md border border-gray-200 rounded-2xl overflow-hidden transition-all duration-500">
+      {/* Discount Badge */}
+      <span className="absolute top-3 left-3 bg-gradient-to-r from-red-500 to-pink-500 text-white text-xs px-3 py-1 rounded-full shadow-md z-10">
+        {props?.item?.discount}% OFF
       </span>
 
-      {/* Image section */}
-      <div className="relative h-[250px] overflow-hidden flex items-center justify-center">
-        <Link to="/">
-          <div className=" h-[250px] overflow-hidden group">
+      {/* Image Section */}
+      <div className="relative h-[300px] overflow-hidden flex items-center justify-center bg-white">
+        
+          <div className="relative w-full h-full">
+            <Link to={`/product/${props?.item?._id}`}>
+            
             {/* Main Image */}
             <img
-              src="https://demos.codezeel.com/wordpress/WCM06/WCM060133/wp-content/uploads/2024/01/20-460x460.jpg"
+              src={props?.item?.images[0]}
               alt=""
-              className="absolute inset-0 w-full h-full object-contain
-                 transition-opacity duration-500
-                 opacity-100 group-hover:opacity-0"
+              className="absolute inset-0 w-full h-full object-cover transition-all duration-500 scale-100 group-hover:scale-110 group-hover:opacity-0"
             />
 
             {/* Hover Image */}
             <img
-              src="http://demos.codezeel.com/wordpress/WCM06/WCM060133/wp-content/uploads/2024/01/02-37-460x460.jpg"
+              src={props?.item?.images[1]}
               alt=""
-              className="absolute inset-0 w-full h-full object-contain
-                 transition-opacity duration-500
-                 opacity-0 group-hover:opacity-100"
+              className="absolute inset-0 w-full h-full object-cover transition-all duration-500 scale-105 opacity-0 group-hover:opacity-100"
             />
+            </Link>
           </div>
-        </Link>
+       
 
-        {/* Hover icons */}
-        <div className="absolute top-4 right-[-50px] flex flex-col gap-2 transition-all duration-300 group-hover:right-4">
-          <Button
-            variant="outlined"
-            sx={{
-              minWidth: 36, // w-9
-              width: 36,
-              height: 36,
-              padding: 0,
-              borderRadius: "50%", // rounded-full
-              backgroundColor: "#fff",
-              borderColor: "#e5e7eb", // gray-200
-              color: "#374151", // gray-700
-              transition: "all 0.3s ease",
+        {/* Floating Icons */}
+        <div className="absolute top-4 right-[-60px] flex flex-col gap-3 transition-all duration-500 group-hover:right-4">
+          {[FiHeart, BiGitCompare, FiZoomIn, HiOutlineDocumentText].map(
+            (Icon, i) => (
+              <Button
+                key={i}
+                variant="contained"
+                sx={{
+                  minWidth: 45,
+                  width: 45,
+                  height: 45,
+                  borderRadius: "50%",
+                  background: "rgba(255,255,255,0.9)",
+                  color: "#111",
+                  backdropFilter: "blur(10px)",
+                  boxShadow: "0 4px 12px rgba(0,0,0,0.1)",
+                  transition: "all 0.3s ease",
 
-              "&:hover": {
-                backgroundColor: "#ff5252", // primary
-                color: "#fff",
-                borderColor: "#ff5252",
-              },
-            }}
-          >
-            <FiHeart fontSize="small" />
-          </Button>
-          <Button
-            variant="outlined"
-            sx={{
-              minWidth: 36, // w-9
-              width: 36,
-              height: 36,
-              padding: 0,
-              borderRadius: "50%", // rounded-full
-              backgroundColor: "#fff",
-              borderColor: "#e5e7eb", // gray-200
-              color: "#374151", // gray-700
-              transition: "all 0.3s ease",
-
-              "&:hover": {
-                backgroundColor: "#ff5252", // primary
-                color: "#fff",
-                borderColor: "#ff5252",
-              },
-            }}
-          >
-            <BiGitCompare fontSize="small" />
-          </Button>
-          <Button
-            variant="outlined"
-            sx={{
-              minWidth: 36, // w-9
-              width: 36,
-              height: 36,
-              padding: 0,
-              borderRadius: "50%", // rounded-full
-              backgroundColor: "#fff",
-              borderColor: "#e5e7eb", // gray-200
-              color: "#374151", // gray-700
-              transition: "all 0.3s ease",
-
-              "&:hover": {
-                backgroundColor: "#ff5252", // primary
-                color: "#fff",
-                borderColor: "#ff5252",
-              },
-            }} onClick={()=>context.setOpenProductDetailsModal(true)}
-          >
-            <FiZoomIn fontSize="small" />
-          </Button>
-          <Button
-            variant="outlined"
-            sx={{
-              minWidth: 36, // w-9
-              width: 36,
-              height: 36,
-              padding: 0,
-              borderRadius: "50%", // rounded-full
-              backgroundColor: "#fff",
-              borderColor: "#e5e7eb", // gray-200
-              color: "#374151", // gray-700
-              transition: "all 0.3s ease",
-
-              "&:hover": {
-                backgroundColor: "#ff5252", // primary
-                color: "#fff",
-                borderColor: "#ff5252",
-              },
-            }}
-          >
-            <HiOutlineDocumentText fontSize="small" />
-          </Button>
+                  "&:hover": {
+                    background: "linear-gradient(135deg,#ff4d4d,#ff6a6a)",
+                    color: "#fff",
+                    transform: "scale(1.1)",
+                  },
+                }}
+                onClick={() =>
+                  Icon === FiZoomIn && context.handleOpenProductDetailsModal(true,props?.item)
+                }
+              >
+                <Icon size={18} />
+              </Button>
+            ),
+          )}
         </div>
       </div>
 
-      {/* Product info */}
-      <div className="p-3 bg-gray-50">
+      {/* Info Section */}
+      <div className="p-4 bg-gradient-to-b from-gray-50 to-white">
         {/* Brand */}
-        <span className="block text-[11px] uppercase tracking-wide text-gray-500 mb-1">
-          Nike
+        <span className="text-[11px] uppercase tracking-widest text-gray-400 font-medium">
+          {props?.item?.brand}
         </span>
 
         {/* Product Name */}
-        <h3 className="text-sm leading-snug mb-1 text-gray-800 font-[400]!">
-          ADRO Men Print Regular Fit Hoodie For Men
+        <h3 className="text-sm font-semibold text-gray-800 mt-1 leading-snug line-clamp-2 hover:text-red-500 transition">
+          <Link to={`/product/${props?.item?._id}`}>{props?.item?.name}</Link>
         </h3>
 
         {/* Rating */}
-        <Rating
-          value={4}
-          size="small"
-          readOnly
-          className="mb-1"
-          sx={{ color: "#f59e0b" }}
-        />
-
-        {/* Price */}
-        <div className="mb-3">
-          <span className="line-through text-gray-400 mr-2">$24.00</span>
-          <span className="text-red-500 font-semibold">$23.00</span>
+        <div className="mt-1">
+          <Rating
+            defaultValue={props?.item?.rating}
+            size="small"
+            precision={0.5}
+            readOnly
+            sx={{ color: "#f59e0b" }}
+          />
         </div>
 
-        {/* Button */}
-        {/* <Button
-          fullWidth
-          variant="contained"
-          sx={{
-            backgroundColor: "#f5efec",
-            color: "#1f2937", // gray-800
-            fontSize: "11px",
-            fontWeight: 600,
-            padding: "6px 0",
-            boxShadow: "none",
-            borderRadius: "4px",
-            "&:hover": {
-              backgroundColor: "#ef4444", // red-500
-              color: "#fff",
-              boxShadow: "none",
-            },
-          }}
-        >
-          SELECT OPTIONS
-        </Button> */}
+        {/* Price */}
+        <div className="mt-2 flex items-center gap-2">
+          <span className="text-gray-400 line-through text-sm">
+            ₹{props?.item?.oldPrice}
+          </span>
+          <span className="text-lg font-bold text-red-500">
+            ₹{props?.item?.price}
+          </span>
+        </div>
+
+        {/* Add to Cart Button */}
+        <button className="mt-4 w-full py-2 rounded-lg bg-black text-white text-sm font-medium transition-all duration-300 hover:bg-red-500 hover:shadow-lg">
+          Add to Cart
+        </button>
       </div>
     </div>
   );

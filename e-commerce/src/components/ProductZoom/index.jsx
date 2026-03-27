@@ -9,7 +9,7 @@ import "swiper/css";
 import { FiChevronUp, FiChevronDown } from "react-icons/fi";
 import "./style.css";
 
-const ProductZoom = () => {
+const ProductZoom = (props) => {
   const prevRef = useRef(null);
   const nextRef = useRef(null);
 
@@ -48,75 +48,23 @@ const ProductZoom = () => {
           }}
           className="thumb-swiper h-[500px] overflow-hidden"
         >
-          <SwiperSlide>
-            <div
-              className={`thumb-item group ${
-                slideIndex === 0 ? "opacity-100" : "opacity-40"
-              }`}
-              onClick={() => goto(0)}
-            >
-              <img
-                src="https://serviceapi.spicezgold.com/download/1742462729828_zoom_0-1673275594.webp"
-                className="w-full transition-all group-hover:scale-105"
-              />
-            </div>
-          </SwiperSlide>
-
-          <SwiperSlide>
-            <div
-              className={`thumb-item group ${
-                slideIndex === 1 ? "opacity-100" : "opacity-40"
-              }`}
-              onClick={() => goto(1)}
-            >
-              <img
-                src="https://serviceapi.spicezgold.com/download/1742462729829_zoom_1-1673275594.webp"
-                className="w-full transition-all group-hover:scale-105"
-              />
-            </div>
-          </SwiperSlide>
-
-          <SwiperSlide>
-            <div
-              className={`thumb-item group ${
-                slideIndex === 2 ? "opacity-100" : "opacity-40"
-              }`}
-              onClick={() => goto(2)}
-            >
-              <img
-                src="https://rukminim2.flixcart.com/image/128/128/xif0q/shirt/7/k/o/l-tbh-aride-mc-the-bear-house-original-imagwy3697eehdwc.jpeg?q=70"
-                className="w-full transition-all group-hover:scale-105"
-              />
-            </div>
-          </SwiperSlide>
-
-          <SwiperSlide>
-            <div
-              className={`thumb-item group ${
-                slideIndex === 3 ? "opacity-100" : "opacity-40"
-              }`}
-              onClick={() => goto(3)}
-            >
-              <img
-                src="https://rukminim2.flixcart.com/image/128/128/xif0q/shirt/f/g/e/l-tbh-aride-mc-the-bear-house-original-imagwy36ppecyffn.jpeg?q=70"
-                className="w-full transition-all group-hover:scale-105"
-              />
-            </div>
-          </SwiperSlide>
-
-          <SwiperSlide>
-            <div
-              className={`thumb-item group ${
-                slideIndex === 4 ? "opacity-100" : "opacity-40"
-              }`}
-              onClick={() => goto(4)}
-            >
-              <img
-                src="https://rukminim2.flixcart.com/image/128/128/xif0q/shirt/n/f/o/l-tbh-aride-mc-the-bear-house-original-imagwy36nd7wt7ef.jpeg?q=70"
-                className="w-full transition-all group-hover:scale-105"
-              />
-            </div>
-          </SwiperSlide>
+          {props?.images?.map((item, index) => {
+            return (
+              <SwiperSlide key={index}>
+                <div
+                  className={`thumb-item group ${
+                    slideIndex === index ? "opacity-100" : "opacity-40"
+                  }`}
+                  onClick={() => goto(index)}
+                >
+                  <img
+                    src={item}
+                    className="w-full transition-all group-hover:scale-105"
+                  />
+                </div>
+              </SwiperSlide>
+            );
+          })}
         </Swiper>
 
         {/* BOTTOM BUTTON */}
@@ -133,46 +81,22 @@ const ProductZoom = () => {
           spaceBetween={14}
           navigation={false}
         >
-          <SwiperSlide>
-            <InnerImageZoom
-              src="https://serviceapi.spicezgold.com/download/1742462729828_zoom_0-1673275594.webp"
-              zoomType="hover"
-              zoomScale={1}
-              zoomPreload={true}
-              hideHint={true}
-              imgAttributes={{
-                style: { objectFit: "contain" },
-              }}
-            />
-          </SwiperSlide>
-          <SwiperSlide>
-            <InnerImageZoom
-              src="https://serviceapi.spicezgold.com/download/1742462729829_zoom_1-1673275594.webp"
-              zoomType="hover"
-              zoomScale={1}
-            />
-          </SwiperSlide>
-          <SwiperSlide>
-            <InnerImageZoom
-              src="https://rukminim2.flixcart.com/image/832/832/xif0q/shirt/7/k/o/l-tbh-aride-mc-the-bear-house-original-imagwy3697eehdwc.jpeg?q=70&crop=false"
-              zoomType="hover"
-              zoomScale={1}
-            />
-          </SwiperSlide>
-          <SwiperSlide>
-            <InnerImageZoom
-              src="https://rukminim2.flixcart.com/image/832/832/xif0q/shirt/f/g/e/l-tbh-aride-mc-the-bear-house-original-imagwy36ppecyffn.jpeg?q=70&crop=false"
-              zoomType="hover"
-              zoomScale={1}
-            />
-          </SwiperSlide>
-          <SwiperSlide>
-            <InnerImageZoom
-              src="https://rukminim2.flixcart.com/image/832/832/xif0q/shirt/n/f/o/l-tbh-aride-mc-the-bear-house-original-imagwy36nd7wt7ef.jpeg?q=70&crop=false"
-              zoomType="hover"
-              zoomScale={1}
-            />
-          </SwiperSlide>
+          {props?.images?.map((item, index) => {
+            return (
+              <SwiperSlide key={index}>
+                <InnerImageZoom
+                  src={item}
+                  zoomType="hover"
+                  zoomScale={1}
+                  zoomPreload={true}
+                  hideHint={true}
+                  imgAttributes={{
+                    style: { objectFit: "contain" },
+                  }}
+                />
+              </SwiperSlide>
+            );
+          })}
         </Swiper>
       </div>
     </div>
