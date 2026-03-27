@@ -44,11 +44,11 @@ const HomeSlider = (props) => {
               props?.data?.map((item, index) => {
                 return (
                   <SwiperSlide key={index}>
-                    <div className="item  overflow-hidden ">
+                    <div className="relative overflow-hidden shadow-lg group">
                       <img
                         src={item?.images[0]}
                         alt="Banner slide"
-                        className="w-full"
+                        className="w-full h-[400px] md:h-[500px] object-cover block"
                       />
                     </div>
                   </SwiperSlide>
