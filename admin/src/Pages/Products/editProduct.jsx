@@ -924,8 +924,9 @@ const EditProduct = () => {
                       </label>
                       <div className="flex items-center gap-4 p-2 bg-[#F9FAFB] rounded-xl border-2  border-gray-100 hover:border-[#3B82F6] transition-all duration-200">
                         <Rating
-                          name="rating"
+                          name="half-rating"
                           value={formFields.rating}
+                          precision={0.5}
                           onChange={onChangeRating}
                         />
                       </div>
