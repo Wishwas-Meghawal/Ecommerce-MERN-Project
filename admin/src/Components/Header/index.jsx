@@ -55,38 +55,38 @@ const Header = () => {
   const context = useContext(MyContext);
   const history = useNavigate();
 
-  // const logout = async () => {
-  //   setAnchorMyAcc(null);
-
-  //   try {
-  //     await fetchDataFromApi(
-  //       `/api/user/logout?token=${localStorage.getItem("accessToken")}`,
-  //       { withCredentials: true },
-  //     );
-  //   } catch (error) {
-  //     console.log("Logout API failed but continuing...");
-  //   }
-
-    
-  //   localStorage.removeItem("accessToken");
-  //   localStorage.removeItem("refreshToken");
-
-  //   context.setIsLogin(false);
-  //   history("/login");
-  // };
-
-  const logout = () =>{
+  const logout = async () => {
     setAnchorMyAcc(null);
 
-    fetchDataFromApi(`/api/user/logout?token=${localStorage.getItem("accessToken")}`,{ withCredentials: true }).then((res)=>{
-      if(res?.error === false){
-        context.setIsLogin(false);
-        localStorage.removeItem("accessToken");
-        localStorage.removeItem("refreshToken");
-        history("/login");
-      }
-    })
-  }
+    try {
+      await fetchDataFromApi(
+        `/api/user/logout?token=${localStorage.getItem("accessToken")}`,
+        { withCredentials: true },
+      );
+    } catch (error) {
+      console.log("Logout API failed but continuing...");
+    }
+
+    
+    localStorage.removeItem("accessToken");
+    localStorage.removeItem("refreshToken");
+
+    context.setIsLogin(false);
+    history("/login");
+  };
+
+  // const logout = () =>{
+  //   setAnchorMyAcc(null);
+
+  //   fetchDataFromApi(`/api/user/logout?token=${localStorage.getItem("accessToken")}`,{ withCredentials: true }).then((res)=>{
+  //     if(res?.error === false){
+  //       context.setIsLogin(false);
+  //       localStorage.removeItem("accessToken");
+  //       localStorage.removeItem("refreshToken");
+  //       history("/login");
+  //     }
+  //   })
+  // }
 
   return (
     <>
