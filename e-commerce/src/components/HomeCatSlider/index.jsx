@@ -9,7 +9,7 @@ import { Navigation } from "swiper/modules";
 import { FiChevronLeft, FiChevronRight } from "react-icons/fi";
 import { Link } from "react-router-dom";
 
-const HomeCatSlider = () => {
+const HomeCatSlider = (props) => {
   const prevRef = useRef(null);
   const nextRef = useRef(null);
   return (
@@ -40,118 +40,23 @@ const HomeCatSlider = () => {
           }}
           className="sliderHome"
         >
-          <SwiperSlide>
-            <Link to="/">
-              <div className="item rounded-md py-7 px-3 bg-white  text-center flex items-center justify-center flex-col">
-                <div className=" cat-img">
-                  <img
-                    src="https://api.spicezgold.com/download/file_1734525204708_fash.png"
-                    alt="Banner slide"
-                    className="w-[70px] transition-all"
-                  />
-                </div>
-                <h3>Fashion</h3>
-              </div>
-            </Link>
-          </SwiperSlide>
-          <SwiperSlide>
-            <Link to="/">
-              <div className="item rounded-sm py-7 px-3 bg-white  text-center flex items-center justify-center flex-col">
-                <div className=" cat-img">
-                  <img
-                    src="https://api.spicezgold.com/download/file_1734525218436_ele.png"
-                    alt="Banner slide"
-                    className="w-[70px] transition-all"
-                  />
-                </div>
-                <h3>Electronics</h3>
-              </div>
-            </Link>
-          </SwiperSlide>
-          <SwiperSlide>
-            <Link to="/">
-              <div className="item rounded-sm py-7 px-3 bg-white  text-center flex items-center justify-center flex-col">
-                <div className=" cat-img">
-                  <img
-                    src="https://api.spicezgold.com/download/file_1734525231018_bag.png"
-                    alt="Banner slide"
-                    className="w-[70px] transition-all"
-                  />
-                </div>
-                <h3>Bags</h3>
-              </div>
-            </Link>
-          </SwiperSlide>
-          <SwiperSlide>
-            <Link to="/">
-              <div className="item rounded-sm py-7 px-3 bg-white  text-center flex items-center justify-center flex-col">
-                <div className=" cat-img">
-                  <img
-                    src="https://api.spicezgold.com/download/file_1734525239704_foot.png"
-                    alt="Banner slide"
-                    className="w-[70px] transition-all"
-                  />
-                </div>
-                <h3>Footwear</h3>
-              </div>
-            </Link>
-          </SwiperSlide>
-          <SwiperSlide>
-            <Link to="/">
-              <div className="item rounded-sm py-7 px-3 bg-white  text-center flex items-center justify-center flex-col">
-                <div className=" cat-img">
-                  <img
-                    src="https://api.spicezgold.com/download/file_1734525248057_gro.png"
-                    alt="Banner slide"
-                    className="w-[70px] transition-all"
-                  />
-                </div>
-                <h3>Groceries</h3>
-              </div>
-            </Link>
-          </SwiperSlide>
-          <SwiperSlide>
-            <Link to="/">
-              <div className="item rounded-sm py-7 px-3 bg-white  text-center flex items-center justify-center flex-col">
-                <div className=" cat-img">
-                  <img
-                    src="https://api.spicezgold.com/download/file_1734525255799_beauty.png"
-                    alt="Banner slide"
-                    className="w-[70px] transition-all"
-                  />
-                </div>
-                <h3>Beauty</h3>
-              </div>
-            </Link>
-          </SwiperSlide>
-          <SwiperSlide>
-            <Link to="/">
-              <div className="item rounded-sm py-7 px-3 bg-white  text-center flex items-center justify-center flex-col">
-                <div className=" cat-img">
-                  <img
-                    src="https://api.spicezgold.com/download/file_1734525275367_well.png"
-                    alt="Banner slide"
-                    className="w-[70px] transition-all"
-                  />
-                </div>
-                <h3>Wellness</h3>
-              </div>
-            </Link>
-          </SwiperSlide>
-          <SwiperSlide>
-            <Link to="/">
-              <div className="item rounded-sm py-7 px-3 bg-white  text-center flex items-center justify-center flex-col">
-                <div className=" cat-img">
-                  <img
-                    src="https://api.spicezgold.com/download/file_1734525286186_jw.png"
-                    alt="Banner slide"
-                    className="w-[70px] transition-all"
-                  />
-                </div>
-                <h3>Jewellery</h3>
-              </div>
-            </Link>
-          </SwiperSlide>
+          {props?.data?.map((cat, index) => {
+            return (
+              <SwiperSlide>
+                <Link to="/">
+                  <div className="item rounded-md py-7 px-3 bg-white  text-center flex items-center justify-center flex-col">
+                    <div className=" cat-img">
+                      <img
+                        src={cat?.images[0]}
+                        className="w-[70px] transition-all"
+                      />
+                    </div>
+                    <h3>{cat?.name}</h3>
+                  </div>
+                </Link>
+              </SwiperSlide>
+            );
+          })}
         </Swiper>
       </div>
     </div>

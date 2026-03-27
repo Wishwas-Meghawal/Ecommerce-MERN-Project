@@ -28,7 +28,7 @@ import MyAccount from "./Pages/MyAccount";
 import MyList from "./Pages/MyList";
 import MyListItems from "./Pages/MyList/MyListItems";
 import Orders from "./Pages/Orders";
-import { fetchDataFromApi } from "./utils/api";
+import { fetchDataFromApi } from "./utils/api.js";
 import AddressForm from "./Pages/MyAccount/AddressForm";
 
 
@@ -47,7 +47,9 @@ function App() {
 
   const [address, setAddress] = useState([]);
 
+  const [catData, setCatData] = useState([]);
   const apiUrl = import.meta.env.VITE_API_URL;
+
 
   const handleCloseProductDetailsModal = () => {
     setOpenProductDetailsModal(false);
@@ -85,7 +87,15 @@ function App() {
         setIsLogin(false);
         setUserData(null);
       });
-  }, []);
+  }, [isLogin]);
+
+  useEffect(() => {
+      fetchDataFromApi("/api/category").then((res) => {
+        if (res?.error === false) {
+          setCatData(res?.data);
+        }
+      });
+    }, []);
 
   const alertBox = (msg, type) => {
     if (type === "success") {
@@ -107,6 +117,8 @@ function App() {
     setUserData,
     address,
     setAddress,
+    setCatData,
+    catData
   };
 
   return (

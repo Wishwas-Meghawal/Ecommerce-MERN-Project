@@ -1,29 +1,26 @@
 import Button from "@mui/material/Button";
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { RiMenu2Fill } from "react-icons/ri";
 import { LiaAngleDownSolid } from "react-icons/lia";
 import { Link } from "react-router-dom";
 import { GoRocket } from "react-icons/go";
 import CategoryPanel from "./CategoryPanel";
-import { fetchDataFromApi } from "../../../utils/api.js";
 
 import "../Navigation/style.css";
+import { MyContext } from "../../../App.jsx";
 
 const Navigation = () => {
   const [isOpenCatPanel, setIsOpenCatPanel] = useState(false);
   const [catData, setCatData] = useState([]);
 
+  const context = useContext(MyContext);
   const openCategoryPanel = () => {
     setIsOpenCatPanel(true);
   };
 
   useEffect(() => {
-    fetchDataFromApi("/api/category").then((res) => {
-      if (res?.error === false) {
-        setCatData(res?.data);
-      }
-    });
-  }, []);
+    setCatData(context?.catData);
+  }, [context?.catData]);
   return (
     <>
       <nav>

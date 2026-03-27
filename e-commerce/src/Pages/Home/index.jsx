@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import HomeSlider from "../../components/HomeSlider";
 import HomeCatSlider from "../../components/HomeCatSlider";
 import { LiaShippingFastSolid } from "react-icons/lia";
@@ -9,17 +9,19 @@ import Tab from "@mui/material/Tab";
 import Box from "@mui/material/Box";
 import ProductsSlider from "../../components/ProductsSlider";
 import { fetchDataFromApi } from "../../utils/api";
+import { MyContext } from "../../App";
 
 const Home = () => {
   const [value, setValue] = useState(0);
   const [homeSLidesData, setHomeSlideData] = useState([]);
 
+  const context = useContext(MyContext);
 
   useEffect(()=>{
     fetchDataFromApi("/api/homeslides").then((res)=>{
       setHomeSlideData(res?.data)
     })
-  })
+  },[]);
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
@@ -30,7 +32,12 @@ const Home = () => {
     {
       homeSLidesData?.length!==0 &&  <HomeSlider data={homeSLidesData} />
     }
-      <HomeCatSlider />
+
+    
+    {
+      context?.catData?.length!==0 && <HomeCatSlider data={context?.catData}/>
+    }
+      
 
       <section className="bg-white py-8">
         <div className="container">
