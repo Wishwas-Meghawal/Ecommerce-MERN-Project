@@ -10,65 +10,61 @@ import Box from "@mui/material/Box";
 import ProductsSlider from "../../components/ProductsSlider";
 import { fetchDataFromApi } from "../../utils/api";
 import { MyContext } from "../../App";
+import ProductLoading from "../../components/ProductLoading";
 
 const Home = () => {
   const [value, setValue] = useState(0);
   const [homeSLidesData, setHomeSlideData] = useState([]);
   const [popularProductData, setPopularProductData] = useState([]);
-  const [productData, setProductData] =  useState([]);
-  const [featuredProducts,setFeaturedProducts] = useState([]);
+  const [productData, setProductData] = useState([]);
+  const [featuredProducts, setFeaturedProducts] = useState([]);
 
   const context = useContext(MyContext);
 
-  useEffect(()=>{
-    fetchDataFromApi("/api/homeslides").then((res)=>{
-      setHomeSlideData(res?.data)
-    })
+  useEffect(() => {
+    fetchDataFromApi("/api/homeslides").then((res) => {
+      setHomeSlideData(res?.data);
+    });
 
-    fetchDataFromApi("/api/product/getAllProducts").then((res)=>{
-      setProductData(res?.products)
-    })
+    fetchDataFromApi("/api/product/getAllProducts").then((res) => {
+      setProductData(res?.products);
+    });
 
-    fetchDataFromApi("/api/product/getAllFeaturedProducts").then((res)=>{
-      setFeaturedProducts(res?.products)
-    })
+    fetchDataFromApi("/api/product/getAllFeaturedProducts").then((res) => {
+      setFeaturedProducts(res?.products);
+    });
+  }, []);
 
-    
-  },[]);
-
-  useEffect(()=>{
-    fetchDataFromApi(`/api/product/getAllProductsByCatId/${context?.catData[0]?._id}`).then((res)=>{
-      if(res?.error === false){
-        setPopularProductData(res?.products)
+  useEffect(() => {
+    fetchDataFromApi(
+      `/api/product/getAllProductsByCatId/${context?.catData[0]?._id}`,
+    ).then((res) => {
+      if (res?.error === false) {
+        setPopularProductData(res?.products);
       }
-    })
-  },[context?.catData])
-
-
+    });
+  }, [context?.catData]);
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
   };
 
-  const filterByCatId = (id)=>{
-    fetchDataFromApi(`/api/product/getAllProductsByCatId/${id}`).then((res)=>{
-      if(res?.error === false){
-        setPopularProductData(res?.products)
+  const filterByCatId = (id) => {
+    setPopularProductData([]);
+    fetchDataFromApi(`/api/product/getAllProductsByCatId/${id}`).then((res) => {
+      if (res?.error === false) {
+        setPopularProductData(res?.products);
       }
-    })
-  }
+    });
+  };
 
   return (
     <>
-    {
-      homeSLidesData?.length!==0 &&  <HomeSlider data={homeSLidesData} />
-    }
+      {homeSLidesData?.length !== 0 && <HomeSlider data={homeSLidesData} />}
 
-    
-    {
-      context?.catData?.length!==0 && <HomeCatSlider data={context?.catData}/>
-    }
-      
+      {context?.catData?.length !== 0 && (
+        <HomeCatSlider data={context?.catData} />
+      )}
 
       <section className="bg-white py-8">
         <div className="container">
@@ -89,22 +85,24 @@ const Home = () => {
                 allowScrollButtonsMobile
                 aria-label="scrollable force tabs example"
               >
-                {
-                  context?.catData?.length!==0 && 
-                  context?.catData?.map((cat,index)=>{
-                    return(
-                      <Tab label={cat?.name} onClick={()=>filterByCatId(cat?._id)} />
-                    )
-                  })
-                }
+                {context?.catData?.length !== 0 &&
+                  context?.catData?.map((cat, index) => {
+                    return (
+                      <Tab
+                        label={cat?.name}
+                        onClick={() => filterByCatId(cat?._id)}
+                      />
+                    );
+                  })}
               </Tabs>
             </div>
           </div>
 
-                {
-                  popularProductData?.length !== 0 && <ProductsSlider items={5} data={popularProductData}/>
-                }
-          
+          {popularProductData?.length === 0 && <ProductLoading />}
+
+          {popularProductData?.length !== 0 && (
+            <ProductsSlider items={5} data={popularProductData} />
+          )}
         </div>
       </section>
 
@@ -127,7 +125,7 @@ const Home = () => {
             <p className="font-bold text-[30px]">- Only $200*</p>
           </div>
 
-          <AdsBannerSlider items={4} />
+          {/* <AdsBannerSlider items={4} /> */}
         </div>
       </section>
 
@@ -135,10 +133,11 @@ const Home = () => {
         <div className="container">
           <h2 className="text-[20px] font-semibold">Latest Products</h2>
 
-          {
-            productData?.length!==0 && <ProductsSlider items={5} data={productData}/>
-          }
-          
+          {productData?.length === 0 && <ProductLoading />}
+
+          {productData?.length !== 0 && (
+            <ProductsSlider items={5} data={productData} />
+          )}
 
           <AdsBannerSlider items={3} />
         </div>
@@ -147,10 +146,11 @@ const Home = () => {
       <section className="py-5 pt-0 bg-white">
         <div className="container">
           <h2 className="text-[20px] font-semibold">Featured Products</h2>
-          {
-            featuredProducts?.length!==0 && <ProductsSlider items={5} data={featuredProducts}/>
-          }
-          
+
+          {featuredProducts?.length === 0 && <ProductLoading />}
+          {featuredProducts?.length !== 0 && (
+            <ProductsSlider items={5} data={featuredProducts} />
+          )}
 
           <AdsBannerSlider items={3} />
         </div>
