@@ -85,7 +85,7 @@ const ProductItem = (props) => {
 
         {/* Product Name */}
         <h3 className="text-sm font-semibold text-gray-800 mt-1 leading-snug line-clamp-2 hover:text-red-500 transition">
-          <Link to={`/product/${props?.item?._id}`}>{props?.item?.name}</Link>
+          <Link to={`/product/${props?.item?._id}`}>{props?.item?.name?.substr(0, 40)+'...'}</Link>
         </h3>
 
         {/* Rating */}
