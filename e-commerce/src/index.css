@@ -446,3 +446,5 @@ button .MuiCircularProgress-root{
 .react-international-phone-input:focus {
   box-shadow: none !important;
 }
+
+header{box-shadow: 0px 1px 5px #0000001a;}
