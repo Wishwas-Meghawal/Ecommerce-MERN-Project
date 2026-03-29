@@ -93,7 +93,7 @@ const Home = () => {
                   context?.catData?.length!==0 && 
                   context?.catData?.map((cat,index)=>{
                     return(
-                      <Tab label={cat?.name} onClick={()=>filterByCatId(ca?._id)} />
+                      <Tab label={cat?.name} onClick={()=>filterByCatId(cat?._id)} />
                     )
                   })
                 }
