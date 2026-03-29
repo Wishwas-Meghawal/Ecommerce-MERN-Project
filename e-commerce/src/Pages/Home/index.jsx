@@ -125,7 +125,7 @@ const Home = () => {
             <p className="font-bold text-[30px]">- Only $200*</p>
           </div>
 
-          {/* <AdsBannerSlider items={4} /> */}
+          <AdsBannerSlider items={4} />
         </div>
       </section>
 
