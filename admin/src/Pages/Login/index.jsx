@@ -85,9 +85,10 @@ const Login = () => {
 
           fetchDataFromApi("/api/user/user-details").then((res) => {
             context.setUserData(res?.data);
+            
+              history("/");
+             
           });
-
-          history("/");
         } else {
           context.alertBox(response?.message, "error");
           setIsLoading(false);
@@ -101,13 +102,13 @@ const Login = () => {
       <header className="flex items-center justify-between px-10 py-5">
         <Link to="/login">
           <img
-            src="	https://isomorphic-furyroad.vercel.app/_next/static/media/logo.a795e14a.svg"
-            alt=""
+            src="/logo.jpg"
+            alt="Logo"
             className="w-[200px]"
           />
         </Link>
         {/* Social Buttons */}
-        <div className="flex items-center gap-4">
+        {/* <div className="flex items-center gap-4">
           <Link to="/login">
             <Button
               variant="outlined"
@@ -163,7 +164,7 @@ const Login = () => {
               Sign Up
             </Button>
           </Link>
-        </div>
+        </div> */}
       </header>
       {/* 🔐 Login Card */}
       <div className="flex flex-1 items-center justify-center">
@@ -171,7 +172,7 @@ const Login = () => {
           {/* Logo */}
           <div className="mb-6 text-3xl font-bold flex items-center justify-center">
             <Link to="/">
-              <img src="https://isomorphic-furyroad.vercel.app/_next/static/media/logo-short.18ca02a8.svg" />
+              <img src="https://isomorphic-furyroad.vercel.app/_next/static/media/logo-short.18ca02a8.svg" alt="Logo" />
             </Link>
           </div>
 
@@ -273,12 +274,12 @@ const Login = () => {
             </Button>
 
             {/* Signup */}
-            <p className="text-sm text-gray-500 mt-6">
+            {/* <p className="text-sm text-gray-500 mt-6">
               Don’t have an account?{" "}
               <Link to="/sign-up" className="text-blue-600 font-medium">
                 Sign Up
               </Link>
-            </p>
+            </p> */}
           </form>
         </div>
       </div>
