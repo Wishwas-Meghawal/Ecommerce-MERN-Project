@@ -1,7 +1,7 @@
 import { Router } from 'express';
 import auth from '../middlewares/auth.js';
 import upload from '../middlewares/multer.js';
-import { createProduct, createProductRAMS, createProductSIZE, createProductWEIGHT, deleteMultipleProduct, deleteProduct, deleteProductRAMS, deleteProductSIZE, deleteProductWEIGHT, getAllFeaturedProducts, getAllProducts, getAllProductsByCatId, getAllProductsByCatName, getAllProductsByPrice, getAllProductsByRating, getAllProductsBySubCatId, getAllProductsBySubCatName, getAllProductsByThirdLavelCatId, getAllProductsByThirdLavelCatName, getProduct, getProductRAMS, getProductRAMSById, getProductsCount, getProductSIZE, getProductSIZEById, getProductWEIGHT, getProductWEIGHTById, removeImageFromCloudinary, updateProduct, updateProductRAMS, updateProductSIZE, updateProductWEIGHT, uploadImages } from '../controllers/product.controller.js';
+import { createProduct, createProductRAMS, createProductSIZE, createProductWEIGHT, deleteMultipleProduct, deleteProduct, deleteProductRAMS, deleteProductSIZE, deleteProductWEIGHT, filters, getAllFeaturedProducts, getAllProducts, getAllProductsByCatId, getAllProductsByCatName, getAllProductsByPrice, getAllProductsByRating, getAllProductsBySubCatId, getAllProductsBySubCatName, getAllProductsByThirdLavelCatId, getAllProductsByThirdLavelCatName, getProduct, getProductRAMS, getProductRAMSById, getProductsCount, getProductSIZE, getProductSIZEById, getProductWEIGHT, getProductWEIGHTById, removeImageFromCloudinary, updateProduct, updateProductRAMS, updateProductSIZE, updateProductWEIGHT, uploadImages } from '../controllers/product.controller.js';
 
 
 const productRouter = Router();
@@ -51,6 +51,9 @@ productRouter.delete('/productWEIGHT/:id',deleteProductWEIGHT);
 productRouter.put("/productWEIGHT/:id", auth, updateProductWEIGHT);
 productRouter.get("/productWEIGHT/get" ,getProductWEIGHT);
 productRouter.get("/productWEIGHT/:id" ,getProductWEIGHTById);
+
+
+productRouter.post("/filters" ,filters);
 
 
 

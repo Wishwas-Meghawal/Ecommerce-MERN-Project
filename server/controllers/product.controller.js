@@ -811,8 +811,6 @@ export async function updateProduct(request, response) {
   }
 }
 
-
-
 // Product RAMS Controllers
 
 // create productRAMS
@@ -878,7 +876,6 @@ export async function deleteProductRAMS(request, response) {
   });
 }
 
-
 //update product Rams
 export async function updateProductRAMS(request, response) {
   try {
@@ -926,7 +923,7 @@ export async function getProductRAMS(request, response) {
     return response.status(200).json({
       error: false,
       success: true,
-      data: productRAM
+      data: productRAM,
     });
   } catch (error) {
     return response.status(500).json({
@@ -951,7 +948,7 @@ export async function getProductRAMSById(request, response) {
     return response.status(200).json({
       error: false,
       success: true,
-      data: productRAM
+      data: productRAM,
     });
   } catch (error) {
     return response.status(500).json({
@@ -962,9 +959,7 @@ export async function getProductRAMSById(request, response) {
   }
 }
 
-
-
-// Product Weight Controllers 
+// Product Weight Controllers
 
 // create productWEIGHT
 export async function createProductWEIGHT(request, response) {
@@ -1029,7 +1024,6 @@ export async function deleteProductWEIGHT(request, response) {
   });
 }
 
-
 //update product Weights
 export async function updateProductWEIGHT(request, response) {
   try {
@@ -1077,7 +1071,7 @@ export async function getProductWEIGHT(request, response) {
     return response.status(200).json({
       error: false,
       success: true,
-      data: productWEIGHT
+      data: productWEIGHT,
     });
   } catch (error) {
     return response.status(500).json({
@@ -1102,7 +1096,7 @@ export async function getProductWEIGHTById(request, response) {
     return response.status(200).json({
       error: false,
       success: true,
-      data: productWEIGHT
+      data: productWEIGHT,
     });
   } catch (error) {
     return response.status(500).json({
@@ -1112,9 +1106,6 @@ export async function getProductWEIGHTById(request, response) {
     });
   }
 }
-
-
-
 
 // Product SIZE Controllers
 
@@ -1180,7 +1171,6 @@ export async function deleteProductSIZE(request, response) {
     message: "Product SIZE Deleted",
   });
 }
-
 
 // update product SIZE
 export async function updateProductSIZE(request, response) {
@@ -1257,6 +1247,61 @@ export async function getProductSIZEById(request, response) {
       success: true,
       data: productSIZE,
     });
+  } catch (error) {
+    return response.status(500).json({
+      message: error.message || error,
+      error: true,
+      success: false,
+    });
+  }
+}
+
+//Filter API for product
+export async function filters(request, response) {
+  const {
+    catId,
+    subCatId,
+    thirdsubCatId,
+    minPrice,
+    maxPrice,
+    rating,
+    page,
+    limit,
+  } = request.body;
+  let filters = {};
+
+  if (catId?.length) {
+    filters.catId = { $in: catId };
+  }
+  if (subCatId?.length) {
+    filters.subCatId = { $in: subCatId };
+  }
+  if (thirdsubCatId?.length) {
+    filters.thirdsubCatId = { $in: thirdsubCatId };
+  }
+  if (minPrice || maxPrice) {
+    filters.price = { $gte: +minPrice || 0, $lte: +maxPrice || Infinity }; // Initialize price filter
+  }
+  if (rating?.length) {
+    filters.rating = { $in: rating };
+  }
+  try {
+    const products = await ProductModel.find(filters)
+      .populate("category")
+      .skip((page - 1) * limit)
+      .limit(limit);
+
+      const totalProducts = await ProductModel.countDocuments(filters);
+
+      return response.status(200).json({
+        error: false,
+        success: true,
+        products: products,
+        total: totalProducts,
+        page: parseInt(page),
+        totalPages: Math.ceil(totalProducts / limit),
+      });
+
   } catch (error) {
     return response.status(500).json({
       message: error.message || error,
