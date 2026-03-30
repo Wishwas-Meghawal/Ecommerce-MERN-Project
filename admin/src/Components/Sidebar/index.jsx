@@ -33,7 +33,7 @@ const Sidebar = () => {
         <div className="py-3 px-5 w-full">
           <Link tp="/">
             <img
-              src="https://isomorphic-furyroad.vercel.app/_next/static/media/logo.a795e14a.svg"
+              src="/logo.jpg"
               alt=""
               className="w-[200px]"
             />
