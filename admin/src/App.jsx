@@ -26,6 +26,7 @@ import ProductDetails from "./Pages/Products/productDetails.jsx";
 import AddRAMS from "./Pages/Products/addRAMS.jsx";
 import AddWEIGHT from "./Pages/Products/addWEIGHT.jsx";
 import AddSIZE from "./Pages/Products/addSIZE.jsx";
+import ProtectedRoute from "./Components/ProtectedRoute/index.jsx";
 
 const MyContext = createContext();
 
@@ -49,7 +50,7 @@ function App() {
       path: "/",
       exact: true,
       element: (
-        <>
+        <ProtectedRoute isLogin={isLogin}>
           <section className="main">
             <Header />
             <div className=" contentMain flex">
@@ -69,7 +70,7 @@ function App() {
               </div>
             </div>
           </section>
-        </>
+        </ProtectedRoute>
       ),
     },
     {
