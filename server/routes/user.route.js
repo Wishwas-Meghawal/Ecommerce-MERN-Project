@@ -13,6 +13,8 @@ import {
   refreshToken,
   userDetails,
   authWithGoogleController,
+  addReview,
+  getReviews,
 } from "../controllers/user.controller.js";
 import auth from "../middlewares/auth.js";
 import upload from "../middlewares/multer.js";
@@ -37,5 +39,7 @@ userRouter.post("/verify-forgot-password-otp", verifyForgotPasswordOtp);
 userRouter.post("/reset-password", resetPassword);
 userRouter.post("/refresh-token", refreshToken);
 userRouter.get("/user-details", auth, userDetails);
+userRouter.post("/addReview", auth, addReview);
+userRouter.post("/getReviews",  getReviews);
 
 export default userRouter;

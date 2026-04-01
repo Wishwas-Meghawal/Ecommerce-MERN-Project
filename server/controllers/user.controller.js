@@ -11,6 +11,7 @@ import generatedRefreshToken from "../utils/generatedRefreshToken.js";
 import { v2 as cloudinary } from "cloudinary";
 import fs from "fs";
 import { hash } from "crypto";
+import ReviewModel from "../models/reviews.model.js";
 // Configuration
 cloudinary.config({
   cloud_name: process.env.cloudinary_Config_Cloud_Name,
@@ -722,6 +723,75 @@ export async function userDetails(request, response) {
   } catch (error) {
     return response.status(500).json({
       message: error.message || error,
+      error: true,
+      success: false,
+    });
+  }
+}
+
+
+// review controller
+export async function addReview(request, response) {
+  try {
+    const { image, userName, review, rating,userId, productId } = request.body;
+
+    // const user = await UserModel.findById(userId);
+
+    // if (!user) {
+    //   return response.status(400).json({
+    //     message: "User not found",
+    //     error: true,
+    //     success: false,
+    //   });
+    // }
+
+    const newReview = {
+      image: image,
+      userName: userName, 
+      review: review,
+      rating: rating,
+      userId: userId,
+      productId: productId,
+    };
+    const userReview = await ReviewModel.create(newReview);
+
+    return response.status(200).json({
+      message: "Review added successfully",
+      error: false, 
+      success: true,
+    });
+  } catch (error) {
+    return response.status(500).json({
+      message: 'Something is wrong',
+      error: true,
+      success: false,
+    });
+  }
+}
+
+// get reviews
+export async function getReviews(request, response) {
+  try {
+    const productId = request.query.productId;
+
+    const reviews = await ReviewModel.find({ productId: productId });
+
+    if(!reviews){
+      return response.status(404).json({
+        error: true,
+        success: false,
+      });
+    }
+
+    return response.status(200).json({
+      error: false,
+      success: true,
+      reviews: reviews,
+    });
+  }
+    catch (error) {
+    return response.status(500).json({
+      message: 'Something is wrong',
       error: true,
       success: false,
     });
