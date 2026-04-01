@@ -140,7 +140,7 @@ function App() {
           <Routes>
             <Route path={"/"} exact={true} element={<Home />} />
             <Route
-              path={"/productListing"}
+              path={"/products"}
               exact={true}
               element={<ProductListing />}
             />

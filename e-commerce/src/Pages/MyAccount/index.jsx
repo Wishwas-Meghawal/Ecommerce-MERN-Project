@@ -245,8 +245,11 @@ const MyAccount = () => {
               <hr />
 
               <form className="mt-5" onSubmit={handleSubmitChangePassword}>
-                <div className="flex items-center gap-2">
-                  <div className="w-[50%]">
+                <div className="grid grid-cols-2 gap-5">
+
+                  {
+                    context?.userData?.signUpWithGoogle === false &&
+                    <div className="col">
                     <TextField
                       label="Old Password"
                       variant="outlined"
@@ -258,7 +261,11 @@ const MyAccount = () => {
                       onChange={onChangeInput}
                     />
                   </div>
-                  <div className="w-[50%]">
+                  }
+
+                  
+
+                  <div className="col">
                     <TextField
                       type="text"
                       label="New Password"
@@ -270,9 +277,8 @@ const MyAccount = () => {
                       onChange={onChangeInput}
                     />
                   </div>
-                </div>
-                <div className="flex items-center mt-4 gap-2">
-                  <div className="w-full">
+
+                  <div className="col">
                     <TextField
                       label="Confirm New Password"
                       variant="outlined"
@@ -290,7 +296,6 @@ const MyAccount = () => {
                 <div className="flex items-center gap-4">
                   <Button
                     type="submit"
-                    disabled={!valideValue2}
                     className="btn-org btn-lg w-[200px]"
                   >
                     {isLoading2 === true ? (

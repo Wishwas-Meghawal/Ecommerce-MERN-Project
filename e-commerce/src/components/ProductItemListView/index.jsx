@@ -10,19 +10,20 @@ import { FiShoppingCart } from "react-icons/fi";
 import { useContext } from "react";
 import { MyContext } from "../../App";
 
-const ProductItemListView = () => {
+const ProductItemListView = (props) => {
+  console.log(props);
   const context = useContext(MyContext);
   return (
     <div className="flex  bg-white border border-gray-200 rounded-lg p-4 gap-6 hover:shadow-lg transition relative">
       {/* 🔴 Discount Badge */}
-      <span className="absolute top-3 left-3 bg-red-500 text-white text-xs px-2 py-1 rounded z-10">
-        -8%
+      <span className="absolute top-3 left-3 bg-gradient-to-r from-red-500 to-pink-500 text-white text-xs px-3 py-1 rounded-full shadow-md z-10">
+        {props?.item?.discount}% OFF
       </span>
       {/* IMAGE */}
       <div className="w-[25%] shrink-0 overflow-hidden rounded-md bg-gray-100">
-        <Link to="/">
+        <Link to={`/product/${props?.item?._id}`}>
           <img
-            src="https://demos.codezeel.com/wordpress/WCM06/WCM060133/wp-content/uploads/2024/01/20-460x460.jpg"
+            src={props?.item?.images[0]}
             alt="product"
             className="w-full h-full object-cover"
           />
@@ -33,29 +34,28 @@ const ProductItemListView = () => {
       <div className="flex flex-col justify-between flex-1 w-[75%]">
         <div>
           <span className="text-xs uppercase text-gray-500">
-            Flying Machine
+            {props?.item?.brand}
           </span>
 
           <h3 className="text-lg font-semibold text-gray-800 mt-1 font-[400]!">
-            Women Wide Leg Killer
+            <Link to={`/product/${props?.item?._id}`}>{props?.item?.name?.substr(0, 40)+'...'}</Link>
           </h3>
 
           <Rating
-            value={4}
-            readOnly
+            defaultValue={props?.item?.rating}
             size="small"
+            precision={0.5}
+            readOnly
             sx={{ color: "#f59e0b" }}
-            className="my-2"
           />
 
           <p className="text-sm text-gray-600 leading-relaxed mb-3">
-            Lorem Ipsum is simply dummy text of the printing and typesetting
-            industry Lorem ipsum dolor sit amet consectetur adipisicing elit. Fugiat alias nostrum porro accusantium.
+            {props?.item?.description}
           </p>
 
           <div className="mt-2 flex items-center gap-2">
-            <span className="line-through text-gray-400 text-sm">₹1200</span>
-            <span className="text-red-500 font-semibold text-lg">₹1500</span>
+            <span className="line-through text-gray-400 text-sm">₹{props?.item?.oldPrice}</span>
+            <span className="text-red-500 font-semibold text-lg">₹{props?.item?.price}</span>
           </div>
 
           {/* BUTTON */}

@@ -1,4 +1,4 @@
-import { FiHeart } from "react-icons/fi";
+import { FiHeart, FiShoppingCart } from "react-icons/fi";
 import { Link } from "react-router-dom";
 import Rating from "@mui/material/Rating";
 import { FiZoomIn } from "react-icons/fi";
@@ -20,10 +20,8 @@ const ProductItem = (props) => {
 
       {/* Image Section */}
       <div className="relative h-[300px] overflow-hidden flex items-center justify-center bg-white">
-        
-          <div className="relative w-full h-full">
-            <Link to={`/product/${props?.item?._id}`}>
-            
+        <div className="relative w-full h-full">
+          <Link to={`/product/${props?.item?._id}`}>
             {/* Main Image */}
             <img
               src={props?.item?.images[0]}
@@ -37,9 +35,8 @@ const ProductItem = (props) => {
               alt=""
               className="absolute inset-0 w-full h-full object-cover transition-all duration-500 scale-105 opacity-0 group-hover:opacity-100"
             />
-            </Link>
-          </div>
-       
+          </Link>
+        </div>
 
         {/* Floating Icons */}
         <div className="absolute top-4 right-[-60px] flex flex-col gap-3 transition-all duration-500 group-hover:right-4">
@@ -66,7 +63,8 @@ const ProductItem = (props) => {
                   },
                 }}
                 onClick={() =>
-                  Icon === FiZoomIn && context.handleOpenProductDetailsModal(true,props?.item)
+                  Icon === FiZoomIn &&
+                  context.handleOpenProductDetailsModal(true, props?.item)
                 }
               >
                 <Icon size={18} />
@@ -85,7 +83,9 @@ const ProductItem = (props) => {
 
         {/* Product Name */}
         <h3 className="text-sm font-semibold text-gray-800 mt-1 leading-snug line-clamp-2 hover:text-red-500 transition">
-          <Link to={`/product/${props?.item?._id}`}>{props?.item?.name?.substr(0, 40)+'...'}</Link>
+          <Link to={`/product/${props?.item?._id}`}>
+            {props?.item?.name?.substr(0, 40) + "..."}
+          </Link>
         </h3>
 
         {/* Rating */}
@@ -110,9 +110,28 @@ const ProductItem = (props) => {
         </div>
 
         {/* Add to Cart Button */}
-        <button className="mt-4 w-full py-2 rounded-lg bg-black text-white text-sm font-medium transition-all duration-300 hover:bg-red-500 hover:shadow-lg">
-          Add to Cart
-        </button>
+        <div className="mt-3">
+          <Button
+            variant="outlined"
+            startIcon={<FiShoppingCart size={15} />}
+            sx={{
+              width: "100%",
+              borderColor: "#ef4444",
+              color: "#ef4444",
+              fontSize: "11px",
+              fontWeight: 600,
+              padding: "5px 14px",
+              minHeight: "35px",
+              textTransform: "uppercase",
+              "&:hover": {
+                backgroundColor: "#ef4444",
+                color: "#fff",
+              },
+            }}
+          >
+            Add to Cart
+          </Button>
+        </div>
       </div>
     </div>
   );

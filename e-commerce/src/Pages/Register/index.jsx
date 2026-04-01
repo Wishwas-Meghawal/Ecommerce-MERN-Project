@@ -6,12 +6,15 @@ import Button from "@mui/material/Button";
 import { data, Link } from "react-router-dom";
 import { postData } from "../../utils/api";
 import { MyContext } from "../../App";
-import CircularProgress from '@mui/material/CircularProgress';
-import { useNavigate } from "react-router-dom"; 
+import CircularProgress from "@mui/material/CircularProgress";
+import { useNavigate } from "react-router-dom";
 
+import { getAuth, signInWithPopup, GoogleAuthProvider } from "firebase/auth";
+import { firebaseApp } from "../../firebase";
+const auth = getAuth(firebaseApp);
+const provider = new GoogleAuthProvider();
 
 const Register = () => {
-
   const [isLoading, setIsLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
 
@@ -31,11 +34,10 @@ const Register = () => {
     });
   };
 
-
-  const valideValue = Object.values(formFields).every(el => el);
+  const valideValue = Object.values(formFields).every((el) => el);
   const handleSubmit = (e) => {
     e.preventDefault();
-     setIsLoading(true);
+    setIsLoading(true);
 
     // Basic validation
     if (formFields.name === "") {
@@ -49,30 +51,77 @@ const Register = () => {
     if (formFields.password === "") {
       context.alertBox("Password is required", "error");
       return false;
-    } 
-    
-    
-     postData("/api/user/register",formFields)
-      .then((response) => {
-        console.log("Registration Response:", response);
-        if(response?.error!==true){
-          setIsLoading(false);
-          context.alertBox(response?.message,"success");
-          localStorage.setItem("userEmail", formFields.email);
-          setFormFields(
-            { 
-              name: "",
-              email: "", 
-              password: ""
-            }
-          );
-         
-          history("/verify");
-        }else{
-          context.alertBox(response?.message,"error",);
-          setIsLoading(false);
-        }
+    }
+
+    postData("/api/user/register", formFields).then((response) => {
+      console.log("Registration Response:", response);
+      if (response?.error !== true) {
+        setIsLoading(false);
+        context.alertBox(response?.message, "success");
+        localStorage.setItem("userEmail", formFields.email);
+        setFormFields({
+          name: "",
+          email: "",
+          password: "",
+        });
+
+        history("/verify");
+      } else {
+        context.alertBox(response?.message, "error");
+        setIsLoading(false);
+      }
+    });
+  };
+
+  const authWithGoogle = () => {
+    signInWithPopup(auth, provider)
+      .then((result) => {
+        // This gives you a Google Access Token. You can use it to access the Google API.
+        const credential = GoogleAuthProvider.credentialFromResult(result);
+        const token = credential.accessToken;
+        // The signed-in user info.
+        const user = result.user;
+        const fields = {
+          name: user.providerData[0].displayName,
+          email: user.providerData[0].email,
+          password: null,
+          avatar: user.providerData[0].photoURL,
+          mobile: user.providerData[0].phoneNumber,
+          role: "USER",
+        };
+
+        postData("/api/user/authWithGoogle", fields).then((res) => {
+          if (res?.error !== true) {
+            setIsLoading(false);
+            context.alertBox(res?.message, "success");
+            localStorage.setItem(
+              "accessToken",res?.data?.accessToken,
+            );
+
+            localStorage.setItem(
+              "refreshToken",res?.data?.refreshToken,
+            );
+
+            context.setIsLogin(true);
+            
+            localStorage.setItem("userEmail", fields.email);
+            history("/");
+          } else {
+            context.alertBox(res?.message, "error");
+            setIsLoading(false);
+          }
+        });
       })
+      .catch((error) => {
+        // Handle Errors here.
+        const errorCode = error.code;
+        const errorMessage = error.message;
+        // The email of the user's account used.
+        const email = error.customData.email;
+        // The AuthCredential type that was used.
+        const credential = GoogleAuthProvider.credentialFromError(error);
+        // ...
+      });
   };
 
   return (
@@ -91,7 +140,7 @@ const Register = () => {
               id="name"
               name="name"
               value={formFields.name}
-              disabled={isLoading===true ? true : false}
+              disabled={isLoading === true ? true : false}
               label="Full Name*"
               variant="outlined"
               className="w-full"
@@ -105,7 +154,7 @@ const Register = () => {
               id="email"
               name="email"
               value={formFields.email}
-              disabled={isLoading===true ? true : false}
+              disabled={isLoading === true ? true : false}
               label="Email Id*"
               variant="outlined"
               className="w-full"
@@ -120,7 +169,7 @@ const Register = () => {
               id="password"
               name="password"
               value={formFields.password}
-              disabled={isLoading===true ? true : false}
+              disabled={isLoading === true ? true : false}
               label="Password*"
               variant="outlined"
               className="w-full"
@@ -141,11 +190,11 @@ const Register = () => {
               disabled={!valideValue}
               className="btn-org btn-lg w-full hover:bg-red-500! transition flex gap-3"
             >
-              {
-                isLoading === true ? <CircularProgress color="inherit"/>
-                :
-                'Register'
-              }
+              {isLoading === true ? (
+                <CircularProgress color="inherit" />
+              ) : (
+                "Register"
+              )}
             </Button>
           </div>
 
@@ -168,9 +217,12 @@ const Register = () => {
           </div>
 
           {/* Google Login */}
-          <Button className="btn-lg  gvap-3 bg-[#f1f1f1]! text-black! w-full h-12 flex items-center justify-center gap-3 border rounded-md hover:bg-gray-50 transition">
+          <Button
+            className="btn-lg  gvap-3 bg-[#f1f1f1]! text-black! w-full h-12 flex items-center justify-center gap-3 border rounded-md hover:bg-gray-50 transition"
+            onClick={authWithGoogle}
+          >
             <FcGoogle size={22} />
-            <span className="font-bold">LOGIN WITH GOOGLE</span>
+            <span className="font-bold">SIGN UP WITH GOOGLE</span>
           </Button>
         </form>
       </div>

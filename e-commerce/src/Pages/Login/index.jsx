@@ -8,6 +8,12 @@ import { MyContext } from "../../App";
 import CircularProgress from "@mui/material/CircularProgress";
 import { fetchDataFromApi, postData } from "../../utils/api.js";
 
+
+import { getAuth, signInWithPopup, GoogleAuthProvider } from "firebase/auth";
+import { firebaseApp } from "../../firebase";
+const auth = getAuth(firebaseApp);
+const provider = new GoogleAuthProvider();
+
 const Login = () => {
   const context = useContext(MyContext);
 
@@ -78,12 +84,12 @@ const Login = () => {
 
           localStorage.setItem(
             "accessToken",
-            response.accessToken || response.data?.accessToken,
+            response.accessToken || response?.data?.accessToken,
           );
 
           localStorage.setItem(
             "refreshToken",
-            response.refreshToken || response.data?.refreshToken,
+            response.refreshToken || response?.data?.refreshToken,
           );
 
           context.setIsLogin(true);
@@ -102,6 +108,58 @@ const Login = () => {
       },
     );
   };
+
+
+  const authWithGoogle = () => {
+      signInWithPopup(auth, provider)
+        .then((result) => {
+          // This gives you a Google Access Token. You can use it to access the Google API.
+          const credential = GoogleAuthProvider.credentialFromResult(result);
+          const token = credential.accessToken;
+          // The signed-in user info.
+          const user = result.user;
+          const fields = {
+            name: user.providerData[0].displayName,
+            email: user.providerData[0].email,
+            password: null,
+            avatar: user.providerData[0].photoURL,
+            mobile: user.providerData[0].phoneNumber,
+            role: "USER",
+          };
+  
+          postData("/api/user/authWithGoogle", fields).then((res) => {
+            if (res?.error !== true) {
+              setIsLoading(false);
+              context.alertBox(res?.message, "success");
+              localStorage.setItem(
+                "accessToken",res?.data?.accessToken,
+              );
+  
+              localStorage.setItem(
+                "refreshToken",res?.data?.refreshToken,
+              );
+  
+              context.setIsLogin(true);
+              
+              localStorage.setItem("userEmail", fields.email);
+              history("/");
+            } else {
+              context.alertBox(res?.message, "error");
+              setIsLoading(false);
+            }
+          });
+        })
+        .catch((error) => {
+          // Handle Errors here.
+          const errorCode = error.code;
+          const errorMessage = error.message;
+          // The email of the user's account used.
+          const email = error.customData.email;
+          // The AuthCredential type that was used.
+          const credential = GoogleAuthProvider.credentialFromError(error);
+          // ...
+        });
+    };
 
   return (
     <section className="py-10 ">
@@ -195,10 +253,13 @@ const Login = () => {
             </div>
 
             {/* Google Login */}
-            <Button className="btn-lg  gvap-3 bg-[#f1f1f1]! text-black! w-full h-12 flex items-center justify-center gap-3 border rounded-md hover:bg-gray-50 transition">
-              <FcGoogle size={22} />
-              <span className="font-bold">LOGIN WITH GOOGLE</span>
-            </Button>
+            <Button
+            className="btn-lg  gvap-3 bg-[#f1f1f1]! text-black! w-full h-12 flex items-center justify-center gap-3 border rounded-md hover:bg-gray-50 transition"
+            onClick={authWithGoogle}
+          >
+            <FcGoogle size={22} />
+            <span className="font-bold">LOGIN WITH GOOGLE</span>
+          </Button>
           </form>
         </div>
       </div>

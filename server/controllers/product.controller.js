@@ -1289,19 +1289,18 @@ export async function filters(request, response) {
     const products = await ProductModel.find(filters)
       .populate("category")
       .skip((page - 1) * limit)
-      .limit(limit);
+      .limit(parseInt(limit));
 
-      const totalProducts = await ProductModel.countDocuments(filters);
+    const totalProducts = await ProductModel.countDocuments(filters);
 
-      return response.status(200).json({
-        error: false,
-        success: true,
-        products: products,
-        total: totalProducts,
-        page: parseInt(page),
-        totalPages: Math.ceil(totalProducts / limit),
-      });
-
+    return response.status(200).json({
+      error: false,
+      success: true,
+      products: products,
+      total: totalProducts,
+      page: parseInt(page),
+      totalPages: Math.ceil(totalProducts / limit),
+    });
   } catch (error) {
     return response.status(500).json({
       message: error.message || error,
@@ -1309,4 +1308,30 @@ export async function filters(request, response) {
       success: false,
     });
   }
+}
+
+const sortItems = (products, sortBy, order) => {
+  return products.sort((a, b) => {
+    if(sortBy === 'name'){
+      return order === "asc"
+      ? a.name.localeCompare(b.name)
+      : b.name.localeCompare(a.name);
+    }
+    if (sortBy === "price") {
+      return order === "asc" ? a.price - b.price : b.price - a.price;
+    }
+    return 0;
+  });
+};
+export async function sortBy(request, response) {
+  const { products, sortBy, order } = request.body;
+  const sortedItems = sortItems([...products?.products], sortBy, order);
+
+  return response.status(200).json({
+    error:false,
+    success: true,
+    products: sortedItems,
+    page: 0,
+    totalPages: 0
+  })
 }

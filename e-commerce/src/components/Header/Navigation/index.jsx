@@ -53,7 +53,7 @@ const Navigation = () => {
                   return (
                     <li className="list-none relative" key={index}>
                       <Link
-                        to="/productListing"
+                        to={`/products?catId=${cat?._id}`}
                         className="link transition text-[14px] font-[500]"
                       >
                         <Button
@@ -73,7 +73,7 @@ const Navigation = () => {
                                   className="list-none w-full relative"
                                   key={index_}
                                 >
-                                  <Link to="/" className="w-full">
+                                  <Link to={`/products?subCatId=${subCat?._id}`} className="w-full">
                                     <Button className="!text-[rgba(0,0,0,0.8)] w-full !text-left !justify-start !rounded-none">
                                       {subCat?.name}
                                     </Button>
@@ -82,15 +82,15 @@ const Navigation = () => {
                                       <div className="submenu absolute top-[0%] left-[100%] min-w-[150px] bg-white shadow-md opacity-0 transition-all">
                                         <ul>
                                           {subCat?.children?.map(
-                                            (thirdSuncat, index__) => {
+                                            (thirdSubcat, index__) => {
                                               return (
                                                 <li className="list-none w-full" key={index__}>
                                                   <Link
-                                                    to="/"
+                                                    to={`/products?thirdLavelCatId=${thirdSubcat?._id}`}
                                                     className="w-full"
                                                   >
                                                     <Button className="!text-[rgba(0,0,0,0.8)] w-full !text-left !justify-start !rounded-none">
-                                                      {thirdSuncat?.name}
+                                                      {thirdSubcat?.name}
                                                     </Button>
                                                   </Link>
                                                 </li>

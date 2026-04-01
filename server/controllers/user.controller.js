@@ -61,7 +61,7 @@ export async function registerUserController(request, response) {
       email,
       "Your OTP for Ecommerce App",
       `Your OTP is ${verifyCode}. It expires in 10 minutes.`,
-      VerificationEmail(name, verifyCode)
+      VerificationEmail(name, verifyCode),
     );
 
     //create a JWT token for verification purpose
@@ -70,7 +70,7 @@ export async function registerUserController(request, response) {
         email: user.email,
         id: user._id,
       },
-      process.env.JSON_WEB_TOKEN_SECRET_KEY
+      process.env.JSON_WEB_TOKEN_SECRET_KEY,
     );
 
     return response.status(200).json({
@@ -126,6 +126,83 @@ export async function verifyEmailController(request, response) {
         error: true,
         success: false,
         message: "OTP expired",
+      });
+    }
+  } catch (error) {
+    return response.status(500).json({
+      message: error.message || error,
+      error: true,
+      success: false,
+    });
+  }
+}
+
+//auth with Google
+export async function authWithGoogleController(request, response) {
+  const { name, email, password, avatar, mobile, role } = request.body;
+  try {
+    const existingUser = await UserModel.findOne({ email: email });
+
+    if (!existingUser) {
+      const user = new UserModel({
+        name: name,
+        email: email,
+        password: "null",
+        avatar: avatar,
+        mobile: mobile,
+        role: role,
+        verify_email: true,
+        signUpWithGoogle: true,
+      });
+      await user.save();
+
+      const accessToken = await generatedAccessToken(user._id);
+      const refreshToken = await generatedRefreshToken(user._id);
+
+      await UserModel.findByIdAndUpdate(user?._id, {
+        last_login_date: new Date(),
+      });
+
+      const cookiesOption = {
+        httpOnly: true,
+        secure: true,
+        sameSite: "None",
+      };
+      response.cookie("accessToken", accessToken, cookiesOption);
+      response.cookie("refreshToken", refreshToken, cookiesOption);
+
+      return response.json({
+        message: "Login successfully",
+        error: false,
+        success: true,
+        data: {
+          accessToken,
+          refreshToken,
+        },
+      });
+    } else {
+      const accessToken = await generatedAccessToken(existingUser._id);
+      const refreshToken = await generatedRefreshToken(existingUser._id);
+
+      await UserModel.findByIdAndUpdate(existingUser?._id, {
+        last_login_date: new Date(),
+      });
+
+      const cookiesOption = {
+        httpOnly: true,
+        secure: true,
+        sameSite: "None",
+      };
+      response.cookie("accessToken", accessToken, cookiesOption);
+      response.cookie("refreshToken", refreshToken, cookiesOption);
+      return response.json({
+        message: "Login successfully",
+        error: false,
+        success: true,
+        data: {
+          accessToken,
+          refreshToken,
+        },
       });
     }
   } catch (error) {
@@ -286,7 +363,7 @@ export async function userAvatarController(request, response) {
           imagesArr.push(result.secure_url);
           fs.unlinkSync(`uploads/${request.files[i].filename}`);
           console.log(request.files[i].filename);
-        }
+        },
       );
     }
 
@@ -367,7 +444,7 @@ export async function updateUserDetails(request, response) {
         otp: verifyCode !== "" ? verifyCode : null,
         otpExpires: verifyCode !== "" ? Date.now() + 600000 : "",
       },
-      { new: true }
+      { new: true },
     );
 
     //send verification email
@@ -376,7 +453,7 @@ export async function updateUserDetails(request, response) {
         email,
         "Your OTP for Ecommerce App",
         `Your OTP is ${verifyCode}. It expires in 10 minutes.`,
-        VerificationEmail(name, verifyCode)
+        VerificationEmail(name, verifyCode),
       );
     }
 
@@ -390,7 +467,7 @@ export async function updateUserDetails(request, response) {
         email: updateUser?.email,
         mobile: updateUser?.mobile,
         avatar: updateUser?.avatar,
-      }
+      },
     });
   } catch (error) {
     return response.status(500).json({
@@ -426,7 +503,7 @@ export async function forgotPasswordController(request, response) {
         email,
         "Verify  OTP from Ecommerce App",
         `Your OTP is ${verifyCode}. It expires in 10 minutes.`,
-        VerificationEmail(user.name, verifyCode)
+        VerificationEmail(user.name, verifyCode),
       );
 
       return response.json({
@@ -504,19 +581,18 @@ export async function verifyForgotPasswordOtp(request, response) {
   }
 }
 
-
 // reset password
 
-export async function resetPassword(request, response){
+export async function resetPassword(request, response) {
   try {
-    const {email,  newPassword, confirmPassword} = request.body;
+    const { email, newPassword, confirmPassword } = request.body;
 
-    if(!email  || !newPassword || !confirmPassword){
+    if (!email || !newPassword || !confirmPassword) {
       return response.status(400).json({
-        error : true,
-        success : false,
-        message : "provide required fields  newPassword, confirmPassword"
-      })
+        error: true,
+        success: false,
+        message: "provide required fields  newPassword, confirmPassword",
+      });
     }
 
     const user = await UserModel.findOne({ email: email });
@@ -528,8 +604,19 @@ export async function resetPassword(request, response){
       });
     }
 
+    if (user.signUpWithGoogle === false) {
+      const checkPassword = await bcrypt.compare(oldPassword, user.password);
 
-    if(newPassword !== confirmPassword){
+      if (!checkPassword) {
+        return response.status(400).json({
+          message: "Your old password is wrong",
+          error: true,
+          success: false,
+        });
+      }
+    }
+
+    if (newPassword !== confirmPassword) {
       return response.status(400).json({
         message: "newPassword and confirmPassword must be same.",
         error: true,
@@ -540,17 +627,15 @@ export async function resetPassword(request, response){
     const salt = await bcrypt.genSalt(10);
     const hashPassword = await bcrypt.hash(confirmPassword, salt);
 
-
-    user.password  = hashPassword;
+    user.password = hashPassword;
+    user.signUpWithGoogle = false;
     await user.save();
-    
 
-     return response.json({
-        message: "Password updated successfully.",
-        error: false,
-        success: true,
-      });
-
+    return response.json({
+      message: "Password updated successfully.",
+      error: false,
+      success: true,
+    });
   } catch (error) {
     return response.status(500).json({
       message: error.message || error,
@@ -560,15 +645,15 @@ export async function resetPassword(request, response){
   }
 }
 
-
 // refresh token controller
 
-export async function refreshToken (request, response){
+export async function refreshToken(request, response) {
   try {
-    const refreshToken = request.cookies.refreshToken || request?.headers?.authorization?.split(" ")[1];
+    const refreshToken =
+      request.cookies.refreshToken ||
+      request?.headers?.authorization?.split(" ")[1];
 
-
-     if (!refreshToken) {
+    if (!refreshToken) {
       return response.status(400).json({
         message: "Invalid Token",
         error: true,
@@ -576,8 +661,10 @@ export async function refreshToken (request, response){
       });
     }
 
-
-    const verifyToken = await jwt.verify(refreshToken,process.env.SECRET_KEY_REFRESH_TOKEN);
+    const verifyToken = await jwt.verify(
+      refreshToken,
+      process.env.SECRET_KEY_REFRESH_TOKEN,
+    );
 
     if (!verifyToken) {
       return response.status(400).json({
@@ -591,23 +678,21 @@ export async function refreshToken (request, response){
     const newAccessToken = await generatedAccessToken(userId);
 
     const cookiesOption = {
-      httpOnly : true,
-      secure : true,
-      sameSite : "None"
-    }
+      httpOnly: true,
+      secure: true,
+      sameSite: "None",
+    };
 
-    response.cookie('accessToken',newAccessToken,cookiesOption);
+    response.cookie("accessToken", newAccessToken, cookiesOption);
 
     return response.json({
-        message: "New Access token generated.",
-        error: false,
-        success: true,
-        data:{
-          accessToken : newAccessToken
-        }
-      });
-
-
+      message: "New Access token generated.",
+      error: false,
+      success: true,
+      data: {
+        accessToken: newAccessToken,
+      },
+    });
   } catch (error) {
     return response.status(500).json({
       message: error.message || error,
@@ -618,20 +703,22 @@ export async function refreshToken (request, response){
 }
 
 // get login user details
-export async function userDetails(request, response){
+export async function userDetails(request, response) {
   try {
-    const userId = request.userId
+    const userId = request.userId;
 
-    console.log(userId)
+    console.log(userId);
 
-    const user  = await UserModel.findById(userId).select('-password -refresh_token').populate('address_details');
+    const user = await UserModel.findById(userId)
+      .select("-password -refresh_token")
+      .populate("address_details");
 
     return response.json({
-      message : 'user details',
-      data : user,
-      error : false,
-      success : true
-    })
+      message: "user details",
+      data: user,
+      error: false,
+      success: true,
+    });
   } catch (error) {
     return response.status(500).json({
       message: error.message || error,
