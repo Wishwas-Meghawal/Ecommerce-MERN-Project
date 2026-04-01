@@ -26,7 +26,9 @@ const ProductDetailsComponent = (props) => {
         </span>
 
         <Rating value={4.5} precision={0.5} readOnly size="small" />
-        <span className="text-sm text-gray-500">(10 Reviews)</span>
+        <span className="text-sm text-gray-500 hover:text-primary cursor-pointer" onClick={props.gotoReviews}>
+          ({props.reviewsCount} Reviews)
+        </span>
       </div>
 
       {/* Price */}

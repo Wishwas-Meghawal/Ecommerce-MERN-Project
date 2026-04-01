@@ -78,6 +78,7 @@ const AccountSidebar = () => {
       <div className="w-full p-5 flex items-center justify-center flex-col">
         <div className="w-[110px] h-[110px]  rounded-full overflow-hidden relative group flex items-center justify-center bg-gray-300">
 
+          
           {
             uploading === true ? <CircularProgress color="inherit" /> : 
             <>
