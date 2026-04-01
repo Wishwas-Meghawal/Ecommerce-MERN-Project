@@ -448,3 +448,8 @@ button .MuiCircularProgress-root{
 }
 
 header{box-shadow: 0px 1px 5px #0000001a;}
+
+
+.MuiCircularProgress-root{
+  color: #ff5252 !important;
+}
