@@ -60,7 +60,6 @@ const Header = () => {
     // ⭐ ALWAYS CLEAR FRONTEND
     localStorage.removeItem("accessToken");
     localStorage.removeItem("refreshToken");
-
     context.setIsLogin(false);
     context.setUserData(null);
 

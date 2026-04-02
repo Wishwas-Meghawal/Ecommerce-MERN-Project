@@ -3,20 +3,20 @@ import CartProductModel from "../models/cartProduct.model.js";
 // add item to cart
 export const addCartItemController = async (request,response)=>{
     try {
-        const userId = request.userId
-        const { productTitle,image,rating,price,quantity,subTotal,productId,countInStock } = request.body
+        const userId = request.userId;
+        const { productTitle,image,rating,price,quantity,subTotal,productId,coutInStock } = request.body
 
         if(!productId){
             return response.status(402).json({
                 message: "Provide productId",
                 error: true,
-                uccess:"false"
+                success:"false"
             })
         }
 
         const checkItemCart = await CartProductModel.findOne({
             userId: userId,
-            product : productId
+            productId : productId
         })
 
 
@@ -35,7 +35,7 @@ export const addCartItemController = async (request,response)=>{
             quantity: quantity,
             subTotal: subTotal,
             productId: productId,
-            countInStock: countInStock,
+            coutInStock: coutInStock,
             userId: userId
         })
 

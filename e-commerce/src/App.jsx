@@ -28,7 +28,7 @@ import MyAccount from "./Pages/MyAccount";
 import MyList from "./Pages/MyList";
 import MyListItems from "./Pages/MyList/MyListItems";
 import Orders from "./Pages/Orders";
-import { fetchDataFromApi } from "./utils/api.js";
+import { fetchDataFromApi, postData } from "./utils/api.js";
 import AddressForm from "./Pages/MyAccount/AddressForm";
 import { Scroll } from "lucide-react";
 import ScrollToTop from "./components/ScrollToTop/index.jsx";
@@ -117,6 +117,38 @@ function App() {
       toast.error(msg);
     }
   };
+
+
+  const addToCart = (product, userId ,quantity) => {
+    if(userId === undefined){
+      alertBox("Please login to add items to cart", "error");
+      return false;
+    } 
+
+    const data = {
+      productTitle: product?.name,
+      image: product?.images[0],
+      rating: product?.rating,
+      price: product?.price,
+      quantity: quantity,
+      subTotal: parseInt(product?.price * quantity),
+      productId: product?._id,
+      coutInStock: product?.coutInStock,
+      userId: userId,
+    } 
+  
+
+    postData("/api/cart/add", data).then((res) => {
+
+      if (res?.error === false) {
+        alertBox(res?.message, "success");
+      } else {
+        alertBox(res?.message, "error");
+      }
+    })
+  };
+
+
   const values = {
     setOpenProductDetailsModal,
     handleOpenProductDetailsModal,
@@ -132,6 +164,7 @@ function App() {
     setAddress,
     setCatData,
     catData,
+    addToCart
   };
 
   return (

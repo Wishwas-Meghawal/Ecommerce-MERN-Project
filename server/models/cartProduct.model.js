@@ -29,7 +29,7 @@ const cartProductSchema = new mongoose.Schema({
         type : String,
         required : true
     },
-    countInStock : {
+    coutInStock : {
         type : Number,
         required : true
     },
@@ -41,6 +41,6 @@ const cartProductSchema = new mongoose.Schema({
     timestamps : true
 })
 
-const CartProductModel = mongoose.model('Cart',cartProductSchema);
+const CartProductModel = mongoose.model('CartProduct',cartProductSchema);
 
 export default CartProductModel;

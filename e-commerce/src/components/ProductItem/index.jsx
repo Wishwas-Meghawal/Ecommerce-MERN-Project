@@ -11,6 +11,10 @@ import { MyContext } from "../../App";
 
 const ProductItem = (props) => {
   const context = useContext(MyContext);
+
+  const addToCart = (product, userId, quantity) => {
+    context?.addToCart(product, userId, quantity);
+  }  
   return (
     <div className="group relative bg-white/70 backdrop-blur-md border border-gray-200 rounded-2xl overflow-hidden transition-all duration-500">
       {/* Discount Badge */}
@@ -113,6 +117,7 @@ const ProductItem = (props) => {
         <div className="mt-3">
           <Button
             variant="outlined"
+            onClick={()=>addToCart(props?.item, context?.userData?._id, 1)}
             startIcon={<FiShoppingCart size={15} />}
             sx={{
               width: "100%",
