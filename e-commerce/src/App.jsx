@@ -30,6 +30,8 @@ import MyListItems from "./Pages/MyList/MyListItems";
 import Orders from "./Pages/Orders";
 import { fetchDataFromApi } from "./utils/api.js";
 import AddressForm from "./Pages/MyAccount/AddressForm";
+import { Scroll } from "lucide-react";
+import ScrollToTop from "./components/ScrollToTop/index.jsx";
 
 function App() {
   const [openProductDetailsModal, setOpenProductDetailsModal] = useState({
@@ -137,6 +139,7 @@ function App() {
       <BrowserRouter>
         <MyContext.Provider value={values}>
           <Header />
+          <ScrollToTop />
           <Routes>
             <Route path={"/"} exact={true} element={<Home />} />
             <Route
@@ -164,6 +167,7 @@ function App() {
             <Route path={"/my-orders"} exact={true} element={<Orders />} />
             <Route path={"/address"} exact={true} element={<AddressForm />} />
           </Routes>
+          <ScrollToTop />
           <Footer />
         </MyContext.Provider>
       </BrowserRouter>
