@@ -1,11 +1,10 @@
 import CartProductModel from "../models/cartProduct.model.js";
-import UserModel from "../models/user.model.js";
 
 // add item to cart
 export const addCartItemController = async (request,response)=>{
     try {
         const userId = request.userId
-        const { productId } = request.body
+        const { productTitle,image,rating,price,quantity,subTotal,productId,countInStock } = request.body
 
         if(!productId){
             return response.status(402).json({
@@ -29,19 +28,18 @@ export const addCartItemController = async (request,response)=>{
         }
 
         const cartItem = new CartProductModel({
-            quantity : 1,
-            userId : userId,
-            productId: productId
+            productTitle: productTitle,
+            image: image,
+            rating: rating,
+            price: price,
+            quantity: quantity,
+            subTotal: subTotal,
+            productId: productId,
+            countInStock: countInStock,
+            userId: userId
         })
 
         const save = await cartItem.save();
-
-        const updatecartUser = await UserModel.updateOne({ _id : userId},{
-            $push : {
-                shopping_cart : productId
-            }
-        })
-
 
         return response.status(200).json({
             data: save,
@@ -68,7 +66,7 @@ export const getCartItemController = async (request,response)=>{
 
         const cartItems = await CartProductModel.find({
             userId: userId
-        }).populate("productId")
+        })
 
         return response.status(200).json({
             data: cartItems,
@@ -80,7 +78,7 @@ export const getCartItemController = async (request,response)=>{
     } catch (error) {
         return response.status(500).json({
             message : error.message || error,
-            error : true,
+            error : true, 
             success : false
         })
     }
@@ -154,16 +152,6 @@ export const deleteCartItemQuantityController = async (request,response)=>{
                 success : false
             })
         }
-
-        const user  = await UserModel.findOne({_id : userId})
-
-        const cartItems = user?.shopping_cart;
-        const updatedUserCart = [...cartItems.slice(0, cartItems.indexOf(productId)), ...
-        cartItems.slice(cartItems.indexOf(productId) + 1)];
-
-
-        user.shopping_cart = updatedUserCart;
-        await user.save();
 
         return response.status(200).json({
             data: deleteCartItem,
