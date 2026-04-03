@@ -69,7 +69,7 @@ const ProductDetails = () => {
 
   return (
     <>
-      <div className="py-10">
+      <div className="py-4 pb-0">
         <div className="container">
           <Breadcrumbs aria-label="breadcrumb">
             <Link
