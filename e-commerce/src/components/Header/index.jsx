@@ -243,7 +243,7 @@ const Header = () => {
                     aria-label="cart"
                     onClick={() => context.setOpenCartPanel(true)}
                   >
-                    <StyledBadge badgeContent={4} color="secondary">
+                    <StyledBadge badgeContent={context?.cartData?.length} color="secondary">
                       <MdOutlineShoppingCart />
                     </StyledBadge>
                   </IconButton>

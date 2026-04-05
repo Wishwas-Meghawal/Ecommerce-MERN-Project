@@ -33,6 +33,8 @@ import AddressForm from "./Pages/MyAccount/AddressForm";
 import { Scroll } from "lucide-react";
 import ScrollToTop from "./components/ScrollToTop/index.jsx";
 
+
+
 function App() {
   const [openProductDetailsModal, setOpenProductDetailsModal] = useState({
     open: false,
@@ -51,6 +53,9 @@ function App() {
   const [address, setAddress] = useState([]);
 
   const [catData, setCatData] = useState([]);
+
+  const [cartData, setCartData] = useState([]);
+
   const apiUrl = import.meta.env.VITE_API_URL;
 
   const handleOpenProductDetailsModal = (status, item) => {
@@ -94,11 +99,13 @@ function App() {
         }
 
         setUserData(res?.data);
+        getCartItems();
       })
       .catch(() => {
         setIsLogin(false);
         setUserData(null);
       });
+      
   }, [isLogin]);
 
   useEffect(() => {
@@ -118,12 +125,11 @@ function App() {
     }
   };
 
-
-  const addToCart = (product, userId ,quantity) => {
-    if(userId === undefined){
+  const addToCart = (product, userId, quantity) => {
+    if (userId === undefined) {
       alertBox("Please login to add items to cart", "error");
       return false;
-    } 
+    }
 
     const data = {
       productTitle: product?.name,
@@ -135,19 +141,27 @@ function App() {
       productId: product?._id,
       coutInStock: product?.coutInStock,
       userId: userId,
-    } 
-  
+      
+    };
 
     postData("/api/cart/add", data).then((res) => {
-
       if (res?.error === false) {
         alertBox(res?.message, "success");
+
+        getCartItems();
       } else {
         alertBox(res?.message, "error");
       }
-    })
+    });
   };
 
+  const getCartItems = () => {
+    fetchDataFromApi(`/api/cart/get`).then((res) => {
+      if (res?.error === false) {
+        setCartData(res?.data);
+      }
+    });
+  };
 
   const values = {
     setOpenProductDetailsModal,
@@ -164,7 +178,8 @@ function App() {
     setAddress,
     setCatData,
     catData,
-    addToCart
+    addToCart,
+    cartData,
   };
 
   return (
@@ -230,7 +245,9 @@ function App() {
                 </div>
 
                 <div className="col2 w-[60%] py-8 px-8">
-                  <ProductDetailsComponent item={openProductDetailsModal?.item}/>
+                  <ProductDetailsComponent
+                    item={openProductDetailsModal?.item}
+                  />
                 </div>
               </>
             )}
