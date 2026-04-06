@@ -180,6 +180,7 @@ function App() {
     catData,
     addToCart,
     cartData,
+    getCartItems,
   };
 
   return (
