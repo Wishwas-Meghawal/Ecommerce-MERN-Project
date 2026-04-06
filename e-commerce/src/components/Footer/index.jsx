@@ -19,6 +19,7 @@ import { Link } from "react-router-dom";
 import Drawer from "@mui/material/Drawer";
 import { MyContext } from "../../App";
 import CartPanel from "../CartPanel";
+import { ShoppingCart } from "lucide-react";
 
 const Footer = () => {
   const context = useContext(MyContext);
@@ -236,14 +237,59 @@ const Footer = () => {
         className="cartPanel"
       >
         <div className="flex items-center justify-between py-3 px-4 gap-3 border-b border-[rgba(0,0,0,0.1)]">
-          <h1>Shopping Cart (10)</h1>
+          <h1>Shopping Cart ({context?.cartData?.length})</h1>
           <IoCloseSharp
             className="text-[20px] cursor-pointer"
             onClick={context.toggleCartpanel(false)}
           />
         </div>
 
-        <CartPanel />
+        {context?.cartData?.length !== 0 ? (
+          <CartPanel data={context?.cartData} />
+        ) : (
+          <div className="w-full h-full flex items-center justify-center bg-gray-50">
+            <div className="flex flex-col items-center text-center p-6 max-w-sm">
+              {/* Icon Container */}
+              <div className="w-20 h-20 flex items-center justify-center rounded-full bg-white shadow-md mb-4">
+                <ShoppingCart className="w-10 h-10 text-gray-400" />
+              </div>
+
+              {/* Title */}
+              <h2 className="text-lg font-semibold text-gray-800">
+                Your cart feels lonely 🛒
+              </h2>
+
+              {/* Subtitle */}
+              <p className="text-sm text-gray-500 mt-2">
+                Looks like you haven’t added anything yet. Start exploring and
+                fill it up!
+              </p>
+
+              <Button
+                variant="contained"
+                sx={{
+                  mt: 3,
+                  px: 4,
+                  py: 1.3,
+                  borderRadius: "999px",
+                  textTransform: "none",
+                  fontWeight: 600,
+                  background: "linear-gradient(135deg, #ff9900, #ffb84d)",
+                  color: "#000",
+                  boxShadow: "0 4px 14px rgba(255,153,0,0.4)",
+                  transition: "all 0.3s ease",
+                  "&:hover": {
+                    background: "linear-gradient(135deg, #e68a00, #ffa31a)",
+                    boxShadow: "0 6px 18px rgba(255,153,0,0.6)",
+                    transform: "translateY(-2px)",
+                  },
+                }}
+              >
+                Continue Shopping
+              </Button>
+            </div>
+          </div>
+        )}
       </Drawer>
     </footer>
   );
