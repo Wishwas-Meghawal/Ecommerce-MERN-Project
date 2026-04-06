@@ -29,13 +29,12 @@ const ProductItem = (props) => {
       cartItem.productId.includes(props?.item?._id),
     );
 
-    
     if (item?.length !== 0) {
       setCartItem(item);
       setIsAdded(true);
       setQuantity(item[0]?.quantity);
-    }else{  
-      setQuantity(1); 
+    } else {
+      setQuantity(1);
     }
   }, [context?.cartData]);
 
@@ -51,14 +50,14 @@ const ProductItem = (props) => {
         (res) => {
           setIsAdded(false);
           context?.alertBox("Cart item deleted successfully", "success");
-          context?.getCartItems(); 
+          context?.getCartItems();
         },
       );
     } else {
       const obj = {
         _id: cartItem[0]?._id,
-        quantity: quantity-1,
-        subTotal: props?.item?.price * (quantity-1),
+        quantity: quantity - 1,
+        subTotal: props?.item?.price * (quantity - 1),
       };
       editData(`/api/cart/update-quantity`, obj).then((res) => {
         context?.alertBox(res?.data?.message, "success");
@@ -71,12 +70,12 @@ const ProductItem = (props) => {
 
     const obj = {
       _id: cartItem[0]?._id,
-      quantity: quantity+1,
-      subTotal: props?.item?.price * ( quantity+1),
+      quantity: quantity + 1,
+      subTotal: props?.item?.price * (quantity + 1),
     };
     editData(`/api/cart/update-quantity`, obj).then((res) => {
-       context?.alertBox(res?.data?.message, "success");
-        context?.getCartItems()
+      context?.alertBox(res?.data?.message, "success");
+      context?.getCartItems();
     });
   };
   return (
@@ -104,6 +103,31 @@ const ProductItem = (props) => {
               className="absolute inset-0 w-full h-full object-cover transition-all duration-500 scale-105 opacity-0 group-hover:opacity-100"
             />
           </Link>
+          <div className="absolute top-0 left-0 w-full h-full bg-black/60 backdrop-blur-sm z-[60] flex items-center justify-center gap-3">
+          {
+            props?.item?.size?.length !==0 && props?.item?.size?.map((size,index) => {
+              return (
+                <span
+                key={index}
+                className="
+                flex items-center justify-center
+                px-3 py-2 
+                w-[25px]
+                min-w-[50px]
+                rounded-lg
+                text-sm font-medium
+                cursor-pointer
+                backdrop-blur-md
+                transition-all duration-200
+              bg-white/80 text-black shadow-md hover:bg-white hover:scale-105 hover:shadow-lg
+                active:scale-95"
+              >
+                {size}
+              </span>
+              )
+            })    
+          }
+          </div>
         </div>
 
         {/* Floating Icons */}

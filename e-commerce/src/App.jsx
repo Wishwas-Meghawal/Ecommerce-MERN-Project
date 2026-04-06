@@ -136,12 +136,17 @@ function App() {
       image: product?.images[0],
       rating: product?.rating,
       price: product?.price,
+      oldPrice: product?.oldPrice,
+      discount: product?.discount,
       quantity: quantity,
       subTotal: parseInt(product?.price * quantity),
       productId: product?._id,
       coutInStock: product?.coutInStock,
       userId: userId,
-      
+      brand: product?.brand,
+      size: size,
+      weight: weight,
+      ram: rams,
     };
 
     postData("/api/cart/add", data).then((res) => {

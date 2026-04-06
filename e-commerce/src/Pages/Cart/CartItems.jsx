@@ -39,11 +39,12 @@ const CartItems = (props) => {
     }
   };
   return (
+    
     <div className="cartItem w-full p-3 flex items-center gap-4 pb-5 border-b border-[rgba(0,0,0,0.1)]">
       <div className="img w-[15%] rounded-md overflow-hidden">
         <Link to="/product/7845" className="group">
           <img
-            src="https://serviceapi.spicezgold.com/download/1742462729828_zoom_0-1673275594.webp"
+            src={props?.item?.image}
             alt=""
             className="w-full group-hover:scale-105 transition-all"
           />
@@ -52,14 +53,14 @@ const CartItems = (props) => {
 
       <div className="info w-[85%] relative">
         <IoCloseSharp className="cursor-pointer absolute top-0 right-0 text-[22px] transition-all" />
-        <span className="text-[13px]">Flying Machine</span>
+        <span className="text-[13px]">{props?.item?.brand}</span>
         <h3 className="text-[15px]">
           <Link to="/" className="link">
-            Men Pure Cotton Striped Casual Shirt
+            {props?.item?.productTitle}
           </Link>
         </h3>
         <Rating
-          value={4}
+          value={props?.item?.rating || 0}
           size="small"
           readOnly
           className="mb-1"
