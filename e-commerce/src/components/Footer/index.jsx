@@ -82,8 +82,12 @@ const Footer = () => {
               (+91) 9876-543-210
             </p>
             <div className="flex items-center gap-2">
-                <IoChatboxOutline className="text-[40px] text-primary"/>
-                <span className="text-[16px] font-[600]">Online Chat<br/>Get Expert Help</span>
+              <IoChatboxOutline className="text-[40px] text-primary" />
+              <span className="text-[16px] font-[600]">
+                Online Chat
+                <br />
+                Get Expert Help
+              </span>
             </div>
           </div>
 
@@ -91,12 +95,36 @@ const Footer = () => {
           <div className="border-l border-gray-200 pl-8">
             <h3 className="text-[18px] font-semibold mb-4">Products</h3>
             <ul className="space-y-2 text-sm text-gray-600 list">
-              <li className="list-none"><Link to="/" className="link">Prices drop</Link></li>
-              <li className="list-none"><Link to="/" className="link">New products</Link></li>
-              <li className="list-none"><Link to="/" className="link">Best sales</Link></li>
-              <li className="list-none"><Link to="/" className="link">Contact us</Link></li>
-              <li className="list-none"><Link to="/" className="link">Sitemap</Link></li>
-              <li className="list-none"><Link to="/" className="link">Stores</Link></li>
+              <li className="list-none">
+                <Link to="/" className="link">
+                  Prices drop
+                </Link>
+              </li>
+              <li className="list-none">
+                <Link to="/" className="link">
+                  New products
+                </Link>
+              </li>
+              <li className="list-none">
+                <Link to="/" className="link">
+                  Best sales
+                </Link>
+              </li>
+              <li className="list-none">
+                <Link to="/" className="link">
+                  Contact us
+                </Link>
+              </li>
+              <li className="list-none">
+                <Link to="/" className="link">
+                  Sitemap
+                </Link>
+              </li>
+              <li className="list-none">
+                <Link to="/" className="link">
+                  Stores
+                </Link>
+              </li>
             </ul>
           </div>
 
@@ -104,18 +132,44 @@ const Footer = () => {
           <div>
             <h3 className="text-[18px] font-semibold mb-4">Our company</h3>
             <ul className="space-y-2 text-sm text-gray-600 list">
-              <li><Link to="/" className="link">Delivery</Link></li>
-              <li><Link to="/" className="link">Legal Notice</Link></li>
-              <li><Link to="/" className="link">Terms and conditions</Link></li>
-              <li><Link to="/" className="link">About us</Link></li>
-              <li><Link to="/" className="link">Secure payment</Link></li>
-              <li><Link to="/" className="link">Login</Link></li>
+              <li>
+                <Link to="/" className="link">
+                  Delivery
+                </Link>
+              </li>
+              <li>
+                <Link to="/" className="link">
+                  Legal Notice
+                </Link>
+              </li>
+              <li>
+                <Link to="/" className="link">
+                  Terms and conditions
+                </Link>
+              </li>
+              <li>
+                <Link to="/" className="link">
+                  About us
+                </Link>
+              </li>
+              <li>
+                <Link to="/" className="link">
+                  Secure payment
+                </Link>
+              </li>
+              <li>
+                <Link to="/" className="link">
+                  Login
+                </Link>
+              </li>
             </ul>
           </div>
 
           {/* NEWSLETTER */}
           <div>
-            <h3 className="text-[18px] font-semibold mb-4">Subscribe to newsletter</h3>
+            <h3 className="text-[18px] font-semibold mb-4">
+              Subscribe to newsletter
+            </h3>
             <p className="text-sm text-gray-600 mb-4">
               Subscribe to our latest newsletter to get news about special
               discounts.
@@ -125,9 +179,7 @@ const Footer = () => {
               placeholder="Your Email Address"
               className="w-full border px-3 py-2 mb-4 outline-none"
             />
-            <Button className="btn-org">
-              SUBSCRIBE
-            </Button>
+            <Button className="btn-org">SUBSCRIBE</Button>
             <div className="flex items-start gap-2 text-xs text-gray-600">
               <input type="checkbox" />
               <span>
@@ -148,21 +200,35 @@ const Footer = () => {
                 >
                   <Icon />
                 </span>
-              )
+              ),
             )}
           </div>
 
           <p className="text-sm text-gray-500">© 2024 - Ecommerce Template</p>
 
-          <div className="flex gap-2">
-            <img src="/visa.png" alt="visa" className="h-6" />
-            <img src="/mastercard.png" alt="mc" className="h-6" />
-            <img src="/paypal.png" alt="paypal" className="h-6" />
+          <div className="flex gap-3 bg-white/70 backdrop-blur-sm rounded-2xl shadow-lg shadow-gray-200/50 p-3 px-5 border border-gray-100/80">
+            <img
+              src="/visa.png"
+              alt="visa"
+              className="h-7 w-auto object-contain grayscale hover:grayscale-0 transition-all duration-300 opacity-80 hover:opacity-100 hover:scale-105"
+            />
+            <div className="w-px h-6 bg-gradient-to-b from-transparent via-gray-300 to-transparent my-auto"></div>
+            <img
+              src="/mastercard.png"
+              alt="mc"
+              className="h-7 w-auto object-contain grayscale hover:grayscale-0 transition-all duration-300 opacity-80 hover:opacity-100 hover:scale-105"
+            />
+            <div className="w-px h-6 bg-gradient-to-b from-transparent via-gray-300 to-transparent my-auto"></div>
+            <img
+              src="/paypal.png"
+              alt="paypal"
+              className="h-7 w-auto object-contain grayscale hover:grayscale-0 transition-all duration-300 opacity-80 hover:opacity-100 hover:scale-105"
+            />
           </div>
         </div>
       </div>
 
-       {/* cart panel */}
+      {/* cart panel */}
       <Drawer
         open={context.openCartPanel}
         onClose={context.toggleCartpanel(false)}
@@ -171,10 +237,13 @@ const Footer = () => {
       >
         <div className="flex items-center justify-between py-3 px-4 gap-3 border-b border-[rgba(0,0,0,0.1)]">
           <h1>Shopping Cart (10)</h1>
-          <IoCloseSharp className="text-[20px] cursor-pointer" onClick={context.toggleCartpanel(false)}/>
+          <IoCloseSharp
+            className="text-[20px] cursor-pointer"
+            onClick={context.toggleCartpanel(false)}
+          />
         </div>
 
-        <CartPanel/>
+        <CartPanel />
       </Drawer>
     </footer>
   );
