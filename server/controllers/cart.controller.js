@@ -89,7 +89,7 @@ export const getCartItemController = async (request,response)=>{
 export const updateCartItemQuantityController = async (request,response)=>{
     try {
         const userId = request.userId
-        const { _id, quantity } = request.body
+        const { _id, quantity, subTotal } = request.body
 
 
         if(!_id || !quantity){
@@ -104,12 +104,16 @@ export const updateCartItemQuantityController = async (request,response)=>{
             _id: _id,
             userId: userId
         },{
-            quantity: quantity
+            quantity: quantity,
+            subTotal: subTotal
+
+        },{
+            new: true
         })
 
         return response.status(200).json({
             data: updateCartItem,
-            message: "Cart item quantity updated successfully",
+            message: "Cart Quantity updated successfully",
             error: false,
             success : true
         })
@@ -129,10 +133,10 @@ export const updateCartItemQuantityController = async (request,response)=>{
 export const deleteCartItemQuantityController = async (request,response)=>{
     try {
         const userId = request.userId
-        const { _id , productId} = request.body  
+        const {id} = request.params  
         
         
-        if(!_id){
+        if(!id){
             return response.status(402).json({
                 message: "Provide id",
                 error: true,
@@ -141,7 +145,7 @@ export const deleteCartItemQuantityController = async (request,response)=>{
         }   
 
         const deleteCartItem = await CartProductModel.deleteOne({
-            _id: _id,
+            _id: id,
             userId: userId
         })  
 
