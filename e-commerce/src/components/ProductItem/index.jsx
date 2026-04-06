@@ -4,17 +4,81 @@ import Rating from "@mui/material/Rating";
 import { FiZoomIn } from "react-icons/fi";
 import { BiGitCompare } from "react-icons/bi";
 import { HiOutlineDocumentText } from "react-icons/hi";
-import { Button } from "@mui/material";
+import { Button, useScrollTrigger } from "@mui/material";
 import Tooltip from "@mui/material/Tooltip";
-import { useContext } from "react";
+import { useContext, useEffect, useState } from "react";
 import { MyContext } from "../../App";
+import { FaMinus } from "react-icons/fa6";
+import { FaPlus } from "react-icons/fa6";
+import { deleteData, editData } from "../../utils/api";
 
 const ProductItem = (props) => {
   const context = useContext(MyContext);
 
+  const [quantity, setQuantity] = useState(1);
+  const [isAdded, setIsAdded] = useState(false);
+  const [cartItem, setCartItem] = useState([]);
+
   const addToCart = (product, userId, quantity) => {
     context?.addToCart(product, userId, quantity);
-  }  
+    setIsAdded(true);
+  };
+
+  useEffect(() => {
+    const item = context?.cartData?.filter((cartItem) =>
+      cartItem.productId.includes(props?.item?._id),
+    );
+
+    
+    if (item?.length !== 0) {
+      setCartItem(item);
+      setIsAdded(true);
+      setQuantity(item[0]?.quantity);
+    }else{  
+      setQuantity(1); 
+    }
+  }, [context?.cartData]);
+
+  const minusQty = () => {
+    if (quantity !== 1 && quantity > 1) {
+      setQuantity(quantity - 1);
+    } else {
+      setQuantity(1);
+    }
+
+    if (quantity === 1) {
+      deleteData(`/api/cart/delete-cart-item/${cartItem[0]?._id}`).then(
+        (res) => {
+          setIsAdded(false);
+          context?.alertBox("Cart item deleted successfully", "success");
+          context?.getCartItems(); 
+        },
+      );
+    } else {
+      const obj = {
+        _id: cartItem[0]?._id,
+        quantity: quantity-1,
+        subTotal: props?.item?.price * (quantity-1),
+      };
+      editData(`/api/cart/update-quantity`, obj).then((res) => {
+        context?.alertBox(res?.data?.message, "success");
+        context?.getCartItems();
+      });
+    }
+  };
+  const addQty = () => {
+    setQuantity(quantity + 1);
+
+    const obj = {
+      _id: cartItem[0]?._id,
+      quantity: quantity+1,
+      subTotal: props?.item?.price * ( quantity+1),
+    };
+    editData(`/api/cart/update-quantity`, obj).then((res) => {
+       context?.alertBox(res?.data?.message, "success");
+        context?.getCartItems()
+    });
+  };
   return (
     <div className="group relative bg-white/70 backdrop-blur-md border border-gray-200 rounded-2xl overflow-hidden transition-all duration-500">
       {/* Discount Badge */}
@@ -115,27 +179,110 @@ const ProductItem = (props) => {
 
         {/* Add to Cart Button */}
         <div className="mt-3">
-          <Button
-            variant="outlined"
-            onClick={()=>addToCart(props?.item, context?.userData?._id, 1)}
-            startIcon={<FiShoppingCart size={15} />}
-            sx={{
-              width: "100%",
-              borderColor: "#ef4444",
-              color: "#ef4444",
-              fontSize: "11px",
-              fontWeight: 600,
-              padding: "5px 14px",
-              minHeight: "35px",
-              textTransform: "uppercase",
-              "&:hover": {
-                backgroundColor: "#ef4444",
-                color: "#fff",
-              },
-            }}
-          >
-            Add to Cart
-          </Button>
+          {isAdded === false ? (
+            <Button
+              variant="outlined"
+              onClick={() =>
+                addToCart(props?.item, context?.userData?._id, quantity)
+              }
+              startIcon={<FiShoppingCart size={15} />}
+              sx={{
+                width: "100%",
+                borderColor: "#ef4444",
+                color: "#ef4444",
+                fontSize: "11px",
+                fontWeight: 600,
+                padding: "5px 14px",
+                minHeight: "35px",
+                textTransform: "uppercase",
+                "&:hover": {
+                  backgroundColor: "#ef4444",
+                  color: "#fff",
+                },
+              }}
+            >
+              Add to Cart
+            </Button>
+          ) : (
+            <div className="mt-3 flex items-center  justify-center">
+              <div className="flex items-center w-[300px] justify-between overflow-hidden rounded-full border border-gray-200 bg-white ">
+                {/* Minus */}
+                <Button
+                  disableRipple
+                  disableElevation
+                  onClick={minusQty}
+                  sx={{
+                    minWidth: "48px",
+                    height: "42px",
+                    color: "#ef4444",
+                    borderRadius: 0, // 👈 important
+                    transition: "all 0.25s ease",
+
+                    "&:hover": {
+                      backgroundColor: "#ef4444",
+                      color: "#ffffff",
+                    },
+
+                    "&:active": {
+                      backgroundColor: "#dc2626",
+                      borderRadius: 0, // 👈 force again
+                    },
+
+                    "&:focus": {
+                      outline: "none",
+                      borderRadius: 0, // 👈 yaha bhi
+                    },
+
+                    "&.Mui-focusVisible": {
+                      borderRadius: 0, // 👈 MUI ka hidden culprit
+                    },
+                  }}
+                >
+                  <FaMinus size={13} />
+                </Button>
+
+                {/* Quantity */}
+                <span className="px-6 text-base font-semibold text-gray-900 select-none ">
+                  {quantity}
+                </span>
+
+                {/* Plus */}
+                <Button
+                  disableRipple
+                  disableElevation
+                  onClick={addQty}
+                  sx={{
+                    minWidth: "48px",
+                    height: "42px",
+                    color: "#ef4444",
+                    borderRadius: 0, // 👈 important
+                    transition: "all 0.25s ease",
+
+                    "&:hover": {
+                      backgroundColor: "#ef4444",
+                      color: "#ffffff",
+                    },
+
+                    "&:active": {
+                      backgroundColor: "#dc2626",
+                      borderRadius: 0, // 👈 force again
+                    },
+
+                    "&:focus": {
+                      outline: "none",
+                      borderRadius: 0, // 👈 yaha bhi
+                    },
+
+                    "&.Mui-focusVisible": {
+                      borderRadius: 0, // 👈 MUI ka hidden culprit
+                    },
+                  }}
+                >
+                  <FaPlus size={13} />
+                </Button>
+              </div>
+            </div>
+          )}
         </div>
       </div>
     </div>
