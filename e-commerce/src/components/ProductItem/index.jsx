@@ -19,9 +19,47 @@ const ProductItem = (props) => {
   const [isAdded, setIsAdded] = useState(false);
   const [cartItem, setCartItem] = useState([]);
 
+  const [activeTab, setActiveTab] = useState(null);
+  const [isShowTabs, setIsShowTabs] = useState(false);
+  const [selectedName, setSelectedName] = useState(null);
+
   const addToCart = (product, userId, quantity) => {
-    context?.addToCart(product, userId, quantity);
-    setIsAdded(true);
+    const productItem = {
+      _id: product?._id,
+      name: product?.name,
+      image: product?.images[0],
+      rating: product?.rating,
+      price: product?.price,
+      oldPrice: product?.oldPrice,
+      discount: product?.discount,
+      quantity: quantity,
+      subTotal: parseInt(product?.price * quantity),
+      productId: product?._id,
+      coutInStock: product?.coutInStock,
+      userId: userId,
+      brand: product?.brand,
+      size: props?.item?.size?.length !== 0 ? selectedName : '',
+      weight: props?.item?.productWeight?.length !== 0 ? selectedName : '',
+      ram: props?.item?.productRam?.length !== 0 ? selectedName : '',
+    };
+    // product size
+    if (props?.item?.size?.length !== 0 || props?.item?.productRam?.length !== 0 || props?.item?.productWeight?.length !== 0) {
+      setIsShowTabs(true);
+    } else {
+      context?.addToCart(productItem, userId, quantity);
+      setIsAdded(true);
+      setIsShowTabs(false);
+    }
+    if (activeTab !== null) {
+      context?.addToCart(productItem, userId, quantity);
+      setIsAdded(true);
+      setIsShowTabs(false)
+    }
+  };
+
+  const handleClickActiveTab = (index, name) => {
+    setActiveTab(index); 
+    setSelectedName(name);
   };
 
   useEffect(() => {
@@ -51,6 +89,8 @@ const ProductItem = (props) => {
           setIsAdded(false);
           context?.alertBox("Cart item deleted successfully", "success");
           context?.getCartItems();
+          setIsShowTabs(false);
+          setActiveTab(null);
         },
       );
     } else {
@@ -103,31 +143,82 @@ const ProductItem = (props) => {
               className="absolute inset-0 w-full h-full object-cover transition-all duration-500 scale-105 opacity-0 group-hover:opacity-100"
             />
           </Link>
-          <div className="absolute top-0 left-0 w-full h-full bg-black/60 backdrop-blur-sm z-[60] flex items-center justify-center gap-3">
-          {
-            props?.item?.size?.length !==0 && props?.item?.size?.map((size,index) => {
-              return (
-                <span
-                key={index}
-                className="
-                flex items-center justify-center
-                px-3 py-2 
-                w-[25px]
-                min-w-[50px]
-                rounded-lg
-                text-sm font-medium
-                cursor-pointer
-                backdrop-blur-md
-                transition-all duration-200
-              bg-white/80 text-black shadow-md hover:bg-white hover:scale-105 hover:shadow-lg
-                active:scale-95"
-              >
-                {size}
-              </span>
-              )
-            })    
-          }
-          </div>
+
+          {isShowTabs === true && (
+            <div className="absolute top-0 left-0 w-full h-full bg-black/60 backdrop-blur-sm z-[60] flex items-center justify-center gap-3">
+              {props?.item?.size?.length !== 0 &&
+                props?.item?.size?.map((item, index) => {
+                  return (
+                    <span
+                      key={index}
+                      className={`
+                      flex items-center justify-center
+                      px-3 py-2 
+                      w-[25px]
+                      min-w-[50px]
+                      rounded-lg
+                      text-sm font-medium
+                      cursor-pointer
+                      backdrop-blur-md
+                      transition-all duration-200
+                    bg-white/80 text-black shadow-md hover:bg-white    hover:scale-105
+                      active:scale-95 ${activeTab === index && "!bg-primary text-white"}`}
+                      onClick={() => handleClickActiveTab(index, item)}
+                    >
+                      {item}
+                    </span>
+                  );
+                })}
+
+              {props?.item?.productRam?.length !== 0 &&
+                props?.item?.productRam?.map((item, index) => {
+                  return (
+                    <span
+                      key={index}
+                      className={`
+                      flex items-center justify-center
+                      px-3 py-2 
+                      w-[25px]
+                      min-w-[50px]
+                      rounded-lg
+                      text-sm font-medium
+                      cursor-pointer
+                      backdrop-blur-md
+                      transition-all duration-200
+                    bg-white/80 text-black shadow-md hover:bg-white    hover:scale-105
+                      active:scale-95 ${activeTab === index && "!bg-primary text-white"}`}
+                      onClick={() => handleClickActiveTab(index, item)}
+                    >
+                      {item}
+                    </span>
+                  );
+                })}
+
+              {props?.item?.productWeight?.length !== 0 &&
+                props?.item?.productWeight?.map((item, index) => {
+                  return (
+                    <span
+                      key={index}
+                      className={`
+                      flex items-center justify-center
+                      px-3 py-2 
+                      w-[25px]
+                      min-w-[50px]
+                      rounded-lg
+                      text-sm font-medium
+                      cursor-pointer
+                      backdrop-blur-md
+                      transition-all duration-200
+                    bg-white/80 text-black shadow-md hover:bg-white    hover:scale-105
+                      active:scale-95 ${activeTab === index && "!bg-primary text-white"}`}
+                      onClick={() => handleClickActiveTab(index, item)}
+                    >
+                      {item}
+                    </span>
+                  );
+                })}
+            </div>
+          )}
         </div>
 
         {/* Floating Icons */}

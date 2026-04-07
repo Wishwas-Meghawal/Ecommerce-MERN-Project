@@ -30,7 +30,7 @@ import MyListItems from "./Pages/MyList/MyListItems";
 import Orders from "./Pages/Orders";
 import { fetchDataFromApi, postData } from "./utils/api.js";
 import AddressForm from "./Pages/MyAccount/AddressForm";
-import { Scroll } from "lucide-react";
+import { Scroll, Weight } from "lucide-react";
 import ScrollToTop from "./components/ScrollToTop/index.jsx";
 
 
@@ -133,7 +133,7 @@ function App() {
 
     const data = {
       productTitle: product?.name,
-      image: product?.images[0],
+      image: product?.image,
       rating: product?.rating,
       price: product?.price,
       oldPrice: product?.oldPrice,
@@ -144,9 +144,10 @@ function App() {
       coutInStock: product?.coutInStock,
       userId: userId,
       brand: product?.brand,
-      size: size,
-      weight: weight,
-      ram: rams,
+      size: product?.size,
+      weight: product?.weight,
+      ram: product?.ram,
+      
     };
 
     postData("/api/cart/add", data).then((res) => {

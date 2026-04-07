@@ -1,64 +1,67 @@
 import mongoose, { mongo } from "mongoose";
 
-const cartProductSchema = new mongoose.Schema({
-    productTitle : {
-        type : String,
-        required : true
+const cartProductSchema = new mongoose.Schema(
+  {
+    productTitle: {
+      type: String,
+      required: true,
     },
-    image:{
-        type : String,
-        required : true
+    image: {
+      type: String,
+      required: true,
     },
-    rating : {
-        type : Number,
-        required : true
+    rating: {
+      type: Number,
+      required: true,
     },
-    price : {
-        type : Number,
-        required : true
+    price: {
+      type: Number,
+      required: true,
     },
-    oldPrice : {
-        type : Number,
+    oldPrice: {
+      type: Number,
     },
-    discount : {
-        type : Number,
+    discount: {
+      type: Number,
     },
-    size : {
-        type : String,
+    size: {
+      type: String,
     },
-    weight:{
-        type : String,
+    weight: {
+      type: String,
     },
-    rams:{
-        type : String,
+    ram: {
+      type: String,
     },
-    quantity : {
-        type : Number,
-        required : true
+    quantity: {
+      type: Number,
+      required: true,
     },
-    subTotal : {
-        type : Number,
-        required : true
+    subTotal: {
+      type: Number,
+      required: true,
     },
-    productId : {
-        type : String,
-        required : true
+    productId: {
+      type: String,
+      required: true,
     },
-    coutInStock : {
-        type : Number,
-        required : true
+    coutInStock: {
+      type: Number,
+      required: true,
     },
-    userId : {
-        type : String,
-        required : true
+    userId: {
+      type: String,
+      required: true,
     },
-    brand:{
-        tyhpe : String,
-    }
-},{
-    timestamps : true
-})
+    brand: {
+      type: String,
+    },
+  },
+  {
+    timestamps: true,
+  },
+);
 
-const CartProductModel = mongoose.model('CartProduct',cartProductSchema);
+const CartProductModel = mongoose.model("CartProduct", cartProductSchema);
 
 export default CartProductModel;
