@@ -112,7 +112,7 @@ const CartPanel = (props) => {
           </div>
           <br />
           <div className="flex items-center justify-center w-full gap-3">
-            <Link to="/cart" className="w-[50%] d-block">
+            <Link to="/cart" className="w-[50%] d-block" onClick={context.toggleCartpanel(false)}>
               <Button className="btn-org btn-lg w-full">View Cart</Button>
             </Link>
 
