@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { Link } from "react-router-dom";
 
 import { IoCloseSharp } from "react-icons/io5";
@@ -7,11 +7,15 @@ import MenuItem from "@mui/material/MenuItem";
 
 import { GoTriangleDown } from "react-icons/go";
 import { Rating } from "@mui/material";
-
+import { deleteData, editData } from "../../utils/api";
+import { MyContext } from "../../App";
 
 const CartItems = (props) => {
+  const context = useContext(MyContext);
   const [sizeanchorEl, setSizeAnchorEl] = useState(null);
-  const [selectedSize, setCartItems] = useState(props.size);
+  const [selectedSize, setCartItems] = useState(props.selected);
+
+  //const [productSizeData, setProductsizeData] = useState([]);
   const openSize = Boolean(sizeanchorEl);
 
   const [qtyanchorEl, setQtyAnchorEl] = useState(null);
@@ -23,26 +27,68 @@ const CartItems = (props) => {
   };
   const handleCloseSize = (value) => {
     setSizeAnchorEl(null);
-    if(value!==null){
-        setCartItems(value)
+    if (value !== null) {
+      setCartItems(value);
     }
   };
-
 
   const handleClickQty = (event) => {
     setQtyAnchorEl(event.currentTarget);
   };
   const handleCloseQty = (value) => {
     setQtyAnchorEl(null);
-    if(value!==null){
-        setSelectedQty(value)
+    if (value !== null) {
+      setSelectedQty(value);
+      const cartObj = {
+      _id: props?.item?._id,
+      quantity: value,
+      subTotal: props?.item?.price * value,
+    }
+    editData("/api/cart/update-quantity",cartObj).then((res)=>{
+      if(res?.data?.error===false){
+        context.alertBox(res?.data?.message,"success");
+        context?.getCartItems(); 
+      }
+    })
+
+
     }
   };
+
+  const updateCart = (selectedVal, qty)=>{
+    handleCloseSize(selectedVal)
+
+    const cartObj = {
+      _id: props?.item?._id,
+      quantity: qty,
+      subTotal: props?.item?.price * qty,
+      size: props?.item?.size!=="" ? selectedVal : '',
+      ram: props?.item?.ram!=="" ? selectedVal : '',
+      weight: props?.item?.weight!=="" ? selectedVal : '',
+    }
+
+    editData("/api/cart/update-quantity",cartObj).then((res)=>{
+      if(res?.data?.error===false){
+        context.alertBox(res?.data?.message,"success");
+        context?.getCartItems(); 
+      }
+    })
+  }
+
+  const removeItem = (id) =>{
+    deleteData(`/api/cart/delete-cart-item/${id}`).then((res)=>{
+      context.alertBox("Product removed from cart","success");
+      context?.getCartItems(); 
+    })
+  }
+
+
+
+
   return (
-    
     <div className="cartItem w-full p-3 flex items-center gap-4 pb-5 border-b border-[rgba(0,0,0,0.1)]">
       <div className="img w-[15%] rounded-md overflow-hidden">
-        <Link to="/product/7845" className="group">
+        <Link to={`/product/${props?.item?.productId}`} className="group">
           <img
             src={props?.item?.image}
             alt=""
@@ -52,10 +98,10 @@ const CartItems = (props) => {
       </div>
 
       <div className="info w-[85%] relative">
-        <IoCloseSharp className="cursor-pointer absolute top-0 right-0 text-[22px] transition-all" />
+        <IoCloseSharp className="cursor-pointer absolute top-0 right-0 text-[22px] transition-all" onClick={()=>removeItem(props?.item?._id)} />
         <span className="text-[13px]">{props?.item?.brand}</span>
         <h3 className="text-[15px]">
-          <Link to="/" className="link">
+          <Link to={`/product/${props?.item?.productId}`} className="link">
             {props?.item?.productTitle}
           </Link>
         </h3>
@@ -68,34 +114,126 @@ const CartItems = (props) => {
         />
 
         <div className="flex items-center gap-4 mt-1">
+
+
+          {props?.item?.size !== "" && (
+            <>
+              {props?.productSizeData?.length !== 0 && (
+                <div className="relative">
+                  <span
+                    className="flex items-center justify-center bg-[#f1f1f1] text-[11px] font-600 py-1 px-3 rounded-md cursor-pointer"
+                    onClick={handleClickSize}
+                  >
+                    Size: {selectedSize} <GoTriangleDown />
+                  </span>
+                  <Menu
+                    id="sizeMenu"
+                    anchorEl={sizeanchorEl}
+                    open={openSize}
+                    onClose={() => handleCloseSize(null)}
+                    slotProps={{
+                      list: {
+                        "aria-labelledby": "basic-button",
+                      },
+                    }}
+                  >
+                    {props?.productSizeData?.map((item, index) => {
+                      return (
+                        <MenuItem
+                          key={index}
+                          className={`${item?.name === selectedSize && 'selected'}`}
+                          onClick={() => updateCart(item?.name,props?.item?.quantity)}
+                        >
+                          {item?.name}
+                        </MenuItem>
+                      );
+                    })}
+                  </Menu>
+                </div>
+              )}
+            </>
+          )}
+
+          {props?.item?.ram !== "" && (
+            <>
+              {props?.productRamsData?.length !== 0 && (
+                <div className="relative">
+                  <span
+                    className="flex items-center justify-center bg-[#f1f1f1] text-[11px] font-600 py-1 px-3 rounded-md cursor-pointer"
+                    onClick={handleClickSize}
+                  >
+                    Ram: {selectedSize} <GoTriangleDown />
+                  </span>
+                  <Menu
+                    id="sizeMenu"
+                    anchorEl={sizeanchorEl}
+                    open={openSize}
+                    onClose={() => handleCloseSize(null)}
+                    slotProps={{
+                      list: {
+                        "aria-labelledby": "basic-button",
+                      },
+                    }}
+                  >
+                    {props?.productRamsData?.map((item, index) => {
+                      return (
+                        <MenuItem
+                          key={index}
+                          className={`${item?.name === selectedSize && "selected"}`}
+                          onClick={() => updateCart(item?.name,props?.item?.quantity)}
+                        >
+                          {item?.name}
+                        </MenuItem>
+                      );
+                    })}
+                  </Menu>
+                </div>
+              )}
+            </>
+          )}
+
+          {props?.item?.weight !== "" && (
+            <>
+              {props?.productWeightData?.length !== 0 && (
+                <div className="relative">
+                  <span
+                    className="flex items-center justify-center bg-[#f1f1f1] text-[11px] font-600 py-1 px-3 rounded-md cursor-pointer"
+                    onClick={handleClickSize}
+                  >
+                    Weigth: {selectedSize} <GoTriangleDown />
+                  </span>
+                  <Menu
+                    id="sizeMenu"
+                    anchorEl={sizeanchorEl}
+                    open={openSize}
+                    onClose={() => handleCloseSize(null)}
+                    slotProps={{
+                      list: {
+                        "aria-labelledby": "basic-button",
+                      },
+                    }}
+                  >
+                    {props?.productWeightData?.map((item, index) => {
+                      return (
+                        <MenuItem
+                          key={index}
+                          className={`${item?.name === selectedSize && "selected"}`}
+                          onClick={() => updateCart(item?.name,props?.item?.quantity)}
+                        >
+                          {item?.name}
+                        </MenuItem>
+                      );
+                    })}
+                  </Menu>
+                </div>
+              )}
+            </>
+          )}
+
           <div className="relative">
             <span
               className="flex items-center justify-center bg-[#f1f1f1] text-[11px] font-600 py-1 px-3 rounded-md cursor-pointer"
-              onClick={handleClickSize}
-            >
-              Size: {selectedSize} <GoTriangleDown />
-            </span>
-            <Menu
-              id="sizeMenu"
-              anchorEl={sizeanchorEl}
-              open={openSize}
-              onClose={()=>handleCloseSize(null)}
-              slotProps={{
-                list: {
-                  "aria-labelledby": "basic-button",
-                },
-              }}
-            >
-              <MenuItem onClick={()=>handleCloseSize('S')}>S</MenuItem>
-              <MenuItem onClick={()=>handleCloseSize('M')}>M</MenuItem>
-              <MenuItem onClick={()=>handleCloseSize('L')}>L</MenuItem>
-              <MenuItem onClick={()=>handleCloseSize('XL')}>XL</MenuItem>
-              <MenuItem onClick={()=>handleCloseSize('XXL')}>XXL</MenuItem>
-            </Menu>
-          </div>
-
-          <div className="relative">
-            <span className="flex items-center justify-center bg-[#f1f1f1] text-[11px] font-600 py-1 px-3 rounded-md cursor-pointer" onClick={handleClickQty}
+              onClick={handleClickQty}
             >
               Qty: {selectedQty} <GoTriangleDown />
             </span>
@@ -103,33 +241,29 @@ const CartItems = (props) => {
               id="sizeMenu"
               anchorEl={qtyanchorEl}
               open={openQty}
-              onClose={()=>handleCloseQty(null)}
+              onClose={() => handleCloseQty(null)}
               slotProps={{
                 list: {
                   "aria-labelledby": "basic-button",
                 },
               }}
             >
-              <MenuItem onClick={()=>handleCloseQty(1)}>1</MenuItem>
-              <MenuItem onClick={()=>handleCloseQty(2)}>2</MenuItem>
-              <MenuItem onClick={()=>handleCloseQty(3)}>3</MenuItem>
-              <MenuItem onClick={()=>handleCloseQty(4)}>4</MenuItem>
-              <MenuItem onClick={()=>handleCloseQty(5)}>5</MenuItem>
-              <MenuItem onClick={()=>handleCloseQty(6)}>6</MenuItem>
-              <MenuItem onClick={()=>handleCloseQty(7)}>7</MenuItem>
-              <MenuItem onClick={()=>handleCloseQty(8)}>8</MenuItem>
-              <MenuItem onClick={()=>handleCloseQty(9)}>9</MenuItem>
-              <MenuItem onClick={()=>handleCloseQty(10)}>10</MenuItem>
+
+              {
+                Array.from({length: 15}).map((_,index)=>(
+                  <MenuItem key={index} onClick={() => handleCloseQty(index+1)}>{index+1}</MenuItem>
+                ))
+              }
             </Menu>
           </div>
         </div>
 
         <div className="mb-3 mt-2 flex items-center gap-4">
-          <span className="text-red-500 font-semibold text-[14px]">$23.00</span>
+          <span className="text-red-500 font-semibold text-[14px]">&#x20b9;{props?.item?.price}</span>
           <span className="line-through text-gray-400 text-[14px] font-[500]">
-            $24.00
+            &#x20b9;{props?.item?.oldPrice}
           </span>
-          <span className="text-red-500 font-semibold text-[14px]">5% OFF</span>
+          <span className="text-red-500 font-semibold text-[14px]">{props?.item?.discount}% OFF</span>
         </div>
       </div>
     </div>

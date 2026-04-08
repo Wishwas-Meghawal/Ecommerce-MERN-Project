@@ -1,12 +1,45 @@
-import React, { use, useContext } from "react";
+import React, { use, useContext, useEffect, useState } from "react";
 import Button from "@mui/material/Button";
 import { BsFillBagCheckFill } from "react-icons/bs";
 import CartItems from "./CartItems";
 import { MyContext } from "../../App";
+import { fetchDataFromApi } from "../../utils/api";
 
 const CartPage = () => {
-
   const context = useContext(MyContext);
+  const [productSizeData, setProductSizeData] = useState([]);
+  const [productRamsData, setProductRamsData] = useState([]);
+  const [productWeightData, setProductWeightData] = useState([]);
+
+  useEffect(() => {
+    fetchDataFromApi("/api/product/productSIZE/get").then((res) => {
+      if (res?.error === false) {
+        setProductSizeData(res?.data);
+      }
+    });
+    fetchDataFromApi("/api/product/productRAMS/get").then((res) => {
+      if (res?.error === false) {
+        setProductRamsData(res?.data);
+      }
+    });
+    fetchDataFromApi("/api/product/productWEIGHT/get").then((res) => {
+      if (res?.error === false) {
+        setProductWeightData(res?.data);
+      }
+    });
+  }, []);
+
+  const selectedSize = (item) => {
+    if (item?.size !== "") {
+      return item?.size;
+    }
+    if (item?.weigth !== "") {
+      return item?.weight;
+    }
+    if (item?.ram !== "") {
+      return item?.ram;
+    }
+  };
 
   return (
     <section className="section py-10 pb-10">
@@ -16,16 +49,28 @@ const CartPage = () => {
             <div className="py-2 px-3 border-b border-[rgba(0,0,0,0.1)]">
               <h2>Your Cart</h2>
               <p className="mt-0 ">
-                There are <span className="font-bold text-primary">{context?.cartData?.length || 0}</span>{" "}
+                There are{" "}
+                <span className="font-bold text-primary">
+                  {context?.cartData?.length || 0}
+                </span>{" "}
                 products in your cart
               </p>
             </div>
 
-            {
-              context?.cartData?.length !== 0 && context?.cartData?.map((item,index) => {
-                return <CartItems qty={item?.quantity} key={item?._id} item={item} />;
-              })
-            }
+            {context?.cartData?.length !== 0 &&
+              context?.cartData?.map((item, index) => {
+                return (
+                  <CartItems
+                    selected={() => selectedSize(item)}
+                    qty={item?.quantity}
+                    key={item?._id}
+                    item={item}
+                    productSizeData={productSizeData}
+                    productRamsData={productRamsData}
+                    productWeightData={productWeightData}
+                  />
+                );
+              })}
           </div>
         </div>
 

@@ -104,7 +104,7 @@ export const getCartItemController = async (request, response) => {
 export const updateCartItemQuantityController = async (request, response) => {
   try {
     const userId = request.userId;
-    const { _id, quantity, subTotal } = request.body;
+    const { _id, quantity, subTotal, size , weight, ram } = request.body;
 
     if (!_id || !quantity) {
       return response.status(402).json({
@@ -122,6 +122,9 @@ export const updateCartItemQuantityController = async (request, response) => {
       {
         quantity: quantity,
         subTotal: subTotal,
+        size:size,
+        ram:ram,
+        weight: weight
       },
       {
         new: true,
@@ -130,7 +133,7 @@ export const updateCartItemQuantityController = async (request, response) => {
 
     return response.status(200).json({
       data: updateCartItem,
-      message: "Cart Quantity updated successfully",
+      message: "Cart item updated successfully",
       error: false,
       success: true,
     });
