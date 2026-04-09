@@ -2,22 +2,22 @@ import React, { useState } from "react";
 import Button from "@mui/material/Button";
 import { FaAngleUp, FaAngleDown } from "react-icons/fa6";
 
+const QtyBox = (props) => {
+  const [qtyVal, setQtyVal] = useState(1);
 
-const QtyBox = () => {
-    const [qtyVal, setQtyVal] = useState(1);
-
-
-    const plusQty=()=>{
-        setQtyVal(qtyVal+1);
+  const plusQty = () => {
+    setQtyVal(qtyVal + 1);
+    props.handleSelectQty(qtyVal + 1);
+  };
+  const minusQty = () => {
+    if (qtyVal === 1) {
+      setQtyVal(1);
+      props.handleSelectQty(1);
+    } else {
+      setQtyVal(qtyVal - 1);
+      props.handleSelectQty(qtyVal - 1);
     }
-    const minusQty=()=>{
-        if(qtyVal===1){
-          setQtyVal(1)
-        }
-        else{
-          setQtyVal(qtyVal-1);
-        }
-    }
+  };
   return (
     <div className="qtyBox flex items-center relative">
       <input
@@ -27,10 +27,16 @@ const QtyBox = () => {
       />
 
       <div className=" flex items-center flex-col justify-between h-[40px] absolute top-0 right-0 z-50">
-        <Button className="min-w-[25px]! w-[25px]! h-[20px]! text-[#000]! rounded-none! hover:bg-[#f1f1f1]!" onClick={plusQty}>
-          <FaAngleUp className="text-[12px] opacity-55"/>
+        <Button
+          className="min-w-[25px]! w-[25px]! h-[20px]! text-[#000]! rounded-none! hover:bg-[#f1f1f1]!"
+          onClick={plusQty}
+        >
+          <FaAngleUp className="text-[12px] opacity-55" />
         </Button>
-        <Button className="min-w-[25px]! w-[25px]! h-[20px]! text-[#000]! rounded-none! hover:bg-[#f1f1f1]!" onClick={minusQty}>
+        <Button
+          className="min-w-[25px]! w-[25px]! h-[20px]! text-[#000]! rounded-none! hover:bg-[#f1f1f1]!"
+          onClick={minusQty}
+        >
           <FaAngleDown className="text-[12px] opacity-55" />
         </Button>
       </div>

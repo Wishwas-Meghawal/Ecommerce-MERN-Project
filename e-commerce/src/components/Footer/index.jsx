@@ -250,13 +250,14 @@ const Footer = () => {
           <div className="w-full h-full flex items-center justify-center bg-gray-50">
             <div className="flex flex-col items-center text-center p-6 max-w-sm">
               {/* Icon Container */}
-              <div className="w-20 h-20 flex items-center justify-center rounded-full bg-white shadow-md mb-4">
-                <ShoppingCart className="w-10 h-10 text-gray-400" />
+              <div className="w-40 h-40 flex items-center justify-center rounded-full  mb-4">
+                <img src="/empty-cart.png" alt="" />
               </div>
 
               {/* Title */}
-              <h2 className="text-lg font-semibold text-gray-800">
-                Your cart feels lonely 🛒
+              <h2 className="flex gap-3 items-center justify-center text-lg font-semibold text-gray-800">
+                Your cart feels lonely
+                <ShoppingCart className="w-5 h-5 text-gray-400" />
               </h2>
 
               {/* Subtitle */}
@@ -265,28 +266,30 @@ const Footer = () => {
                 fill it up!
               </p>
 
-              <Button
-                variant="contained"
-                sx={{
-                  mt: 3,
-                  px: 4,
-                  py: 1.3,
-                  borderRadius: "999px",
-                  textTransform: "none",
-                  fontWeight: 600,
-                  background: "linear-gradient(135deg, #ff9900, #ffb84d)",
-                  color: "#000",
-                  boxShadow: "0 4px 14px rgba(255,153,0,0.4)",
-                  transition: "all 0.3s ease",
-                  "&:hover": {
-                    background: "linear-gradient(135deg, #e68a00, #ffa31a)",
-                    boxShadow: "0 6px 18px rgba(255,153,0,0.6)",
-                    transform: "translateY(-2px)",
-                  },
-                }}
-              >
-                Continue Shopping
-              </Button>
+              
+                <Button
+                  variant="contained"
+                  onClick={context.toggleCartpanel(false)}
+                  sx={{
+                    mt: 3,
+                    px: 4,
+                    py: 1.3,
+                    borderRadius: "999px",
+                    textTransform: "none",
+                    fontWeight: 600,
+                    background: "linear-gradient(135deg, #ff9900, #ffb84d)",
+                    color: "#000",
+                    boxShadow: "0 4px 14px rgba(255,153,0,0.4)",
+                    transition: "all 0.3s ease",
+                    "&:hover": {
+                      background: "linear-gradient(135deg, #e68a00, #ffa31a)",
+                      boxShadow: "0 6px 18px rgba(255,153,0,0.6)",
+                      transform: "translateY(-2px)",
+                    },
+                  }}
+                >
+                  Continue Shopping
+                </Button>
             </div>
           </div>
         )}

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import Rating from "@mui/material/Rating";
 import Button from "@mui/material/Button";
 import { TbTruckDelivery } from "react-icons/tb";
@@ -6,9 +6,74 @@ import { FiHeart } from "react-icons/fi";
 import { HiOutlineArrowsRightLeft } from "react-icons/hi2";
 import { MdOutlineShoppingCart } from "react-icons/md";
 import QtyBox from "../../components/QtyBox";
+import { MyContext } from "../../App";
+
+import { postData } from "../../utils/api";
+import { CircularProgress } from "@mui/material";
 
 const ProductDetailsComponent = (props) => {
+  const context = useContext(MyContext);
   const [activeSize, setActiveSize] = useState(null);
+  const [quantity, setQuantity] = useState(1);
+  const [selectedName, setSelectedName] = useState(null);
+  const [isLoading, setIsLoading] = useState(false);
+  const [tabError, setTabError] = useState(false);
+
+  const handleSelectQty = (qty) => {
+    setQuantity(qty);
+  };
+
+  const handleClickActiveTab = (index, name) => {
+    setActiveSize(index);
+    setSelectedName(name);
+  };
+
+  const addToCart = (product, userId, quantity) => {
+    if (userId === undefined) {
+      alertBox("Please login to add items to cart", "error");
+      return false;
+    }
+
+    const productItem = {
+      _id: product?._id,
+      productTitle: product?.name,
+      image: product?.images[0],
+      rating: product?.rating,
+      price: product?.price,
+      oldPrice: product?.oldPrice,
+      discount: product?.discount,
+      quantity: quantity,
+      subTotal: parseInt(product?.price * quantity),
+      productId: product?._id,
+      coutInStock: product?.coutInStock,
+      userId: userId,
+      brand: product?.brand,
+      size: props?.item?.size?.length !== 0 ? selectedName : "",
+      weight: props?.item?.productWeight?.length !== 0 ? selectedName : "",
+      ram: props?.item?.productRam?.length !== 0 ? selectedName : "",
+    };
+
+    if (selectedName !== null) {
+      setIsLoading(true);
+      postData("/api/cart/add", productItem).then((res) => {
+        if (res?.error === false) {
+          context?.alertBox(res?.message, "success");
+
+          context?.getCartItems();
+          setTimeout(() => {
+            setIsLoading(false);
+          }, 500);
+        } else {
+          context?.alertBox(res?.message, "error");
+          setTimeout(() => {
+            setIsLoading(false);
+          }, 500);
+        }
+      });
+    } else {
+      setTabError(true);
+    }
+  };
   return (
     <>
       {/* Title */}
@@ -26,7 +91,10 @@ const ProductDetailsComponent = (props) => {
         </span>
 
         <Rating value={4.5} precision={0.5} readOnly size="small" />
-        <span className="text-sm text-gray-500 hover:text-primary cursor-pointer" onClick={props.gotoReviews}>
+        <span
+          className="text-sm text-gray-500 hover:text-primary cursor-pointer"
+          onClick={props.gotoReviews}
+        >
           ({props.reviewsCount} Reviews)
         </span>
       </div>
@@ -57,21 +125,28 @@ const ProductDetailsComponent = (props) => {
             {props?.item?.productRam?.map((item, index) => {
               return (
                 <Button
-                  className="border! border-[rgba(0,0,0,0.1)]!"
                   key={index}
                   variant={activeSize === index ? "contained" : "outlined"}
-                  onClick={() => setActiveSize(index)}
+                  onClick={() => handleClickActiveTab(index, item)}
                   sx={{
                     minWidth: "46px",
                     height: "42px",
                     borderRadius: "5px",
                     fontWeight: 600,
 
-                    // CONDITION BASED COLOR
                     backgroundColor:
                       activeSize === index ? "#ff5252" : "transparent",
-                    color: activeSize === index ? "#fff" : "#111",
-                    border: "1px solid rgba(0,0,0,0.15)",
+
+                    color:
+                      activeSize === index
+                        ? "#fff"
+                        : tabError
+                          ? "#ef4444" // 🔴 text red when error
+                          : "#111",
+
+                    border: tabError
+                      ? "1px solid #ef4444" // 🔴 ERROR BORDER
+                      : "1px solid rgba(0,0,0,0.15)",
 
                     "&:hover": {
                       backgroundColor:
@@ -79,7 +154,7 @@ const ProductDetailsComponent = (props) => {
                     },
                   }}
                 >
-                  {itme}
+                  {item}
                 </Button>
               );
             })}
@@ -95,21 +170,28 @@ const ProductDetailsComponent = (props) => {
             {props?.item?.productWeight?.map((item, index) => {
               return (
                 <Button
-                  className="border! border-[rgba(0,0,0,0.1)]!"
                   key={index}
                   variant={activeSize === index ? "contained" : "outlined"}
-                  onClick={() => setActiveSize(index)}
+                  onClick={() => handleClickActiveTab(index, item)}
                   sx={{
                     minWidth: "46px",
                     height: "42px",
                     borderRadius: "5px",
                     fontWeight: 600,
 
-                    // CONDITION BASED COLOR
                     backgroundColor:
                       activeSize === index ? "#ff5252" : "transparent",
-                    color: activeSize === index ? "#fff" : "#111",
-                    border: "1px solid rgba(0,0,0,0.15)",
+
+                    color:
+                      activeSize === index
+                        ? "#fff"
+                        : tabError
+                          ? "#ef4444" // 🔴 text red when error
+                          : "#111",
+
+                    border: tabError
+                      ? "1px solid #ef4444" // 🔴 ERROR BORDER
+                      : "1px solid rgba(0,0,0,0.15)",
 
                     "&:hover": {
                       backgroundColor:
@@ -133,21 +215,28 @@ const ProductDetailsComponent = (props) => {
             {props?.item?.size?.map((item, index) => {
               return (
                 <Button
-                  className="border! border-[rgba(0,0,0,0.1)]!"
                   key={index}
                   variant={activeSize === index ? "contained" : "outlined"}
-                  onClick={() => setActiveSize(index)}
+                  onClick={() => handleClickActiveTab(index, item)}
                   sx={{
                     minWidth: "46px",
                     height: "42px",
                     borderRadius: "5px",
                     fontWeight: 600,
 
-                    // CONDITION BASED COLOR
                     backgroundColor:
                       activeSize === index ? "#ff5252" : "transparent",
-                    color: activeSize === index ? "#fff" : "#111",
-                    border: "1px solid rgba(0,0,0,0.15)",
+
+                    color:
+                      activeSize === index
+                        ? "#fff"
+                        : tabError
+                          ? "#ef4444" // 🔴 text red when error
+                          : "#111",
+
+                    border: tabError
+                      ? "1px solid #ef4444" // 🔴 ERROR BORDER
+                      : "1px solid rgba(0,0,0,0.15)",
 
                     "&:hover": {
                       backgroundColor:
@@ -174,19 +263,28 @@ const ProductDetailsComponent = (props) => {
       <div className="flex items-center mt-4 gap-4 mb-6">
         {/* Quantity Control */}
         <div className="qtyBoxWrapper w-[80px] h-[40px]">
-          <QtyBox />
+          <QtyBox handleSelectQty={handleSelectQty} />
         </div>
         <Button
-          className="bg-primary!"
+          className="bg-primary! min-w-[200px]!"
           variant="contained"
+          onClick={() =>
+            addToCart(props?.item, context?.userData?._id, quantity)
+          }
           sx={{
             height: "40px",
             fontWeight: 600,
             gap: 2,
           }}
         >
-          <MdOutlineShoppingCart size={20} />
-          ADD TO CART
+          {isLoading ? (
+            <CircularProgress size={20} sx={{ color: "#fff !important" }} />
+          ) : (
+            <>
+              <MdOutlineShoppingCart size={20} />
+              ADD TO CART
+            </>
+          )}
         </Button>
       </div>
 

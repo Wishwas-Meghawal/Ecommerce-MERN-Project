@@ -1,5 +1,5 @@
 import { FiHeart, FiShoppingCart } from "react-icons/fi";
-import { Link } from "react-router-dom";
+import { IDLE_BLOCKER, Link } from "react-router-dom";
 import Rating from "@mui/material/Rating";
 import { FiZoomIn } from "react-icons/fi";
 import { BiGitCompare } from "react-icons/bi";
@@ -11,6 +11,8 @@ import { MyContext } from "../../App";
 import { FaMinus } from "react-icons/fa6";
 import { FaPlus } from "react-icons/fa6";
 import { deleteData, editData } from "../../utils/api";
+import { CircularProgress } from "@mui/material";
+import { MdOutlineShoppingCart } from "react-icons/md";
 
 const ProductItem = (props) => {
   const context = useContext(MyContext);
@@ -22,6 +24,7 @@ const ProductItem = (props) => {
   const [activeTab, setActiveTab] = useState(null);
   const [isShowTabs, setIsShowTabs] = useState(false);
   const [selectedName, setSelectedName] = useState(null);
+  const [isLoading, setIsLoading] = useState(false);
 
   const addToCart = (product, userId, quantity) => {
     const productItem = {
@@ -38,28 +41,42 @@ const ProductItem = (props) => {
       coutInStock: product?.coutInStock,
       userId: userId,
       brand: product?.brand,
-      size: props?.item?.size?.length !== 0 ? selectedName : '',
-      weight: props?.item?.productWeight?.length !== 0 ? selectedName : '',
-      ram: props?.item?.productRam?.length !== 0 ? selectedName : '',
+      size: props?.item?.size?.length !== 0 ? selectedName : "",
+      weight: props?.item?.productWeight?.length !== 0 ? selectedName : "",
+      ram: props?.item?.productRam?.length !== 0 ? selectedName : "",
     };
+    setIsLoading(true);
     // product size
-    if (props?.item?.size?.length !== 0 || props?.item?.productRam?.length !== 0 || props?.item?.productWeight?.length !== 0) {
+    if (
+      props?.item?.size?.length !== 0 ||
+      props?.item?.productRam?.length !== 0 ||
+      props?.item?.productWeight?.length !== 0
+    ) {
       setIsShowTabs(true);
     } else {
       context?.addToCart(productItem, userId, quantity);
       setIsAdded(true);
       setIsShowTabs(false);
+      setTimeout(() => {
+        setIsLoading(false);
+      }, 500);
     }
     if (activeTab !== null) {
       context?.addToCart(productItem, userId, quantity);
       setIsAdded(true);
-      setIsShowTabs(false)
+      setIsShowTabs(false);
+      setTimeout(() => {
+        setIsLoading(false);
+      }, 500);
     }
   };
 
   const handleClickActiveTab = (index, name) => {
-    setActiveTab(index); 
+    setActiveTab(index);
     setSelectedName(name);
+    setTimeout(() => {
+      setIsLoading(false);
+    }, 500);
   };
 
   useEffect(() => {
@@ -300,7 +317,6 @@ const ProductItem = (props) => {
               onClick={() =>
                 addToCart(props?.item, context?.userData?._id, quantity)
               }
-              startIcon={<FiShoppingCart size={15} />}
               sx={{
                 width: "100%",
                 borderColor: "#ef4444",
@@ -316,87 +332,112 @@ const ProductItem = (props) => {
                 },
               }}
             >
-              Add to Cart
+              <MdOutlineShoppingCart size={20} />
+              ADD TO CART
             </Button>
           ) : (
-            <div className="mt-3 flex items-center  justify-center">
-              <div className="flex items-center w-[300px] justify-between overflow-hidden rounded-full border border-gray-200 bg-white ">
-                {/* Minus */}
+            <>
+              {isLoading === true ? (
                 <Button
-                  disableRipple
-                  disableElevation
-                  onClick={minusQty}
+                  variant="outlined"
                   sx={{
-                    minWidth: "48px",
-                    height: "42px",
+                    width: "100%",
+                    borderColor: "#ef4444",
                     color: "#ef4444",
-                    borderRadius: 0, // 👈 important
-                    transition: "all 0.25s ease",
-
+                    fontSize: "11px",
+                    fontWeight: 600,
+                    padding: "5px 14px",
+                    minHeight: "35px",
+                    textTransform: "uppercase",
                     "&:hover": {
                       backgroundColor: "#ef4444",
-                      color: "#ffffff",
-                    },
-
-                    "&:active": {
-                      backgroundColor: "#dc2626",
-                      borderRadius: 0, // 👈 force again
-                    },
-
-                    "&:focus": {
-                      outline: "none",
-                      borderRadius: 0, // 👈 yaha bhi
-                    },
-
-                    "&.Mui-focusVisible": {
-                      borderRadius: 0, // 👈 MUI ka hidden culprit
+                      color: "#fff",
                     },
                   }}
                 >
-                  <FaMinus size={13} />
+                  <CircularProgress size={20} sx={{ color: "#fff !important" }} />
                 </Button>
+              ) : (
+                <div className="mt-3 flex items-center  justify-center">
+                  <div className="flex items-center w-[300px] justify-between overflow-hidden rounded-full border border-gray-200 bg-white ">
+                    {/* Minus */}
+                    <Button
+                      disableRipple
+                      disableElevation
+                      onClick={minusQty}
+                      sx={{
+                        minWidth: "48px",
+                        height: "42px",
+                        color: "#ef4444",
+                        borderRadius: 0, // 👈 important
+                        transition: "all 0.25s ease",
 
-                {/* Quantity */}
-                <span className="px-6 text-base font-semibold text-gray-900 select-none ">
-                  {quantity}
-                </span>
+                        "&:hover": {
+                          backgroundColor: "#ef4444",
+                          color: "#ffffff",
+                        },
 
-                {/* Plus */}
-                <Button
-                  disableRipple
-                  disableElevation
-                  onClick={addQty}
-                  sx={{
-                    minWidth: "48px",
-                    height: "42px",
-                    color: "#ef4444",
-                    borderRadius: 0, // 👈 important
-                    transition: "all 0.25s ease",
+                        "&:active": {
+                          backgroundColor: "#dc2626",
+                          borderRadius: 0, // 👈 force again
+                        },
 
-                    "&:hover": {
-                      backgroundColor: "#ef4444",
-                      color: "#ffffff",
-                    },
+                        "&:focus": {
+                          outline: "none",
+                          borderRadius: 0, // 👈 yaha bhi
+                        },
 
-                    "&:active": {
-                      backgroundColor: "#dc2626",
-                      borderRadius: 0, // 👈 force again
-                    },
+                        "&.Mui-focusVisible": {
+                          borderRadius: 0, // 👈 MUI ka hidden culprit
+                        },
+                      }}
+                    >
+                      <FaMinus size={13} />
+                    </Button>
 
-                    "&:focus": {
-                      outline: "none",
-                      borderRadius: 0, // 👈 yaha bhi
-                    },
+                    {/* Quantity */}
+                    <span className="px-6 text-base font-semibold text-gray-900 select-none ">
+                      {quantity}
+                    </span>
 
-                    "&.Mui-focusVisible": {
-                      borderRadius: 0, // 👈 MUI ka hidden culprit
-                    },
-                  }}
-                >
-                  <FaPlus size={13} />
-                </Button>
-              </div>
-            </div>
+                    {/* Plus */}
+                    <Button
+                      disableRipple
+                      disableElevation
+                      onClick={addQty}
+                      sx={{
+                        minWidth: "48px",
+                        height: "42px",
+                        color: "#ef4444",
+                        borderRadius: 0, // 👈 important
+                        transition: "all 0.25s ease",
+
+                        "&:hover": {
+                          backgroundColor: "#ef4444",
+                          color: "#ffffff",
+                        },
+
+                        "&:active": {
+                          backgroundColor: "#dc2626",
+                          borderRadius: 0, // 👈 force again
+                        },
+
+                        "&:focus": {
+                          outline: "none",
+                          borderRadius: 0, // 👈 yaha bhi
+                        },
+
+                        "&.Mui-focusVisible": {
+                          borderRadius: 0, // 👈 MUI ka hidden culprit
+                        },
+                      }}
+                    >
+                      <FaPlus size={13} />
+                    </Button>
+                  </div>
+                </div>
+              )}
+            </>
           )}
         </div>
       </div>
