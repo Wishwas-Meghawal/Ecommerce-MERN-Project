@@ -45,27 +45,23 @@ const Header = () => {
 
   const history = useNavigate();
 
-  const logout = async () => {
+  const logout =  () => {
     setAnchorEl(null);
-
-    try {
-      await fetchDataFromApi(
+      fetchDataFromApi(
         `/api/user/logout?token=${localStorage.getItem("accessToken")}`,
         { withCredentials: true },
-      );
-    } catch (e) {
-      console.log("Logout API failed, continuing...");
-    }
-
-    // ⭐ ALWAYS CLEAR FRONTEND
-    localStorage.removeItem("accessToken");
-    localStorage.removeItem("refreshToken");
-    context.setIsLogin(false);
-    context.setUserData(null);
-
-    history("/");
-  };
-
+      ).then((res)=>{
+        if(res?.error === false){
+          context.setIsLogin(false);
+          localStorage.removeItem("accessToken");
+          localStorage.removeItem("refreshToken");
+          context.setUserData(null);
+          context?.setCartData([]);
+          history("/");
+    
+        }
+      })
+    } 
   return (
     <header className="bg-white sticky -top-[47px] z-[100]">
       <div className="top-strip py-2 border-t border-gray-200 border-b">

@@ -186,6 +186,7 @@ function App() {
     catData,
     addToCart,
     cartData,
+    setCartData,
     getCartItems,
   };
 
