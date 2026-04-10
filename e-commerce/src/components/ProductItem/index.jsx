@@ -13,6 +13,7 @@ import { FaPlus } from "react-icons/fa6";
 import { deleteData, editData } from "../../utils/api";
 import { CircularProgress } from "@mui/material";
 import { MdOutlineShoppingCart } from "react-icons/md";
+import { MdClose } from "react-icons/md";
 
 const ProductItem = (props) => {
   const context = useContext(MyContext);
@@ -163,6 +164,20 @@ const ProductItem = (props) => {
 
           {isShowTabs === true && (
             <div className="absolute top-0 left-0 w-full h-full bg-black/60 backdrop-blur-sm z-[60] flex items-center justify-center gap-3">
+              <Button
+                onClick={()=>setIsShowTabs(false)} 
+                className="
+                  absolute! top-4 right-4 min-w-0!
+                  p-2! rounded-full!
+                  bg-black/40! backdrop-blur-md
+                  hover:bg-red-500!
+                  transition-all duration-200
+                  hover:scale-110 active:scale-95
+                  z-90
+                "
+              >
+                <MdClose className="text-white text-[15px]" />
+              </Button>
               {props?.item?.size?.length !== 0 &&
                 props?.item?.size?.map((item, index) => {
                   return (
@@ -355,7 +370,10 @@ const ProductItem = (props) => {
                     },
                   }}
                 >
-                  <CircularProgress size={20} sx={{ color: "#fff !important" }} />
+                  <CircularProgress
+                    size={20}
+                    sx={{ color: "#fff !important" }}
+                  />
                 </Button>
               ) : (
                 <div className="mt-3 flex items-center  justify-center">
