@@ -60,6 +60,9 @@ const Header = () => {
     localStorage.removeItem("accessToken");
     localStorage.removeItem("refreshToken");
     context?.setIsLogin(false);
+    context?.setCartData([]);
+    context?.setMyListData([]);
+    history("/");
   };
   return (
     <header className="bg-white sticky -top-[47px] z-[100]">
@@ -225,11 +228,20 @@ const Header = () => {
               </li>
               <li>
                 <Tooltip title="WishList">
-                  <IconButton aria-label="cart">
-                    <StyledBadge badgeContent={4} color="secondary">
-                      <FaRegHeart />
-                    </StyledBadge>
-                  </IconButton>
+                  <Link to="/my-list">
+                    <IconButton aria-label="cart">
+                      <StyledBadge
+                        badgeContent={
+                          context?.myListData?.length !== 0
+                            ? context?.myListData?.length
+                            : 0
+                        }
+                        color="secondary"
+                      >
+                        <FaRegHeart />
+                      </StyledBadge>
+                    </IconButton>
+                  </Link>
                 </Tooltip>
               </li>
               <li>
@@ -239,7 +251,11 @@ const Header = () => {
                     onClick={() => context.setOpenCartPanel(true)}
                   >
                     <StyledBadge
-                      badgeContent={context?.cartData?.length}
+                      badgeContent={
+                        context?.cartData?.length !== 0
+                          ? context?.cartData?.length
+                          : 0
+                      }
                       color="secondary"
                     >
                       <MdOutlineShoppingCart />

@@ -1,4 +1,5 @@
 import { FiHeart, FiShoppingCart } from "react-icons/fi";
+import { FaHeart } from "react-icons/fa";
 import { IDLE_BLOCKER, Link } from "react-router-dom";
 import Rating from "@mui/material/Rating";
 import { FiZoomIn } from "react-icons/fi";
@@ -10,7 +11,7 @@ import { useContext, useEffect, useState } from "react";
 import { MyContext } from "../../App";
 import { FaMinus } from "react-icons/fa6";
 import { FaPlus } from "react-icons/fa6";
-import { deleteData, editData } from "../../utils/api";
+import { deleteData, editData, postData } from "../../utils/api";
 import { CircularProgress } from "@mui/material";
 import { MdOutlineShoppingCart } from "react-icons/md";
 import { MdClose } from "react-icons/md";
@@ -20,6 +21,7 @@ const ProductItem = (props) => {
 
   const [quantity, setQuantity] = useState(1);
   const [isAdded, setIsAdded] = useState(false);
+  const [isAddedInMyLst, setIsAddedInMyList] = useState(false);
   const [cartItem, setCartItem] = useState([]);
 
   const [activeTab, setActiveTab] = useState(null);
@@ -85,6 +87,10 @@ const ProductItem = (props) => {
       cartItem.productId.includes(props?.item?._id),
     );
 
+    const myListItem = context?.myListData?.filter((item) =>
+      item.productId.includes(props?.item?._id),
+    );
+
     if (item?.length !== 0) {
       setCartItem(item);
       setIsAdded(true);
@@ -92,6 +98,15 @@ const ProductItem = (props) => {
     } else {
       setQuantity(1);
     }
+
+
+    if (myListItem?.length !== 0) {
+      setIsAddedInMyList(true);
+    } else {
+      setIsAddedInMyList(false);
+    }
+
+
   }, [context?.cartData]);
 
   const minusQty = () => {
@@ -136,6 +151,35 @@ const ProductItem = (props) => {
       context?.getCartItems();
     });
   };
+
+  const handleAddToMyList = (item) => {
+    if (context?.userData === null) {
+      context?.alertBox("Please login to add items to cart", "error");
+      return false;
+    } else {
+      const obj = {
+        productId: item?._id,
+        userId: context?.userData?._id,
+        productTitle: item?.name,
+        image: item?.images[0],
+        rating: item?.rating,
+        price: item?.price,
+        oldPrice: item?.oldPrice,
+        brand: item?.brand,
+        discount: item?.discount,
+      };
+
+      postData("/api/myList/add", obj).then((res) => {
+        if (res?.error === false) {
+          context?.alertBox(res?.message, "success");
+          setIsAddedInMyList(true);
+          context?.getMyListData();
+        } else {
+          context?.alertBox(res?.message, "error");
+        }
+      });
+    }
+  };
   return (
     <div className="group relative bg-white/70 backdrop-blur-md border border-gray-200 rounded-2xl overflow-hidden transition-all duration-500">
       {/* Discount Badge */}
@@ -165,7 +209,7 @@ const ProductItem = (props) => {
           {isShowTabs === true && (
             <div className="absolute top-0 left-0 w-full h-full bg-black/60 backdrop-blur-sm z-[60] flex items-center justify-center gap-3">
               <Button
-                onClick={()=>setIsShowTabs(false)} 
+                onClick={() => setIsShowTabs(false)}
                 className="
                   absolute! top-4 right-4 min-w-0!
                   p-2! rounded-full!
@@ -255,37 +299,103 @@ const ProductItem = (props) => {
 
         {/* Floating Icons */}
         <div className="absolute top-4 right-[-60px] flex flex-col gap-3 transition-all duration-500 group-hover:right-4">
-          {[FiHeart, BiGitCompare, FiZoomIn, HiOutlineDocumentText].map(
-            (Icon, i) => (
-              <Button
-                key={i}
-                variant="contained"
-                sx={{
-                  minWidth: 45,
-                  width: 45,
-                  height: 45,
-                  borderRadius: "50%",
-                  background: "rgba(255,255,255,0.9)",
-                  color: "#111",
-                  backdropFilter: "blur(10px)",
-                  boxShadow: "0 4px 12px rgba(0,0,0,0.1)",
-                  transition: "all 0.3s ease",
+          <Button
+            variant="contained"
+            onClick={() => {
+              handleAddToMyList(props?.item);
+            }}
+            sx={{
+              minWidth: 45,
+              width: 45,
+              height: 45,
+              borderRadius: "50%",
+              background: "rgba(255,255,255,0.9)",
+              color: "#111",
+              backdropFilter: "blur(10px)",
+              boxShadow: "0 4px 12px rgba(0,0,0,0.1)",
+              transition: "all 0.3s ease",
 
-                  "&:hover": {
-                    background: "linear-gradient(135deg,#ff4d4d,#ff6a6a)",
-                    color: "#fff",
-                    transform: "scale(1.1)",
-                  },
-                }}
-                onClick={() =>
-                  Icon === FiZoomIn &&
-                  context.handleOpenProductDetailsModal(true, props?.item)
-                }
-              >
-                <Icon size={18} />
-              </Button>
-            ),
-          )}
+              "&:hover": {
+                background: "linear-gradient(135deg,#ff4d4d,#ff6a6a)",
+                color: "#fff",
+                transform: "scale(1.1)",
+              },
+            }}
+          >
+            {isAddedInMyLst ? <FaHeart size={18} /> : <FiHeart size={18} />}
+          </Button>
+
+          <Button
+            variant="contained"
+            sx={{
+              minWidth: 45,
+              width: 45,
+              height: 45,
+              borderRadius: "50%",
+              background: "rgba(255,255,255,0.9)",
+              color: "#111",
+              backdropFilter: "blur(10px)",
+              boxShadow: "0 4px 12px rgba(0,0,0,0.1)",
+              transition: "all 0.3s ease",
+
+              "&:hover": {
+                background: "linear-gradient(135deg,#ff4d4d,#ff6a6a)",
+                color: "#fff",
+                transform: "scale(1.1)",
+              },
+            }}
+          >
+            <BiGitCompare size={18} />
+          </Button>
+
+          <Button
+            variant="contained"
+            sx={{
+              minWidth: 45,
+              width: 45,
+              height: 45,
+              borderRadius: "50%",
+              background: "rgba(255,255,255,0.9)",
+              color: "#111",
+              backdropFilter: "blur(10px)",
+              boxShadow: "0 4px 12px rgba(0,0,0,0.1)",
+              transition: "all 0.3s ease",
+
+              "&:hover": {
+                background: "linear-gradient(135deg,#ff4d4d,#ff6a6a)",
+                color: "#fff",
+                transform: "scale(1.1)",
+              },
+            }}
+            onClick={() =>
+              context.handleOpenProductDetailsModal(true, props?.item)
+            }
+          >
+            <FiZoomIn size={18} />
+          </Button>
+
+          <Button
+            variant="contained"
+            sx={{
+              minWidth: 45,
+              width: 45,
+              height: 45,
+              borderRadius: "50%",
+              background: "rgba(255,255,255,0.9)",
+              color: "#111",
+              backdropFilter: "blur(10px)",
+              boxShadow: "0 4px 12px rgba(0,0,0,0.1)",
+              transition: "all 0.3s ease",
+
+              "&:hover": {
+                background: "linear-gradient(135deg,#ff4d4d,#ff6a6a)",
+                color: "#fff",
+                transform: "scale(1.1)",
+              },
+            }}
+          >
+            <HiOutlineDocumentText size={18} />
+          </Button>
         </div>
       </div>
 

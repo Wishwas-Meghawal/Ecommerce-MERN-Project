@@ -27,14 +27,11 @@ import AddressForm from "./Pages/MyAccount/AddressForm";
 import { Scroll, Weight } from "lucide-react";
 import ScrollToTop from "./components/ScrollToTop/index.jsx";
 
-
-
 function App() {
   const [openProductDetailsModal, setOpenProductDetailsModal] = useState({
     open: false,
     item: {},
   });
-  
 
   const [openCartPanel, setOpenCartPanel] = useState(false);
 
@@ -49,6 +46,8 @@ function App() {
   const [catData, setCatData] = useState([]);
 
   const [cartData, setCartData] = useState([]);
+
+  const [myListData, setMyListData] = useState([]);
 
   const apiUrl = import.meta.env.VITE_API_URL;
 
@@ -94,12 +93,12 @@ function App() {
 
         setUserData(res?.data);
         getCartItems();
+        getMyListData();
       })
       .catch(() => {
         setIsLogin(false);
         setUserData(null);
       });
-      
   }, [isLogin]);
 
   useEffect(() => {
@@ -141,7 +140,6 @@ function App() {
       size: product?.size,
       weight: product?.weight,
       ram: product?.ram,
-      
     };
 
     postData("/api/cart/add", data).then((res) => {
@@ -162,6 +160,14 @@ function App() {
       }
     });
   };
+
+  const getMyListData = () =>{
+    fetchDataFromApi("/api/myList").then((res)=>{
+      if(res?.error == false){
+        setMyListData(res?.data);
+      }
+    })
+  }
 
   const values = {
     openProductDetailsModal,
@@ -184,6 +190,9 @@ function App() {
     cartData,
     setCartData,
     getCartItems,
+    myListData,
+    setMyListData,
+    getMyListData,
   };
 
   return (
@@ -223,8 +232,6 @@ function App() {
           <Footer />
         </MyContext.Provider>
       </BrowserRouter>
-
-      
 
       <Toaster />
     </>
