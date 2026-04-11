@@ -45,23 +45,22 @@ const Header = () => {
 
   const history = useNavigate();
 
-  const logout =  () => {
+  const logout = async () => {
     setAnchorEl(null);
-      fetchDataFromApi(
-        `/api/user/logout?token=${localStorage.getItem("accessToken")}`,
-        { withCredentials: true },
-      ).then((res)=>{
-        if(res?.error === false){
-          context.setIsLogin(false);
-          localStorage.removeItem("accessToken");
-          localStorage.removeItem("refreshToken");
-          context.setUserData(null);
-          context?.setCartData([]);
-          history("/");
-    
-        }
-      })
-    } 
+
+    try {
+      await fetchDataFromApi(`/api/user/logout`, {
+        withCredentials: true,
+      });
+    } catch (e) {
+      console.log("Logout API failed, continuing...");
+    }
+
+    // ⭐ IMPORTANT: Always clear frontend
+    localStorage.removeItem("accessToken");
+    localStorage.removeItem("refreshToken");
+    context?.setIsLogin(false);
+  };
   return (
     <header className="bg-white sticky -top-[47px] z-[100]">
       <div className="top-strip py-2 border-t border-gray-200 border-b">
@@ -239,7 +238,10 @@ const Header = () => {
                     aria-label="cart"
                     onClick={() => context.setOpenCartPanel(true)}
                   >
-                    <StyledBadge badgeContent={context?.cartData?.length} color="secondary">
+                    <StyledBadge
+                      badgeContent={context?.cartData?.length}
+                      color="secondary"
+                    >
                       <MdOutlineShoppingCart />
                     </StyledBadge>
                   </IconButton>
