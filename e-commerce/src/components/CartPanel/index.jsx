@@ -23,7 +23,7 @@ const CartPanel = (props) => {
               {/* Image */}
               <div className="img w-[22%] h-[90px] overflow-hidden rounded-lg bg-gray-100">
                 <Link
-                  to={`/product/${item?._id}`}
+                 to={`/product/${item?.productId}`}
                   className="block group h-full"
                 >
                   <img
@@ -39,7 +39,7 @@ const CartPanel = (props) => {
                 {/* Title */}
                 <h4 className="text-[15px] font-semibold text-gray-800 leading-tight line-clamp-2 pr-8">
                   <Link
-                    to={`/product/${item?._id}`}
+                    to={`/product/${item?.productId}`}
                     className="hover:text-primary transition-all"
                   >
                     {item?.productTitle?.substr(0, 30) + "..."}
