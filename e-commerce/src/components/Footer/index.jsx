@@ -24,7 +24,7 @@ import DialogContent from "@mui/material/DialogContent";
 import { IoCloseSharp } from "react-icons/io5";
 import ProductZoom from "../ProductZoom";
 import ProductDetailsComponent from "../ProductDetails";
-
+import { MdHome } from "react-icons/md";
 
 const Footer = () => {
   const context = useContext(MyContext);
@@ -273,29 +273,32 @@ const Footer = () => {
                 fill it up!
               </p>
 
-              <Button
-                variant="contained"
-                onClick={context.toggleCartpanel(false)}
-                sx={{
-                  mt: 3,
-                  px: 4,
-                  py: 1.3,
-                  borderRadius: "999px",
-                  textTransform: "none",
-                  fontWeight: 600,
-                  background: "linear-gradient(135deg, #ff9900, #ffb84d)",
-                  color: "#000",
-                  boxShadow: "0 4px 14px rgba(255,153,0,0.4)",
-                  transition: "all 0.3s ease",
-                  "&:hover": {
-                    background: "linear-gradient(135deg, #e68a00, #ffa31a)",
-                    boxShadow: "0 6px 18px rgba(255,153,0,0.6)",
-                    transform: "translateY(-2px)",
-                  },
-                }}
-              >
-                Continue Shopping
-              </Button>
+              <Link to="/">
+                <Button
+                  variant="contained"
+                  startIcon={<MdHome />}
+                  sx={{
+                    mt: 3,
+                    px: 4,
+                    py: 1.2,
+                    borderRadius: "999px",
+                    textTransform: "none",
+                    fontWeight: 600,
+                    background: "linear-gradient(135deg, #ff4d4d, #ff6a6a)",
+                    color: "#fff",
+                    boxShadow: "0 4px 14px rgba(255, 77, 77, 0.4)",
+                    transition: "all 0.3s ease",
+
+                    "&:hover": {
+                      background: "linear-gradient(135deg, #e04343, #ff5252)",
+                      boxShadow: "0 6px 18px rgba(255, 77, 77, 0.6)",
+                      transform: "translateY(-2px)",
+                    },
+                  }}
+                >
+                  Continue Shopping
+                </Button>
+              </Link>
             </div>
           </div>
         )}
@@ -322,7 +325,9 @@ const Footer = () => {
             {context?.openProductDetailsModal?.item?.length !== 0 && (
               <>
                 <div className="col1 w-[40%]">
-                  <ProductZoom images={context?.openProductDetailsModal?.item?.images} />
+                  <ProductZoom
+                    images={context?.openProductDetailsModal?.item?.images}
+                  />
                 </div>
 
                 <div className="col2 w-[60%] py-8 px-8">
