@@ -53,25 +53,48 @@ const ProductDetailsComponent = (props) => {
       ram: props?.item?.productRam?.length !== 0 ? selectedName : "",
     };
 
-    if (selectedName !== null) {
+    if (
+      props?.item?.size?.length !== 0 ||
+      props?.item?.productWeight?.length !== 0 ||
+      props?.item?.productRam?.length !== 0
+    ) {
+      if (selectedName !== null) {
+        setIsLoading(true);
+        postData("/api/cart/add", productItem).then((res) => {
+          if (res?.error === false) {
+            context?.alertBox(res?.message, "success");
+
+            context?.getCartItems();
+            setTimeout(() => {
+              setIsLoading(false);
+            }, 500);
+          } else {
+            context?.alertBox(res?.message, "error");
+            setTimeout(() => {
+              setIsLoading(false);
+            }, 500);
+          }
+        });
+      } else {
+        setTabError(true);
+      }
+    }else{
       setIsLoading(true);
       postData("/api/cart/add", productItem).then((res) => {
-        if (res?.error === false) {
-          context?.alertBox(res?.message, "success");
+          if (res?.error === false) {
+            context?.alertBox(res?.message, "success");
 
-          context?.getCartItems();
-          setTimeout(() => {
-            setIsLoading(false);
-          }, 500);
-        } else {
-          context?.alertBox(res?.message, "error");
-          setTimeout(() => {
-            setIsLoading(false);
-          }, 500);
-        }
-      });
-    } else {
-      setTabError(true);
+            context?.getCartItems();
+            setTimeout(() => {
+              setIsLoading(false);
+            }, 500);
+          } else {
+            context?.alertBox(res?.message, "error");
+            setTimeout(() => {
+              setIsLoading(false);
+            }, 500);
+          }
+        });
     }
   };
   return (

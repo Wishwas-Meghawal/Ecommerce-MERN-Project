@@ -1,5 +1,4 @@
-import Button from "@mui/material/Button";
-import React, { useContext } from "react";
+import React, { useContext, useState } from "react";
 import {
   FaTruck,
   FaUndoAlt,
@@ -12,7 +11,6 @@ import {
   FaInstagram,
 } from "react-icons/fa";
 import { IoChatboxOutline } from "react-icons/io5";
-import { IoCloseSharp } from "react-icons/io5";
 
 import { Link } from "react-router-dom";
 
@@ -20,9 +18,18 @@ import Drawer from "@mui/material/Drawer";
 import { MyContext } from "../../App";
 import CartPanel from "../CartPanel";
 import { ShoppingCart } from "lucide-react";
+import Button from "@mui/material/Button";
+import Dialog from "@mui/material/Dialog";
+import DialogContent from "@mui/material/DialogContent";
+import { IoCloseSharp } from "react-icons/io5";
+import ProductZoom from "../ProductZoom";
+import ProductDetailsComponent from "../ProductDetails";
+
 
 const Footer = () => {
   const context = useContext(MyContext);
+  const [fullWidth, setFullWidth] = useState(true);
+  const [maxWidth, setMaxWidth] = useState("lg");
   return (
     <footer className="bg-[#fff] ">
       <div className="container mx-auto px-4">
@@ -266,34 +273,68 @@ const Footer = () => {
                 fill it up!
               </p>
 
-              
-                <Button
-                  variant="contained"
-                  onClick={context.toggleCartpanel(false)}
-                  sx={{
-                    mt: 3,
-                    px: 4,
-                    py: 1.3,
-                    borderRadius: "999px",
-                    textTransform: "none",
-                    fontWeight: 600,
-                    background: "linear-gradient(135deg, #ff9900, #ffb84d)",
-                    color: "#000",
-                    boxShadow: "0 4px 14px rgba(255,153,0,0.4)",
-                    transition: "all 0.3s ease",
-                    "&:hover": {
-                      background: "linear-gradient(135deg, #e68a00, #ffa31a)",
-                      boxShadow: "0 6px 18px rgba(255,153,0,0.6)",
-                      transform: "translateY(-2px)",
-                    },
-                  }}
-                >
-                  Continue Shopping
-                </Button>
+              <Button
+                variant="contained"
+                onClick={context.toggleCartpanel(false)}
+                sx={{
+                  mt: 3,
+                  px: 4,
+                  py: 1.3,
+                  borderRadius: "999px",
+                  textTransform: "none",
+                  fontWeight: 600,
+                  background: "linear-gradient(135deg, #ff9900, #ffb84d)",
+                  color: "#000",
+                  boxShadow: "0 4px 14px rgba(255,153,0,0.4)",
+                  transition: "all 0.3s ease",
+                  "&:hover": {
+                    background: "linear-gradient(135deg, #e68a00, #ffa31a)",
+                    boxShadow: "0 6px 18px rgba(255,153,0,0.6)",
+                    transform: "translateY(-2px)",
+                  },
+                }}
+              >
+                Continue Shopping
+              </Button>
             </div>
           </div>
         )}
       </Drawer>
+
+      <Dialog
+        open={context?.openProductDetailsModal.open}
+        fullWidth={fullWidth}
+        maxWidth={maxWidth}
+        onClose={context?.handleCloseProductDetailsModal}
+        aria-labelledby="alert-dialog-title"
+        aria-describedby="alert-dialog-description"
+        className="productDetailslModal"
+      >
+        <DialogContent>
+          <div className="flex items-center w-full productDetailsModalContainer relative">
+            <Button
+              className="w-10! h-10! min-w-10! rounded-full! text-black! absolute! top-0 right-0 bg-[#f1f1f1]!"
+              onClick={context?.handleCloseProductDetailsModal}
+            >
+              <IoCloseSharp className="text-[20px] " />
+            </Button>
+
+            {context?.openProductDetailsModal?.item?.length !== 0 && (
+              <>
+                <div className="col1 w-[40%]">
+                  <ProductZoom images={context?.openProductDetailsModal?.item?.images} />
+                </div>
+
+                <div className="col2 w-[60%] py-8 px-8">
+                  <ProductDetailsComponent
+                    item={context?.openProductDetailsModal?.item}
+                  />
+                </div>
+              </>
+            )}
+          </div>
+        </DialogContent>
+      </Dialog>
     </footer>
   );
 };
