@@ -10,9 +10,9 @@ export const addAddressController = async (request, response) => {
       pincode,
       country,
       mobile,
-      status,
       userId,
-      selected,
+      landmark,
+      addressType
     } = request.body;
 
     // if (
@@ -32,9 +32,9 @@ export const addAddressController = async (request, response) => {
       pincode,
       country,
       mobile,
-      status,
       userId,
-      selected,
+      landmark,
+      addressType
     });
     const saveAddress = await address.save();
 

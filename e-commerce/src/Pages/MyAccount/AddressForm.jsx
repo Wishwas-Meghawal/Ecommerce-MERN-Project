@@ -4,6 +4,11 @@ import AddressSelector from "../../components/AddressSelector";
 import { Button, Select, TextField } from "@mui/material";
 import { Plus } from "lucide-react";
 import MenuItem from "@mui/material/MenuItem";
+import Radio from "@mui/material/Radio";
+import RadioGroup from "@mui/material/RadioGroup";
+import FormControlLabel from "@mui/material/FormControlLabel";
+import FormControl from "@mui/material/FormControl";
+import FormLabel from "@mui/material/FormLabel";
 
 import DialogTitle from "@mui/material/DialogTitle";
 import Dialog from "@mui/material/Dialog";
@@ -16,10 +21,10 @@ import { MyContext } from "../../App.jsx";
 const AddressForm = () => {
   const context = useContext(MyContext);
   const [phone, setPhone] = useState("");
-  const [status, setStatus] = useState(false);
   const [isOpenModel, setIsOpenModel] = useState(false);
   const [address, setAddress] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
+  const [addressType, setAddressType] = useState("");
 
   const [formFields, setFormFields] = useState({
     address_line: "",
@@ -28,9 +33,9 @@ const AddressForm = () => {
     pincode: "",
     country: "",
     mobile: "",
-    status: "",
     userId: "",
-    selected: false,
+    addressType: "",
+    landmark: "",
   });
 
   useEffect(() => {
@@ -64,23 +69,14 @@ const AddressForm = () => {
     }));
   };
 
-
-  const removeAddress = (id) =>{
-    deleteData(`/api/address/${id}`).then((res)=>{
+  const removeAddress = (id) => {
+    deleteData(`/api/address/${id}`).then((res) => {
       fetchDataFromApi(
-          `/api/address/get?userId=${context?.userData?._id}`,
-        ).then((res) => {
-          setAddress(res.data)
-        }); 
-    })
-  }
-
-  const handleChangeStatus = (event) => {
-    setStatus(event.target.value);
-    setFormFields((prev) => ({
-      ...prev,
-      status: event.target.value,
-    }));
+        `/api/address/get?userId=${context?.userData?._id}`,
+      ).then((res) => {
+        setAddress(res.data);
+      });
+    });
   };
 
   const handleSubmit = (e) => {
@@ -88,15 +84,26 @@ const AddressForm = () => {
 
     if (formFields.address_line === "")
       return context.alertBox("Address Line 1 required", "error");
+
     if (formFields.city === "")
       return context.alertBox("City required", "error");
+
     if (formFields.state === "")
       return context.alertBox("State required", "error");
+
     if (formFields.pincode === "")
       return context.alertBox("Pincode required", "error");
+
     if (formFields.country === "")
       return context.alertBox("Country required", "error");
+
     if (phone === "") return context.alertBox("Mobile required", "error");
+
+    if (formFields.landmark === "")
+      return context.alertBox("Landmark required", "error");
+
+    if (formFields.addressType === "")
+      return context.alertBox("AddressType required", "error");
 
     postData(`/api/address/add`, formFields, {
       withCredentials: true,
@@ -109,13 +116,36 @@ const AddressForm = () => {
         fetchDataFromApi(
           `/api/address/get?userId=${context?.userData?._id}`,
         ).then((res) => {
-          setAddress(res.data)
+          setAddress(res.data);
+
+          setFormFields({
+            address_line: "",
+            city: "",
+            state: "",
+            pincode: "",
+            country: "",
+            mobile: "",
+            userId: "",
+            addressType: "",
+            landmark: "",
+          });
+
+          setAddressType("");
+          setPhone("");
         });
       } else {
         context.alertBox(res?.message, "error");
         setIsLoading(false);
       }
     });
+  };
+
+  const handleChangeAddressType = (event) => {
+    setAddressType(event.target.value);
+    setFormFields(() => ({
+      ...formFields,
+      addressType: event.target.value,
+    }));
   };
 
   return (
@@ -172,7 +202,7 @@ const AddressForm = () => {
                   Add New Address
                 </Button>
               </div>
-              <AddressSelector 
+              <AddressSelector
                 addresses={address}
                 removeAddress={removeAddress}
               />
@@ -305,6 +335,7 @@ const AddressForm = () => {
           >
             Postcode/ZIP *
           </h6>
+
           <div className="flex items-center gap-4 pb-4">
             <div className="col w-[100%]">
               <TextField
@@ -343,16 +374,63 @@ const AddressForm = () => {
                 />
               </div>
             </div>
+
             <div className="col w-[50%]">
-              <Select
-                value={status}
-                onChange={handleChangeStatus}
-                size="small"
+              <TextField
                 className="w-full"
-              >
-                <MenuItem value={true}>True</MenuItem>
-                <MenuItem value={false}>False</MenuItem>
-              </Select>
+                label="Landmark"
+                variant="outlined"
+                size="small"
+                name="landmark"
+                value={formFields.landmark}
+                onChange={onChangeInput}
+                sx={{
+                  "& .MuiOutlinedInput-root": {
+                    borderRadius: "8px",
+                    "&:hover fieldset": {
+                      borderColor: "#1976d2",
+                    },
+                  },
+                }}
+              />
+            </div>
+          </div>
+
+          <div className="flex items-center gap-4 pb-4">
+            <div className="col w-[50%]">
+              <FormControl>
+                <FormLabel id="demo-row-radio-buttons-group-label">
+                  <h6
+                    className="text-[14px] font-[500] "
+                    style={{
+                      color: "#4a5568",
+                      marginBottom: "2px",
+                      fontWeight: 600,
+                      fontSize: "0.9rem",
+                    }}
+                  >
+                    Address Type *
+                  </h6>
+                </FormLabel>
+                <RadioGroup
+                  row
+                  aria-labelledby="demo-row-radio-buttons-group-label"
+                  name="row-radio-buttons-group"
+                  value={addressType}
+                  onChange={handleChangeAddressType}
+                >
+                  <FormControlLabel
+                    value="Home"
+                    control={<Radio />}
+                    label="Home"
+                  />
+                  <FormControlLabel
+                    value="Office"
+                    control={<Radio />}
+                    label="Office"
+                  />
+                </RadioGroup>
+              </FormControl>
             </div>
           </div>
 
