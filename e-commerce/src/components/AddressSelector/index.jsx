@@ -11,7 +11,7 @@ export default function AddressSelector({ addresses = [], removeAddress }) {
 
   if (!addresses?.length) {
     return (
-      <div className="bg-white/60 backdrop-blur-lg border border-gray-200 pt-5 p-8 rounded-3xl text-center text-gray-500 shadow-sm">
+      <div className="bg-white/60 backdrop-blur-lg border border-gray-200 pt-5 mt-5 p-8 rounded-3xl text-center text-gray-500 shadow-sm">
         No address found
       </div>
     );
