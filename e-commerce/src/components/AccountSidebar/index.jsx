@@ -74,7 +74,7 @@ const AccountSidebar = () => {
     }
   }
   return (
-    <div className="card1 bg-white shadow-md rounded-md sticky top-[10px]">
+    <div className="card1 bg-white shadow-md rounded-md sticky top-[165px] z-[90]">
       <div className="w-full p-5 flex items-center justify-center flex-col">
         <div className="w-[110px] h-[110px]  rounded-full overflow-hidden relative group flex items-center justify-center bg-gray-300">
 
