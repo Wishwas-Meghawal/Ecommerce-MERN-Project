@@ -72,8 +72,8 @@ h1,h2,h3,h4,h5,h6{
   font-size: 12px !important; 
   padding: 5px 20px !important;
 }
-.link:hover{
-    color: #ff5252;
+.link:hover,.Mui-checked{
+    color: #ff5252 !important;
 }
 
 .MuiBadge-badge{
