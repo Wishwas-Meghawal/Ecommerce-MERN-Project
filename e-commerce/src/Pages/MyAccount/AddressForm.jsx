@@ -15,7 +15,15 @@ import Dialog from "@mui/material/Dialog";
 
 import { PhoneInput } from "react-international-phone";
 import "react-international-phone/style.css";
-import { deleteData, fetchDataFromApi, postData } from "../../utils/api.js";
+
+import CircularProgress from "@mui/material/CircularProgress";
+
+import {
+  deleteData,
+  editData,
+  fetchDataFromApi,
+  postData,
+} from "../../utils/api.js";
 import { MyContext } from "../../App.jsx";
 
 const AddressForm = () => {
@@ -25,6 +33,8 @@ const AddressForm = () => {
   const [address, setAddress] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [addressType, setAddressType] = useState("");
+  const [mode, setMode] = useState("add");
+  const [addressId, setAddressId] = useState("");
 
   const [formFields, setFormFields] = useState({
     address_line: "",
@@ -82,6 +92,8 @@ const AddressForm = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
 
+    setIsLoading(true);
+
     if (formFields.address_line === "")
       return context.alertBox("Address Line 1 required", "error");
 
@@ -105,18 +117,60 @@ const AddressForm = () => {
     if (formFields.addressType === "")
       return context.alertBox("AddressType required", "error");
 
-    postData(`/api/address/add`, formFields, {
-      withCredentials: true,
-    }).then((res) => {
-      if (!res?.error) {
-        setIsLoading(true);
-        context.alertBox(res?.message, "success");
+    if (mode === "add") {
+      postData(`/api/address/add`, formFields, {
+        withCredentials: true,
+      }).then((res) => {
+        if (!res?.error) {
+          
+          context.alertBox(res?.message, "success");
+          setTimeout(()=>{
+            setIsLoading(false);
+            setIsOpenModel(false);
+          },500)
 
-        setIsOpenModel(false);
+          
+          fetchDataFromApi(
+            `/api/address/get?userId=${context?.userData?._id}`,
+          ).then((res) => {
+            setAddress(res.data);
+
+            setFormFields({
+              address_line: "",
+              city: "",
+              state: "",
+              pincode: "",
+              country: "",
+              mobile: "",
+              userId: "",
+              addressType: "",
+              landmark: "",
+            });
+
+            setAddressType("");
+            setPhone("");
+          });
+        } else {
+          context.alertBox(res?.message, "error");
+          setIsLoading(false);
+        }
+      });
+    }
+
+    if (mode === "edit") {
+      setIsLoading(true);
+      editData(`/api/address/${addressId}`, formFields, {
+        withCredentials: true,
+      }).then((res) => {
         fetchDataFromApi(
           `/api/address/get?userId=${context?.userData?._id}`,
         ).then((res) => {
+           setTimeout(()=>{
+            setIsLoading(false);
+            setIsOpenModel(false);
+          },500)
           setAddress(res.data);
+         
 
           setFormFields({
             address_line: "",
@@ -133,10 +187,31 @@ const AddressForm = () => {
           setAddressType("");
           setPhone("");
         });
-      } else {
-        context.alertBox(res?.message, "error");
-        setIsLoading(false);
-      }
+      });
+    }
+  };
+
+  const editAddress = (id) => {
+    setMode("edit");
+    setIsOpenModel(true);
+
+    setAddressId(id);
+
+    fetchDataFromApi(`/api/address/${id}`).then((res) => {
+      setFormFields({
+        address_line: res?.address?.address_line,
+        city: res?.address?.city,
+        state: res?.address?.state,
+        pincode: res?.address?.pincode,
+        country: res?.address?.country,
+        mobile: res?.address?.mobile,
+        userId: res?.address?.userId,
+        addressType: res?.address?.addressType,
+        landmark: res?.address?.landmark,
+      });
+      const ph = `"${res?.address?.mobile}"`;
+      setPhone(ph);
+      setAddressType(res?.address?.addressType);
     });
   };
 
@@ -205,6 +280,7 @@ const AddressForm = () => {
               <AddressSelector
                 addresses={address}
                 removeAddress={removeAddress}
+                editAddress={editAddress}
               />
             </div>
           </div>
@@ -231,7 +307,8 @@ const AddressForm = () => {
             borderBottom: "1px solid rgba(0,0,0,0.08)",
           }}
         >
-          Add Address
+          {mode === "add" ? "Add " : "Edit "}
+          Address
         </DialogTitle>
 
         <form
@@ -497,7 +574,11 @@ const AddressForm = () => {
                 },
               }}
             >
-              Save Address
+              {isLoading === true ? (
+                <CircularProgress color="inherit" />
+              ) : (
+                "Save Address"
+              )}
             </Button>
           </div>
         </form>

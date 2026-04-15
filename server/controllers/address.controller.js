@@ -12,7 +12,7 @@ export const addAddressController = async (request, response) => {
       mobile,
       userId,
       landmark,
-      addressType
+      addressType,
     } = request.body;
 
     // if (
@@ -34,7 +34,7 @@ export const addAddressController = async (request, response) => {
       mobile,
       userId,
       landmark,
-      addressType
+      addressType,
     });
     const saveAddress = await address.save();
 
@@ -97,48 +97,120 @@ export const getAddressController = async (request, response) => {
   }
 };
 
+export const deleteAddressController = async (request, response) => {
+  try {
+    const userId = request.userId;
+    const _id = request.params.id;
 
-export const deleteAddressController = async (request,response)=>{
-    try {
-        const userId = request.userId
-        const  _id  = request.params.id 
-        
-        
-        if(!_id){
-            return response.status(402).json({
-                message: "Provide id",
-                error: true,
-                success: false
-            })
-        }   
-
-        const deleteAddress = await AddressModel.deleteOne({
-            _id: _id,
-            userId: userId
-        })  
-
-        if(!deleteAddress){
-            return response.status(404).json({
-                message: "Address not found",
-                error: true,
-                success : false
-            })
-        }
-
-
-        return response.status(200).json({
-            data: deleteAddress,
-            message: "Address deleted successfully",
-            error: false,
-            success : true
-        })
-    } catch (error) {
-        return response.status(500).json({
-            message : error.message || error,
-            error : true,   
-            success : false
-        })
+    if (!_id) {
+      return response.status(402).json({
+        message: "Provide id",
+        error: true,
+        success: false,
+      });
     }
+
+    const deleteAddress = await AddressModel.deleteOne({
+      _id: _id,
+      userId: userId,
+    });
+
+    if (!deleteAddress) {
+      return response.status(404).json({
+        message: "Address not found",
+        error: true,
+        success: false,
+      });
+    }
+
+    return response.status(200).json({
+      data: deleteAddress,
+      message: "Address deleted successfully",
+      error: false,
+      success: true,
+    });
+  } catch (error) {
+    return response.status(500).json({
+      message: error.message || error,
+      error: true,
+      success: false,
+    });
+  }
+};
+
+export const getSingleAddressController = async (request, response) => {
+  try {
+    const id = request.params.id;
+
+    const address = await AddressModel.findOne({ _id: id });
+
+    if (!address) {
+      return response.status(404).json({
+        message: "Address Not Found",
+        error: true,
+        success: false,
+      });
+    }
+
+    return response.status(200).json({
+      error: false,
+      success: true,
+      address: address
+    });
+  } catch (error) {
+    return response.status(500).json({
+      message: error.message || error,
+      error: true,
+      success: false,
+    });
+  }
+};
+
+
+export async function editAddress(request, response) {
+  try {
+    const id = request.params.id;
+     const {
+      address_line,
+      city,
+      state,
+      pincode,
+      country,
+      mobile,
+      userId,
+      landmark,
+      addressType,
+    } = request.body;
+
+    
+
+    const address = await AddressModel.findByIdAndUpdate(
+      id,
+      {
+        address_line: address_line,
+        city: city,
+        state: state,
+        pincode: pincode,
+        country: country,
+        mobile: mobile,
+        landmark: landmark,
+        addressType: addressType,
+      },
+      { new: true },
+    );
+
+
+    return response.json({
+      message: "Address Updated successfully",
+      error: false,
+      success: true,
+      address: address,
+    });
+  } catch (error) {
+    return response.status(500).json({
+      message: error.message || error,
+      error: true,
+      success: false,
+    });
+  }
 }
-
-

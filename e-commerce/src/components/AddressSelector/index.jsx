@@ -15,7 +15,7 @@ import MenuItem from "@mui/material/MenuItem";
 
 const ITEM_HEIGHT = 48;
 
-export default function AddressSelector({ addresses = [], removeAddress }) {
+export default function AddressSelector({ addresses = [], removeAddress,editAddress }) {
   const context = useContext(MyContext);
   const [selected, setSelected] = useState(null);
 
@@ -44,6 +44,11 @@ export default function AddressSelector({ addresses = [], removeAddress }) {
   setAnchorEl(null);
   removeAddress(id); // ye props wala function hai ✅
 };
+
+const handleEditAddress = (id)=>{
+  setAnchorEl(null);
+  editAddress(id)
+}
 
   return (
     <div className="w-full mt-6">
@@ -177,7 +182,7 @@ export default function AddressSelector({ addresses = [], removeAddress }) {
                   }}
                 >
                     <MenuItem
-                      onClick={handleClose}
+                      onClick={()=>handleEditAddress(addr?._id)}
                     >
                       Edit
                     </MenuItem>
