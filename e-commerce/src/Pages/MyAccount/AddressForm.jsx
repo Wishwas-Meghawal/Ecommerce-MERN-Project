@@ -39,6 +39,7 @@ const AddressForm = () => {
         `/api/address/get?userId=${context?.userData?._id}`,
       ).then((res) => {
         setAddress(res.data);
+        context?.getUserDetails();
       });
     });
   };

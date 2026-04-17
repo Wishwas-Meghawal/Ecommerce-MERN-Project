@@ -42,7 +42,7 @@ const CartPanel = (props) => {
                     to={`/product/${item?.productId}`}
                     className="hover:text-primary transition-all"
                   >
-                    {item?.productTitle?.substr(0, 30) + "..."}
+                    {item?.productTitle?.substr(0, 20) + "..."}
                   </Link>
                 </h4>
 
@@ -55,8 +55,7 @@ const CartPanel = (props) => {
                     </span>
                   </span>
 
-                  <span className="text-primary font-bold text-[15px]">
-                    ₹{item?.price}
+                  <span className="text-primary font-bold text-[15px]">Price: {item?.price?.toLocaleString('en-US', {style: 'currency', currency: 'INR'})}
                   </span>
                 </div>
 
@@ -117,7 +116,7 @@ const CartPanel = (props) => {
             </Link>
 
             <Link to="/checkout" className="w-[50%] d-block">
-              <Button className="btn-org  btn-border btn-lg w-full">
+              <Button className="btn-org  btn-border btn-lg w-full" onClick={context.toggleCartpanel(false)}>
                 CHECKOUT
               </Button>
             </Link>

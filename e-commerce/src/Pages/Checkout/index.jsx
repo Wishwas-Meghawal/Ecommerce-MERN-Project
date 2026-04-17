@@ -1,288 +1,309 @@
-import React from "react";
+import React, { use, useContext, useState } from "react";
 import TextField from "@mui/material/TextField";
-import { Button } from "@mui/material";
+import { Button, Typography } from "@mui/material";
 import { BsFillBagCheckFill } from "react-icons/bs";
+import { MyContext } from "../../App";
+import { FiEdit2, FiPlus } from "react-icons/fi";
+import Radio from "@mui/material/Radio";
+import { Box, Briefcase, Home } from "lucide-react";
+import { MapPinOff } from "lucide-react";
+import { Link } from "react-router-dom";
+import { MdHome } from "react-icons/md";
 
 const Checkout = () => {
+  const context = useContext(MyContext);
+  const [isChecked, setIsChecked] = useState(0);
+  const handleEditAddress = (id) => {
+    context?.setOpenAddressPanel(true);
+    context?.setAddressMode("edit");
+    context?.setAddressId(id);
+  };
+
+  const handleChange = (event, index) => {
+    if (event.target.checked) {
+      setIsChecked(index);
+    }
+  };
   return (
     <section className="py-10">
       <div className="container flex gap-5">
         <div className="leftCol w-[70%]">
           <div className="card bg-white shadow-md rounded-md p-5 w-full">
-            <h1>Billing Details</h1>
+            <div className="flex items-center justify-between">
+              <h2>Select Delivery Address</h2>
+              <Button
+                variant="outlined"
+                onClick={() => {
+                  context?.setOpenAddressPanel(true);
+                  context?.setAddressMode("add");
+                }}
+                className="h-[40px] px-6 rounded-2xl  text-white font-semibold text-[15px]  transition-all duration-300 flex items-center gap-2 tracking-wide"
+              >
+                <span className="w-8 h-8 rounded-full bg-white/20 flex items-center justify-center">
+                  <FiPlus className="text-[18px]" />
+                </span>
+                ADD NEW ADDRESS
+              </Button>
+            </div>
 
-            <form className="w-full mt-5">
-              <div className="flex items-center gap-5 pb-5">
-                <div className="col w-[50%]">
-                  <TextField
-                    className="w-full"
-                    label="Full Name"
-                    variant="outlined"
-                    size="small"
-                  />
-                </div>
-                <div className="col w-[50%]">
-                  <TextField
-                    className="w-full"
-                    label="Country *"
-                    variant="outlined"
-                    size="small"
-                  />
-                </div>
-              </div>
+            <div className="w-full bg-white p-6 mt-3">
+              {context?.userData?.address_details?.length !== 0 ? (
+                context?.userData?.address_details?.map((address, index) => {
+                  return (
+                    <div key={index} className="space-y-5">
+                      <div
+                        className={`border border-[rgba(0,0,0,0.1)]  rounded-sm  p-5 mb-3 transition-all duration-300 shadow-sm ${isChecked === index && "bg-[#fff2f2]"}`}
+                      >
+                        {/* Top */}
+                        <div className="flex items-start justify-between gap-4">
+                          <div className="flex gap-4 w-full">
+                            {/* Radio */}
+                            <div>
+                              <Radio
+                                checked={isChecked === index}
+                                onChange={(event) => handleChange(event, index)}
+                                value={address._id}
+                                sx={{
+                                  padding: "2px",
+                                  "&.Mui-checked": { color: "#2563eb" },
+                                }}
+                              />
+                            </div>
 
-              <h6 className="text-[14px] font-[500] mb-3">Street address *</h6>
-              <div className="flex items-center gap-5 pb-5">
-                <div className="col w-[100%]">
-                  <TextField
-                    className="w-full"
-                    label="House No. and Street Name"
-                    variant="outlined"
-                    size="small"
-                  />
-                </div>
-              </div>
-              <div className="flex items-center gap-5 pb-5">
-                <div className="col w-[100%]">
-                  <TextField
-                    className="w-full"
-                    label="Apartment,suite,unit,etc.(0ptional)"
-                    variant="outlined"
-                    size="small"
-                  />
-                </div>
-              </div>
+                            {/* Content */}
+                            <div className="w-full">
+                              <span
+                                className={`w-fit flex items-center gap-1 text-[10px] px-2 py-[2px] rounded-full font-medium
+                                ${
+                                  address.addressType === "Home"
+                                    ? "bg-green-100 text-green-600"
+                                    : "bg-purple-100 text-purple-600"
+                                }`}
+                              >
+                                {address.addressType === "Home" ? (
+                                  <Home size={12} />
+                                ) : (
+                                  <Briefcase size={12} />
+                                )}
+                                {address.addressType}
+                              </span>
+                              <h3 className="text-[20px] font-bold text-gray-800 mb-2">
+                                {context?.userData?.name}
+                              </h3>
 
-              <div className="flex items-center gap-5 pb-5">
-                <div className="col w-[50%]">
-                  <TextField
-                    className="w-full"
-                    label="Town/City *"
-                    variant="outlined"
-                    size="small"
-                  />
-                </div>
-                <div className="col w-[50%]">
-                  <TextField
-                    className="w-full"
-                    label="State/Country *"
-                    variant="outlined"
-                    size="small"
-                  />
-                </div>
-              </div>
+                              <p className="text-sm text-gray-600">
+                                {[
+                                  address?.address_line,
+                                  address?.city,
+                                  address?.state,
+                                ]
+                                  .filter(Boolean)
+                                  .join(", ")}
 
-              <h6 className="text-[14px] font-[500] mb-3">Postcode/ZIP *</h6>
-              <div className="flex items-center gap-5 pb-5">
-                <div className="col w-[100%]">
-                  <TextField
-                    className="w-full"
-                    label="ZIP Code"
-                    variant="outlined"
-                    size="small"
-                  />
-                </div>
-              </div>
+                                {address?.pincode && (
+                                  <>
+                                    {" - "}
+                                    <span className="font-semibold text-gray-800">
+                                      {address.pincode}
+                                    </span>
+                                  </>
+                                )}
+                              </p>
 
-              <div className="flex items-center gap-5 pb-5">
-                <div className="col w-[50%]">
-                  <TextField
-                    className="w-full"
-                    label="Phone Number"
-                    variant="outlined"
-                    size="small"
-                  />
-                </div>
-                <div className="col w-[50%]">
-                  <TextField
-                    type="email"
-                    className="w-full"
-                    label="Email"
-                    variant="outlined"
-                    size="small"
-                  />
-                </div>
-              </div>
-            </form>
+                              <p className="text-[15px] font-bold text-gray-700">
+                                Mobile : {context?.userData?.mobile}
+                              </p>
+                            </div>
+                          </div>
+
+                          {/* Edit */}
+                          <Button
+                            variant="contained"
+                            startIcon={<FiEdit2 size={16} />}
+                            sx={{
+                              minWidth: "fit-content",
+                              px: 2.2,
+                              height: 40,
+                              textTransform: "none",
+                              fontSize: "14px",
+                              fontWeight: 700,
+
+                              background: "#eff6ff",
+                              color: "#2563eb",
+                              boxShadow: "0 2px 8px rgba(37,99,235,0.12)",
+
+                              transition: "all 0.3s ease",
+
+                              "&:hover": {
+                                background:
+                                  "linear-gradient(135deg, #3b82f6, #06b6d4)",
+                                color: "#fff",
+                                boxShadow: "0 8px 20px rgba(59,130,246,0.35)",
+                                transform: "translateY(-2px) scale(1.03)",
+                              },
+
+                              "&:active": {
+                                transform: "scale(0.98)",
+                              },
+                            }}
+                            onClick={() => handleEditAddress(address?._id)}
+                          >
+                            EDIT
+                          </Button>
+                        </div>
+                      </div>
+                    </div>
+                  );
+                })
+              ) : (
+                <>
+                  <div className="w-full h-full flex items-center justify-center ">
+                    <div className="flex flex-col items-center text-center p-6 max-w-sm">
+                      {/* Icon Container */}
+                      <div className="w-40 h-40 flex items-center justify-center rounded-full  mb-4">
+                        <img src="/noaddress.png" alt="" />
+                      </div>
+
+                      {/* Title */}
+                      <h2 className="flex gap-3 items-center justify-center text-lg font-semibold text-gray-800">
+                        No Address Found
+                        <MapPinOff className="w-5 h-5 text-gray-400" />
+                      </h2>
+
+                      {/* Subtitle */}
+                      <p className="text-sm text-gray-500 mt-2">
+                        You haven’t added any delivery address yet. Add a new address to continue.
+                      </p>
+
+                      <Link to="/address">
+                        <Button
+                          variant="contained"
+                          startIcon={<MdHome />}
+                          sx={{
+                            mt: 3,
+                            px: 4,
+                            py: 1.2,
+                            borderRadius: "999px",
+                            textTransform: "none",
+                            fontWeight: 600,
+                            background:
+                              "linear-gradient(135deg, #ff4d4d, #ff6a6a)",
+                            color: "#fff",
+                            boxShadow: "0 4px 14px rgba(255, 77, 77, 0.4)",
+                            transition: "all 0.3s ease",
+
+                            "&:hover": {
+                              background:
+                                "linear-gradient(135deg, #e04343, #ff5252)",
+                              boxShadow: "0 6px 18px rgba(255, 77, 77, 0.6)",
+                              transform: "translateY(-2px)",
+                            },
+                          }}
+                        >
+                          Add Address
+                        </Button>
+                      </Link>
+                    </div>
+                  </div>
+                </>
+              )}
+            </div>
           </div>
         </div>
 
-        <div className="rigthCol w-[30%]">
-          <div className="card shadow-md bg-white p-5 rounded-md">
-            <h2 className="mb-4">Your Order</h2>
+        <div className="rightCol w-full lg:w-[32%]">
+          <div className="relative overflow-hidden rounded-3xl border border-gray-200 bg-white/90 backdrop-blur-xl shadow-[0_20px_60px_rgba(0,0,0,0.08)] transition-all duration-300 hover:shadow-[0_25px_70px_rgba(0,0,0,0.12)]">
+            <div className="p-6">
+              {/* Header */}
+              <div className="mb-5 flex items-center justify-between">
+                <div>
+                  <h2 className="text-[22px] font-bold text-gray-800 tracking-tight">
+                    Your Order
+                  </h2>
+                </div>
 
-            <div className="flex items-center justify-between py-3 border-t border-[rgba(0,0,0,0.1)] border-b">
-              <span className="text-[14px] font-[600]">Product</span>
-              <span className="text-[14px] font-[600]">Subtotal</span>
+              </div>
+
+              {/* Head Row */}
+              <div className="flex items-center justify-between rounded-xl bg-gray-50 px-4 py-3 mb-4 border border-gray-100">
+                <span className="text-[13px] font-semibold uppercase tracking-wide text-gray-500">
+                  Product
+                </span>
+                <span className="text-[13px] font-semibold uppercase tracking-wide text-gray-500">
+                  Subtotal
+                </span>
+              </div>
+
+              {/* Product List */}
+              <div className="space-y-3 max-h-[320px] overflow-y-auto pr-2 custom-scrollbar">
+                {context?.cartData?.length > 0 &&
+                  context?.cartData?.map((item, index) => {
+                    return (
+                      <div
+                        key={index}
+                        className="group flex items-center justify-between rounded-2xl border border-gray-100 bg-white px-3 py-3 transition-all duration-300 hover:shadow-md hover:border-orange-200"
+                      >
+                        {/* Left */}
+                        <div className="flex items-center gap-3 w-[70%]">
+                          {/* Image */}
+                          <div className="w-[58px] h-[58px] overflow-hidden rounded-2xl bg-gray-100 shrink-0">
+                            <img
+                              src={item?.image}
+                              alt=""
+                              className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-110"
+                            />
+                          </div>
+
+                          {/* Info */}
+                          <div className="w-full">
+                            <h4
+                              title={item?.productTitle}
+                              className="text-[14px] font-semibold text-gray-800 leading-5 line-clamp-2"
+                            >
+                              {item?.productTitle}
+                            </h4>
+
+                            <div className="mt-1 flex items-center gap-2 text-[13px] text-gray-500">
+                              <span>Qty: {item?.quantity}</span>
+                              <span className="h-1 w-1 rounded-full bg-gray-400"></span>
+                              <span>
+                                {item?.price?.toLocaleString("en-US", {
+                                  style: "currency",
+                                  currency: "INR",
+                                })}
+                              </span>
+                            </div>
+                          </div>
+                        </div>
+
+                        {/* Price */}
+                        <span className="text-[14px] font-bold text-gray-800">
+                          {(item?.quantity * item?.price)?.toLocaleString(
+                            "en-US",
+                            {
+                              style: "currency",
+                              currency: "INR",
+                            },
+                          )}
+                        </span>
+                      </div>
+                    );
+                  })}
+              </div>
+
+              {/* Divider */}
+              <div className="my-5 border-t border-dashed border-gray-200"></div>
+
+              {/* Button */}
+              <Button className="btn-org btn-lg w-full  gap-2">
+                <BsFillBagCheckFill className="text-[20px]" />
+                Secure Checkout
+              </Button>
+
+              <p className="text-center text-xs text-gray-400 mt-3">
+                Safe & encrypted payment gateway
+              </p>
             </div>
-
-            <div className="mb-5 scroll max-h-[250px] overflow-y-scroll overflow-x-hidden pr-5">
-              <div className="flex items-center justify-between py-2">
-                <div className="part1 flex items-center gap-3">
-                  <div className="img w-[50px] h-[50px] object-cover overflow-hidden rounded-md group cursor-pointer">
-                    <img
-                      src="http://demos.codezeel.com/wordpress/WCM06/WCM060133/wp-content/uploads/2024/01/02-37-460x460.jpg"
-                      alt=""
-                      className="w-full transition-all group-hover:scale-105"
-                    />
-                  </div>
-                  <div className="info">
-                    <h4 className="text-[14px]">Men Pure Cotton...</h4>
-                    <span className="text-[14px]">Qty : 1</span>
-                  </div>
-                </div>
-                <span className="text-[14px] font-[600]">$1,300.00</span>
-              </div>
-              <div className="flex items-center justify-between py-2">
-                <div className="part1 flex items-center gap-3">
-                  <div className="img w-[50px] h-[50px] object-cover overflow-hidden rounded-md group cursor-pointer">
-                    <img
-                      src="http://demos.codezeel.com/wordpress/WCM06/WCM060133/wp-content/uploads/2024/01/02-37-460x460.jpg"
-                      alt=""
-                      className="w-full transition-all group-hover:scale-105"
-                    />
-                  </div>
-                  <div className="info">
-                    <h4 className="text-[14px]">Men Pure Cotton...</h4>
-                    <span className="text-[14px]">Qty : 1</span>
-                  </div>
-                </div>
-                <span className="text-[14px] font-[600]">$1,300.00</span>
-              </div>
-              <div className="flex items-center justify-between py-2">
-                <div className="part1 flex items-center gap-3">
-                  <div className="img w-[50px] h-[50px] object-cover overflow-hidden rounded-md group cursor-pointer">
-                    <img
-                      src="http://demos.codezeel.com/wordpress/WCM06/WCM060133/wp-content/uploads/2024/01/02-37-460x460.jpg"
-                      alt=""
-                      className="w-full transition-all group-hover:scale-105"
-                    />
-                  </div>
-                  <div className="info">
-                    <h4 className="text-[14px]">Men Pure Cotton...</h4>
-                    <span className="text-[14px]">Qty : 1</span>
-                  </div>
-                </div>
-                <span className="text-[14px] font-[600]">$1,300.00</span>
-              </div>
-              <div className="flex items-center justify-between py-2">
-                <div className="part1 flex items-center gap-3">
-                  <div className="img w-[50px] h-[50px] object-cover overflow-hidden rounded-md group cursor-pointer">
-                    <img
-                      src="http://demos.codezeel.com/wordpress/WCM06/WCM060133/wp-content/uploads/2024/01/02-37-460x460.jpg"
-                      alt=""
-                      className="w-full transition-all group-hover:scale-105"
-                    />
-                  </div>
-                  <div className="info">
-                    <h4 className="text-[14px]">Men Pure Cotton...</h4>
-                    <span className="text-[14px]">Qty : 1</span>
-                  </div>
-                </div>
-                <span className="text-[14px] font-[600]">$1,300.00</span>
-              </div>
-              <div className="flex items-center justify-between py-2">
-                <div className="part1 flex items-center gap-3">
-                  <div className="img w-[50px] h-[50px] object-cover overflow-hidden rounded-md group cursor-pointer">
-                    <img
-                      src="http://demos.codezeel.com/wordpress/WCM06/WCM060133/wp-content/uploads/2024/01/02-37-460x460.jpg"
-                      alt=""
-                      className="w-full transition-all group-hover:scale-105"
-                    />
-                  </div>
-                  <div className="info">
-                    <h4 className="text-[14px]">Men Pure Cotton...</h4>
-                    <span className="text-[14px]">Qty : 1</span>
-                  </div>
-                </div>
-                <span className="text-[14px] font-[600]">$1,300.00</span>
-              </div>
-              <div className="flex items-center justify-between py-2">
-                <div className="part1 flex items-center gap-3">
-                  <div className="img w-[50px] h-[50px] object-cover overflow-hidden rounded-md group cursor-pointer">
-                    <img
-                      src="http://demos.codezeel.com/wordpress/WCM06/WCM060133/wp-content/uploads/2024/01/02-37-460x460.jpg"
-                      alt=""
-                      className="w-full transition-all group-hover:scale-105"
-                    />
-                  </div>
-                  <div className="info">
-                    <h4 className="text-[14px]">Men Pure Cotton...</h4>
-                    <span className="text-[14px]">Qty : 1</span>
-                  </div>
-                </div>
-                <span className="text-[14px] font-[600]">$1,300.00</span>
-              </div>
-              <div className="flex items-center justify-between py-2">
-                <div className="part1 flex items-center gap-3">
-                  <div className="img w-[50px] h-[50px] object-cover overflow-hidden rounded-md group cursor-pointer">
-                    <img
-                      src="http://demos.codezeel.com/wordpress/WCM06/WCM060133/wp-content/uploads/2024/01/02-37-460x460.jpg"
-                      alt=""
-                      className="w-full transition-all group-hover:scale-105"
-                    />
-                  </div>
-                  <div className="info">
-                    <h4 className="text-[14px]">Men Pure Cotton...</h4>
-                    <span className="text-[14px]">Qty : 1</span>
-                  </div>
-                </div>
-                <span className="text-[14px] font-[600]">$1,300.00</span>
-              </div>
-              <div className="flex items-center justify-between py-2">
-                <div className="part1 flex items-center gap-3">
-                  <div className="img w-[50px] h-[50px] object-cover overflow-hidden rounded-md group cursor-pointer">
-                    <img
-                      src="http://demos.codezeel.com/wordpress/WCM06/WCM060133/wp-content/uploads/2024/01/02-37-460x460.jpg"
-                      alt=""
-                      className="w-full transition-all group-hover:scale-105"
-                    />
-                  </div>
-                  <div className="info">
-                    <h4 className="text-[14px]">Men Pure Cotton...</h4>
-                    <span className="text-[14px]">Qty : 1</span>
-                  </div>
-                </div>
-                <span className="text-[14px] font-[600]">$1,300.00</span>
-              </div>
-              <div className="flex items-center justify-between py-2">
-                <div className="part1 flex items-center gap-3">
-                  <div className="img w-[50px] h-[50px] object-cover overflow-hidden rounded-md group cursor-pointer">
-                    <img
-                      src="http://demos.codezeel.com/wordpress/WCM06/WCM060133/wp-content/uploads/2024/01/02-37-460x460.jpg"
-                      alt=""
-                      className="w-full transition-all group-hover:scale-105"
-                    />
-                  </div>
-                  <div className="info">
-                    <h4 className="text-[14px]">Men Pure Cotton...</h4>
-                    <span className="text-[14px]">Qty : 1</span>
-                  </div>
-                </div>
-                <span className="text-[14px] font-[600]">$1,300.00</span>
-              </div>
-              <div className="flex items-center justify-between py-2">
-                <div className="part1 flex items-center gap-3">
-                  <div className="img w-[50px] h-[50px] object-cover overflow-hidden rounded-md group cursor-pointer">
-                    <img
-                      src="http://demos.codezeel.com/wordpress/WCM06/WCM060133/wp-content/uploads/2024/01/02-37-460x460.jpg"
-                      alt=""
-                      className="w-full transition-all group-hover:scale-105"
-                    />
-                  </div>
-                  <div className="info">
-                    <h4 className="text-[14px]">Men Pure Cotton...</h4>
-                    <span className="text-[14px]">Qty : 1</span>
-                  </div>
-                </div>
-                <span className="text-[14px] font-[600]">$1,300.00</span>
-              </div>
-            </div>
-
-            <Button className="btn-org btn-lg w-full flex gap-2">
-              <BsFillBagCheckFill className="text-[20px]" />
-              Checkout
-            </Button>
           </div>
         </div>
       </div>
