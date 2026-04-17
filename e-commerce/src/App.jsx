@@ -34,6 +34,7 @@ function App() {
   });
 
   const [openCartPanel, setOpenCartPanel] = useState(false);
+  const [openAddressPanel, setOpenAddressPanel] = useState(false);
 
   const [maxWidth, setMaxWidth] = useState("lg");
 
@@ -48,6 +49,10 @@ function App() {
   const [cartData, setCartData] = useState([]);
 
   const [myListData, setMyListData] = useState([]);
+
+  const [addressMode, setAddressMode] = useState("add");
+
+  const [addressId, setAddressId] = useState("")
 
   const apiUrl = import.meta.env.VITE_API_URL;
 
@@ -69,37 +74,46 @@ function App() {
     setOpenCartPanel(newOpen);
   };
 
+  const toggleAddresspanel = (newOpen) => () => {
+    if(newOpen == false){
+      setAddressMode("add")
+    }
+    setOpenAddressPanel(newOpen);
+  };
+
+
+
   useEffect(() => {
     const token = localStorage.getItem("accessToken");
 
-    if (!token) {
+    if (token !== undefined && token !== null && token !== "") {
+      setIsLogin(true);
+
+     
+      getCartItems();
+      getMyListData();
+      getUserDetails();
+    } else {
       setIsLogin(false);
-      setUserData(null);
-      return;
     }
-
-    setIsLogin(true);
-
-    fetchDataFromApi("/api/user/user-details")
-      .then((res) => {
-        if (res?.error === true) {
-          localStorage.removeItem("accessToken");
-          localStorage.removeItem("refreshToken");
-
-          setIsLogin(false);
-          setUserData(null);
-          return;
-        }
-
-        setUserData(res?.data);
-        getCartItems();
-        getMyListData();
-      })
-      .catch(() => {
-        setIsLogin(false);
-        setUserData(null);
-      });
   }, [isLogin]);
+
+  const getUserDetails = () =>{
+     fetchDataFromApi("/api/user/user-details").then((res) => {
+        setUserData(res.data);
+        if (res?.response?.data?.error === true) {
+          if (res?.response?.data?.message === "You have not Login") {
+            localStorage.removeItem("accessToken");
+            localStorage.removeItem("refreshToken");
+
+            alertBox("Your sesion is closed please login  again", "error");
+
+            window.location.href = "/login";
+            setIsLogin(false);
+          }
+        }
+      });
+  }
 
   useEffect(() => {
     fetchDataFromApi("/api/category").then((res) => {
@@ -161,13 +175,13 @@ function App() {
     });
   };
 
-  const getMyListData = () =>{
-    fetchDataFromApi("/api/myList").then((res)=>{
-      if(res?.error == false){
+  const getMyListData = () => {
+    fetchDataFromApi("/api/myList").then((res) => {
+      if (res?.error == false) {
         setMyListData(res?.data);
       }
-    })
-  }
+    });
+  };
 
   const values = {
     openProductDetailsModal,
@@ -177,6 +191,9 @@ function App() {
     setOpenCartPanel,
     openCartPanel,
     toggleCartpanel,
+    setOpenAddressPanel,
+    openAddressPanel,
+    toggleAddresspanel,
     alertBox,
     isLogin,
     setIsLogin,
@@ -193,6 +210,11 @@ function App() {
     myListData,
     setMyListData,
     getMyListData,
+    getUserDetails,
+    addressMode,
+    setAddressMode,
+    addressId,
+    setAddressId,
   };
 
   return (

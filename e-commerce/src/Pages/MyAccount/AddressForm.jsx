@@ -1,83 +1,37 @@
 import React, { useContext, useEffect, useState } from "react";
 import AccountSidebar from "../../components/AccountSidebar";
 import AddressSelector from "../../components/AddressSelector";
-import { Button, Select, TextField } from "@mui/material";
+import { Button } from "@mui/material";
 import { Plus } from "lucide-react";
-import MenuItem from "@mui/material/MenuItem";
-import Radio from "@mui/material/Radio";
-import RadioGroup from "@mui/material/RadioGroup";
-import FormControlLabel from "@mui/material/FormControlLabel";
-import FormControl from "@mui/material/FormControl";
-import FormLabel from "@mui/material/FormLabel";
 
-import DialogTitle from "@mui/material/DialogTitle";
-import Dialog from "@mui/material/Dialog";
 
-import { PhoneInput } from "react-international-phone";
-import "react-international-phone/style.css";
-
-import CircularProgress from "@mui/material/CircularProgress";
 
 import {
   deleteData,
-  editData,
+
   fetchDataFromApi,
-  postData,
+
 } from "../../utils/api.js";
+
 import { MyContext } from "../../App.jsx";
 
 const AddressForm = () => {
   const context = useContext(MyContext);
-  const [phone, setPhone] = useState("");
-  const [isOpenModel, setIsOpenModel] = useState(false);
   const [address, setAddress] = useState([]);
-  const [isLoading, setIsLoading] = useState(false);
-  const [addressType, setAddressType] = useState("");
-  const [mode, setMode] = useState("add");
-  const [addressId, setAddressId] = useState("");
+ 
 
-  const [formFields, setFormFields] = useState({
-    address_line: "",
-    city: "",
-    state: "",
-    pincode: "",
-    country: "",
-    mobile: "",
-    userId: "",
-    addressType: "",
-    landmark: "",
-  });
-
-  useEffect(() => {
-    if (context?.userData?._id !== undefined) {
-      setFormFields((prev) => ({
-        ...prev,
-        userId: context?.userData?._id,
-      }));
-    }
-  }, [context?.userData]);
+  
 
   useEffect(() => {
     if (context?.userData?._id !== undefined && context?.userData?._id !== "") {
-      fetchDataFromApi(
-        `/api/address/get?userId=${context?.userData?._id}`,
-      ).then((res) => {
-        setAddress(res.data);
-      });
+      
+        setAddress(context?.userData?.address_details);
     }
   }, [context?.userData]);
 
-  const handleClose = () => {
-    setIsOpenModel(false);
-  };
+  
 
-  const onChangeInput = (e) => {
-    const { name, value } = e.target;
-    setFormFields((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
-  };
+  
 
   const removeAddress = (id) => {
     deleteData(`/api/address/${id}`).then((res) => {
@@ -89,139 +43,9 @@ const AddressForm = () => {
     });
   };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
+ 
 
-    setIsLoading(true);
-
-    if (formFields.address_line === "")
-      return context.alertBox("Address Line 1 required", "error");
-
-    if (formFields.city === "")
-      return context.alertBox("City required", "error");
-
-    if (formFields.state === "")
-      return context.alertBox("State required", "error");
-
-    if (formFields.pincode === "")
-      return context.alertBox("Pincode required", "error");
-
-    if (formFields.country === "")
-      return context.alertBox("Country required", "error");
-
-    if (phone === "") return context.alertBox("Mobile required", "error");
-
-    if (formFields.landmark === "")
-      return context.alertBox("Landmark required", "error");
-
-    if (formFields.addressType === "")
-      return context.alertBox("AddressType required", "error");
-
-    if (mode === "add") {
-      postData(`/api/address/add`, formFields, {
-        withCredentials: true,
-      }).then((res) => {
-        if (!res?.error) {
-          
-          context.alertBox(res?.message, "success");
-          setTimeout(()=>{
-            setIsLoading(false);
-            setIsOpenModel(false);
-          },500)
-
-          
-          fetchDataFromApi(
-            `/api/address/get?userId=${context?.userData?._id}`,
-          ).then((res) => {
-            setAddress(res.data);
-
-            setFormFields({
-              address_line: "",
-              city: "",
-              state: "",
-              pincode: "",
-              country: "",
-              mobile: "",
-              userId: "",
-              addressType: "",
-              landmark: "",
-            });
-
-            setAddressType("");
-            setPhone("");
-          });
-        } else {
-          context.alertBox(res?.message, "error");
-          setIsLoading(false);
-        }
-      });
-    }
-
-    if (mode === "edit") {
-      setIsLoading(true);
-      editData(`/api/address/${addressId}`, formFields, {
-        withCredentials: true,
-      }).then((res) => {
-        fetchDataFromApi(
-          `/api/address/get?userId=${context?.userData?._id}`,
-        ).then((res) => {
-           setTimeout(()=>{
-            setIsLoading(false);
-            setIsOpenModel(false);
-          },500)
-          setAddress(res.data);
-         
-
-          setFormFields({
-            address_line: "",
-            city: "",
-            state: "",
-            pincode: "",
-            country: "",
-            mobile: "",
-            userId: "",
-            addressType: "",
-            landmark: "",
-          });
-
-          setAddressType("");
-          setPhone("");
-        });
-      });
-    }
-  };
-
-  const editAddress = (id) => {
-    setMode("edit");
-    setIsOpenModel(true);
-
-    setAddressId(id);
-
-    fetchDataFromApi(`/api/address/${id}`).then((res) => {
-      setFormFields({
-        address_line: res?.address?.address_line,
-        city: res?.address?.city,
-        state: res?.address?.state,
-        pincode: res?.address?.pincode,
-        country: res?.address?.country,
-        mobile: res?.address?.mobile,
-        userId: res?.address?.userId,
-        addressType: res?.address?.addressType,
-        landmark: res?.address?.landmark,
-      });
-      const ph = `"${res?.address?.mobile}"`;
-      setPhone(ph);
-      setAddressType(res?.address?.addressType);
-    });
-  };
-
-  const handleChangeAddressType = (event) => {
-    setAddressType(event.target.value);
-    setFormFields(() => ({
-      ...formFields,
-      addressType: event.target.value,
-    }));
-  };
+ 
 
   return (
     <>
@@ -253,7 +77,10 @@ const AddressForm = () => {
                   fullWidth
                   variant="outlined"
                   startIcon={<Plus size={18} />}
-                  onClick={() => setIsOpenModel(true)}
+                  onClick={()=>{
+                    context?.setOpenAddressPanel(true);
+                    context?.setAddressMode("add");
+                  }}
                   sx={{
                     borderStyle: "dashed",
                     borderWidth: "2px",
@@ -280,309 +107,13 @@ const AddressForm = () => {
               <AddressSelector
                 addresses={address}
                 removeAddress={removeAddress}
-                editAddress={editAddress}
+                
               />
             </div>
           </div>
         </div>
       </section>
-      <Dialog
-        open={isOpenModel}
-        sx={{
-          "& .MuiPaper-root": {
-            borderRadius: "12px",
-            boxShadow: "0 8px 32px rgba(0,0,0,0.08)",
-            maxWidth: "600px",
-            width: "100%",
-          },
-        }}
-      >
-        <DialogTitle
-          sx={{
-            backgroundColor: "#ff5252",
-            color: "white",
-            padding: "16px 24px",
-            fontSize: "1.25rem",
-            fontWeight: 600,
-            borderBottom: "1px solid rgba(0,0,0,0.08)",
-          }}
-        >
-          {mode === "add" ? "Add " : "Edit "}
-          Address
-        </DialogTitle>
-
-        <form
-          className="w-full"
-          style={{ padding: "24px" }}
-          onSubmit={handleSubmit}
-        >
-          <div className="flex items-center gap-4 pb-4">
-            <div className="col w-[100%]">
-              <TextField
-                className="w-full"
-                label="Address Line 1"
-                variant="outlined"
-                size="small"
-                name="address_line"
-                value={formFields.address_line}
-                onChange={onChangeInput}
-                sx={{
-                  "& .MuiOutlinedInput-root": {
-                    borderRadius: "8px",
-                    "&:hover fieldset": {
-                      borderColor: "#1976d2",
-                    },
-                  },
-                }}
-              />
-            </div>
-          </div>
-
-          <div className="flex items-center gap-4 pb-4">
-            <div className="col w-full">
-              <TextField
-                className="w-full"
-                label="City *"
-                variant="outlined"
-                size="small"
-                name="city"
-                value={formFields.city}
-                onChange={onChangeInput}
-                sx={{
-                  "& .MuiOutlinedInput-root": {
-                    borderRadius: "8px",
-                    "&:hover fieldset": {
-                      borderColor: "#1976d2",
-                    },
-                  },
-                }}
-              />
-            </div>
-          </div>
-
-          <div className="flex items-center gap-4 pb-4">
-            <div className="col w-[50%]">
-              <TextField
-                className="w-full"
-                label="State *"
-                variant="outlined"
-                size="small"
-                name="state"
-                value={formFields.state}
-                onChange={onChangeInput}
-                sx={{
-                  "& .MuiOutlinedInput-root": {
-                    borderRadius: "8px",
-                    "&:hover fieldset": {
-                      borderColor: "#1976d2",
-                    },
-                  },
-                }}
-              />
-            </div>
-            <div className="col w-[50%]">
-              <TextField
-                className="w-full"
-                label="Country *"
-                variant="outlined"
-                size="small"
-                name="country"
-                value={formFields.country}
-                onChange={onChangeInput}
-                sx={{
-                  "& .MuiOutlinedInput-root": {
-                    borderRadius: "8px",
-                    "&:hover fieldset": {
-                      borderColor: "#1976d2",
-                    },
-                  },
-                }}
-              />
-            </div>
-          </div>
-
-          <h6
-            className="text-[14px] font-[500] mb-2"
-            style={{
-              color: "#4a5568",
-              marginBottom: "8px",
-              fontWeight: 600,
-              fontSize: "0.9rem",
-            }}
-          >
-            Postcode/ZIP *
-          </h6>
-
-          <div className="flex items-center gap-4 pb-4">
-            <div className="col w-[100%]">
-              <TextField
-                className="w-full"
-                label="ZIP Code"
-                variant="outlined"
-                size="small"
-                name="pincode"
-                value={formFields.pincode}
-                onChange={onChangeInput}
-                sx={{
-                  "& .MuiOutlinedInput-root": {
-                    borderRadius: "8px",
-                    "&:hover fieldset": {
-                      borderColor: "#1976d2",
-                    },
-                  },
-                }}
-              />
-            </div>
-          </div>
-
-          <div className="flex items-center gap-4 pb-4">
-            <div className="w-[50%]">
-              <div className="mui-phone-wrapper">
-                <PhoneInput
-                  defaultCountry="in"
-                  value={phone}
-                  onChange={(phone) => {
-                    setPhone(phone);
-                    setFormFields((prev) => ({
-                      ...prev,
-                      mobile: phone,
-                    }));
-                  }}
-                />
-              </div>
-            </div>
-
-            <div className="col w-[50%]">
-              <TextField
-                className="w-full"
-                label="Landmark"
-                variant="outlined"
-                size="small"
-                name="landmark"
-                value={formFields.landmark}
-                onChange={onChangeInput}
-                sx={{
-                  "& .MuiOutlinedInput-root": {
-                    borderRadius: "8px",
-                    "&:hover fieldset": {
-                      borderColor: "#1976d2",
-                    },
-                  },
-                }}
-              />
-            </div>
-          </div>
-
-          <div className="flex items-center gap-4 pb-4">
-            <div className="col w-[50%]">
-              <FormControl>
-                <FormLabel id="demo-row-radio-buttons-group-label">
-                  <h6
-                    className="text-[14px] font-[500] "
-                    style={{
-                      color: "#4a5568",
-                      marginBottom: "2px",
-                      fontWeight: 600,
-                      fontSize: "0.9rem",
-                    }}
-                  >
-                    Address Type *
-                  </h6>
-                </FormLabel>
-                <RadioGroup
-                  row
-                  aria-labelledby="demo-row-radio-buttons-group-label"
-                  name="row-radio-buttons-group"
-                  value={addressType}
-                  onChange={handleChangeAddressType}
-                >
-                  <FormControlLabel
-                    value="Home"
-                    control={<Radio />}
-                    label="Home"
-                  />
-                  <FormControlLabel
-                    value="Office"
-                    control={<Radio />}
-                    label="Office"
-                  />
-                </RadioGroup>
-              </FormControl>
-            </div>
-          </div>
-
-          {/* Add Action Buttons */}
-          <div className="flex justify-end gap-3 mt-6">
-            <Button
-              type="button"
-              onClick={handleClose}
-              sx={{
-                borderRadius: "6px",
-                px: 3,
-                py: 1,
-                textTransform: "none",
-                fontSize: "0.9rem",
-                fontWeight: 500,
-
-                background: "rgba(255, 255, 255, 0.6)",
-                backdropFilter: "blur(8px)",
-                WebkitBackdropFilter: "blur(8px)",
-                border: "1px solid rgba(0,0,0,0.08)",
-                color: "#374151",
-
-                transition: "all 0.25s ease",
-
-                "&:hover": {
-                  backgroundColor: "#000",
-                  color: "#fff",
-                  borderColor: "#000",
-                  boxShadow: "0 6px 14px rgba(0,0,0,0.25)",
-                  transform: "translateY(-1px)",
-                },
-
-                "&:active": {
-                  transform: "translateY(0px)",
-                  boxShadow: "0 3px 8px rgba(0,0,0,0.2)",
-                },
-              }}
-            >
-              Cancel
-            </Button>
-
-            <Button
-              type="submit"
-              variant="contained"
-              sx={{
-                borderRadius: "10px",
-                px: 4,
-                py: 1,
-                textTransform: "none",
-                fontSize: "0.95rem",
-                fontWeight: 600,
-                backgroundColor: "#ff5252",
-                boxShadow: "0 8px 16px -4px rgba(255, 82, 82, 0.35)",
-                transition:
-                  "background-color 0.25s ease, box-shadow 0.25s ease",
-
-                "&:hover": {
-                  backgroundColor: "#000", // 👈 only color change
-                  boxShadow: "0 12px 20px -6px rgba(255, 82, 82, 0.45)",
-                },
-
-                "&:active": {
-                  boxShadow: "0 6px 12px -4px rgba(255, 82, 82, 0.35)",
-                },
-              }}
-            >
-              {isLoading === true ? (
-                <CircularProgress color="inherit" />
-              ) : (
-                "Save Address"
-              )}
-            </Button>
-          </div>
-        </form>
-      </Dialog>
+      
     </>
   );
 };

@@ -42,12 +42,14 @@ export default function AddressSelector({ addresses = [], removeAddress,editAddr
 
   const handleRemoveAddress = (id) => {
   setAnchorEl(null);
-  removeAddress(id); // ye props wala function hai ✅
+  removeAddress(id); // ye props wala function hai 
 };
 
 const handleEditAddress = (id)=>{
   setAnchorEl(null);
-  editAddress(id)
+  context?.setOpenAddressPanel(true)
+  context?.setAddressMode("edit");
+  context?.setAddressId(id);
 }
 
   return (
