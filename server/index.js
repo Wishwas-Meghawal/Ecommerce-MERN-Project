@@ -16,6 +16,7 @@ import cartRouter from './routes/cart.route.js';
 import myListRouter from './routes/myList.route.js';
 import addressRouter from './routes/address.route.js';
 import homeSlidesRouter from './routes/homeSlider.route.js';
+import orderRouter from './routes/order.route.js';
 
 
 const app = express(); 
@@ -44,6 +45,7 @@ app.use('/api/cart',cartRouter)
 app.use('/api/myList',myListRouter)
 app.use('/api/address',addressRouter);
 app.use('/api/homeSlides',homeSlidesRouter);
+app.use('/api/order',orderRouter);
 
 connectDB().then(()=>{
     app.listen(process.env.PORT,()=>{
