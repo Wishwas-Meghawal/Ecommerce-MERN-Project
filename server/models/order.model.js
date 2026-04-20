@@ -34,11 +34,11 @@ const orderSchema = new mongoose.Schema(
     },
     payment_status: {
       type: String,
-      default: "panding",
+      default: "",
     },
     order_status: {
       type: String,
-      default: "",
+      default: "pending",
     },
     delivery_address: {
       type: mongoose.Schema.ObjectId,

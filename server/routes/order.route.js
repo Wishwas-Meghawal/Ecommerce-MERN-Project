@@ -5,6 +5,6 @@ import { createOrderController, getOrderDetailsController } from '../controllers
 const orderRouter = Router();
 
 orderRouter.post('/create',auth, createOrderController);
-orderRouter.post('/order-list',auth, getOrderDetailsController);
+orderRouter.get('/order-list',auth, getOrderDetailsController);
 
 export default orderRouter;

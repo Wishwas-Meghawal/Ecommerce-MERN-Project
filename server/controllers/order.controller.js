@@ -51,9 +51,9 @@ export const createOrderController =  async (request, response) =>{
 
 export const getOrderDetailsController =  async (request, response) =>{
   try {
-    const userId = request.userId;
+    const userId = request.userId; // order id
 
-    const orderList = (await OrderModel.find({userId : userId})).toSorted({ createdAt: -1}).populate('delivery_address, userId')
+    const orderList = await OrderModel.find({userId : userId}).sort({ createdAt: -1}).populate('delivery_address userId')
 
     return response.status(200).json({
       error: false,
