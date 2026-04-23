@@ -1,7 +1,7 @@
-import OrderModel from "../models/order.model.js"
-import ProductModel from "../models/product.model.js"
+import OrderModel from "../models/order.model.js";
+import ProductModel from "../models/product.model.js";
 
-export const createOrderController =  async (request, response) =>{
+export const createOrderController = async (request, response) => {
   try {
     let order = new OrderModel({
       userId: request.body.userId,
@@ -13,22 +13,25 @@ export const createOrderController =  async (request, response) =>{
       date: request.body.date,
     });
 
-    if(!order){
+    if (!order) {
       response.status(500).json({
         error: true,
-        success: false
-      })
+        success: false,
+      });
     }
 
-    for(let i = 0; i< request.body.products.length; i++){
+    for (let i = 0; i < request.body.products.length; i++) {
       await ProductModel.findByIdAndUpdate(
         request.body.products[i].productId,
         {
-          coutInStock: parseInt(request.body.products[i].coutInStock - request.body.products[i].quantity),
+          coutInStock: parseInt(
+            request.body.products[i].coutInStock -
+              request.body.products[i].quantity,
+          ),
         },
         {
-          new : true
-        }
+          new: true,
+        },
       );
     }
     order = await order.save();
@@ -37,7 +40,7 @@ export const createOrderController =  async (request, response) =>{
       error: false,
       success: true,
       message: "Order Placed",
-      order: order
+      order: order,
     });
   } catch (error) {
     return response.status(500).json({
@@ -46,20 +49,21 @@ export const createOrderController =  async (request, response) =>{
       success: false,
     });
   }
-}
+};
 
-
-export const getOrderDetailsController =  async (request, response) =>{
+export const getOrderDetailsController = async (request, response) => {
   try {
     const userId = request.userId; // order id
 
-    const orderList = await OrderModel.find({userId : userId}).sort({ createdAt: -1}).populate('delivery_address userId')
+    const orderList = await OrderModel.find({ userId: userId })
+      .sort({ createdAt: -1 })
+      .populate("delivery_address userId");
 
     return response.status(200).json({
       error: false,
       success: true,
       message: "Order List",
-      data: orderList
+      data: orderList,
     });
   } catch (error) {
     return response.status(500).json({
@@ -68,4 +72,33 @@ export const getOrderDetailsController =  async (request, response) =>{
       success: false,
     });
   }
-}
+};
+
+export const updateOrderStatusController = async (request, response) => {
+  try {
+    const { id, order_status } = request.body;
+
+  const updateOrder = await OrderModel.updateOne(
+    {
+      _id: id,
+    },
+    {
+      order_status: order_status,
+    },
+    { new: true },
+  );
+
+  return response.status(200).json({
+    message: "Update Order Status",
+    success: true,
+    error: false,
+    data: updateOrder
+  })
+  } catch (error) {
+    return response.status(500).json({
+      message: error.message || error,
+      error: true,
+      success: false,
+    }); 
+  }
+};

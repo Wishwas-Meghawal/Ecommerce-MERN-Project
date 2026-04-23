@@ -1,7 +1,7 @@
 import React, { useContext, useState } from "react";
 import { RechartsDevtools } from "@recharts/devtools";
 import DashboardBoxes from "../../Components/DashboardBoxes";
-import { Button } from "@mui/material";
+import { Button, Chip } from "@mui/material";
 import { FaPlus } from "react-icons/fa6";
 import { FaAngleDown } from "react-icons/fa6";
 import { FaAngleUp } from "react-icons/fa6";
@@ -31,11 +31,57 @@ import {
 import { MyContext } from "../../App";
 
 const label = { slotProps: { input: { "aria-label": "Checkbox demo" } } };
+import { TbTruckDelivery, TbPackage } from "react-icons/tb";
+import {
+  IoDiamondOutline,
+  IoLocationOutline,
+  IoCallOutline,
+  IoMailOutline,
+  IoCheckmarkCircle,
+  IoTimeOutline,
+} from "react-icons/io5";
+import { BsCalendar3, BsCashCoin, BsWallet2, BsReceipt } from "react-icons/bs";
+import { HiOutlineClipboardList } from "react-icons/hi";
+import { FaBoxOpen } from "react-icons/fa6";
+import { useEffect } from "react";
+import { fetchDataFromApi } from "../../utils/api";
 
 const Dashboard = () => {
   const context = useContext(MyContext);
   const [isOpenOrderProduct, setIsOpenOrderProduct] = useState(null);
+  const [orders, setOrders] = useState([]);
   const [categoryFilterVal, setCategoryFilterVal] = useState();
+
+  const isShowOrderProduct = (index) => {
+    if (isOpenOrderProduct == index) {
+      setIsOpenOrderProduct(null);
+    } else {
+      setIsOpenOrderProduct(index);
+    }
+  };
+  useEffect(() => {
+    fetchDataFromApi("/api/order/order-list").then((res) => {
+      if (res?.error === false) {
+        setOrders(res?.data);
+      }
+    });
+  }, []);
+
+  // Helper function to format address properly
+  const formatAddress = (address) => {
+    if (!address) return "No address provided";
+    const parts = [
+      address.address_line,
+      address.city,
+      address.state,
+      address.landmark,
+    ].filter(Boolean);
+    let formatted = parts.join(", ");
+    if (address.pincode) {
+      formatted += ` - ${address.pincode}`;
+    }
+    return formatted;
+  };
 
   const [chart1Data, setChart1Data] = useState([
     { name: "Jan", TotalUsers: 120, TotalSales: 220 },
@@ -55,14 +101,6 @@ const Dashboard = () => {
     setCategoryFilterVal(event.target.value);
   };
 
-  const isShowOrderProduct = (index) => {
-    if (isOpenOrderProduct == index) {
-      setIsOpenOrderProduct(null);
-    } else {
-      setIsOpenOrderProduct(index);
-    }
-  };
-
   return (
     <>
       <div className="w-full bg-[#f1faff] py-2 px-5 border border-[rgba(0,0,0,0.1)] flex items-center gap-8 mb-5 justify-between rounded-md">
@@ -76,10 +114,15 @@ const Dashboard = () => {
             Here's What happing on your store today. See the statistics at once.
           </p>
           <br />
-          <Button className="btn-blue capitalize!" onClick={()=>context.setIsOpenFullScreenPanel({
-                        open:true,
-                        model:"Add Product"
-                      })}>
+          <Button
+            className="btn-blue capitalize!"
+            onClick={() =>
+              context.setIsOpenFullScreenPanel({
+                open: true,
+                model: "Add Product",
+              })
+            }
+          >
             <FaPlus />
             Add Product
           </Button>
@@ -115,10 +158,15 @@ const Dashboard = () => {
 
           <div className="col w-[25%] ml-auto flex items-center gap-3">
             <Button className="btn bg-green-600! text-white!">Export</Button>
-            <Button className="btn-blue text-white! " onClick={()=>context.setIsOpenFullScreenPanel({
-                        open:true,
-                        model:"Add Product"
-                      })}>
+            <Button
+              className="btn-blue text-white! "
+              onClick={() =>
+                context.setIsOpenFullScreenPanel({
+                  open: true,
+                  model: "Add Product",
+                })
+              }
+            >
               <FaPlus />
               Add Product
             </Button>
@@ -240,268 +288,349 @@ const Dashboard = () => {
         <div className="flex items-center justify-between px-5 py-5">
           <h2 className="text-[18px] font-[600]">Recent Orders</h2>
         </div>
-        <div className="relative mt-5 overflow-x-auto pb-5">
-          <table className="min-w-full text-sm text-left text-gray-600">
-            {/* Table Head */}
-            <thead className="bg-gray-100 text-xs uppercase text-gray-700">
-              <tr>
-                <th className="px-6 py-3">&nbsp;</th>
-                <th className="px-6 py-3 whitespace-nowrap">Order ID</th>
-                <th className="px-6 py-3 whitespace-nowrap">Paymant Id</th>
-                <th className="px-6 py-3 whitespace-nowrap">Name</th>
-                <th className="px-6 py-3 whitespace-nowrap">Phone Number</th>
-                <th className="px-6 py-3 whitespace-nowrap">Address</th>
-                <th className="px-6 py-3 whitespace-nowrap">Pincode</th>
-                <th className="px-6 py-3 whitespace-nowrap">Total Amount</th>
-                <th className="px-6 py-3 whitespace-nowrap">Email</th>
-                <th className="px-6 py-3 whitespace-nowrap">User Id</th>
-                <th className="px-6 py-3 whitespace-nowrap">Order Status</th>
-                <th className="px-6 py-3 whitespace-nowrap">Date</th>
+        <div className="overflow-x-auto scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100">
+          <table className="min-w-[1200px] w-full text-sm">
+            <thead>
+              <tr className="bg-gray-100 border-b border-gray-200 sticky top-0 z-10">
+                <th className="px-4 py-4 text-xs font-bold text-gray-500 uppercase tracking-wider w-12"></th>
+                <th className="px-4 py-4 text-xs font-bold text-gray-500 uppercase tracking-wider">
+                  ORDER ID
+                </th>
+                <th className="px-4 py-4 text-xs font-bold text-gray-500 uppercase tracking-wider">
+                  PAYMENT ID
+                </th>
+                <th className="px-4 py-4 text-xs font-bold text-gray-500 uppercase tracking-wider">
+                  CUSTOMER
+                </th>
+                <th className="px-4 py-4 text-xs font-bold text-gray-500 uppercase tracking-wider">
+                  CONTACT
+                </th>
+                <th className="px-4 py-4 text-xs font-bold text-gray-500 uppercase tracking-wider min-w-[280px]">
+                  SHIPPING ADDRESS
+                </th>
+                <th className="px-4 py-4 text-xs font-bold text-gray-500 uppercase tracking-wider">
+                  AMOUNT
+                </th>
+                <th className="px-4 py-4 text-xs font-bold text-gray-500 uppercase tracking-wider">
+                  EMAIL
+                </th>
+                <th className="px-4 py-4 text-xs font-bold text-gray-500 uppercase tracking-wider">
+                  USER ID
+                </th>
+                <th className="px-4 py-4 text-xs font-bold text-gray-500 uppercase tracking-wider">
+                  STATUS
+                </th>
+                <th className="px-4 py-4 text-xs font-bold text-gray-500 uppercase tracking-wider">
+                  DATE
+                </th>
               </tr>
             </thead>
+            <tbody className="divide-y divide-gray-100">
+              {orders?.length > 0 ? (
+                orders.map((order, index) => (
+                  <React.Fragment key={order?._id || index}>
+                    <tr className="hover:bg-gray-50/80 transition duration-150 group">
+                      {/* Expand Button */}
+                      <td className="px-4 py-4 align-top">
+                        <TooltipMUI
+                          title={
+                            isOpenOrderProduct === index
+                              ? "Hide items"
+                              : "View items"
+                          }
+                          arrow
+                        >
+                          <Button
+                            className="w-9! h-9! min-w-9! rounded-full! bg-gray-100! hover:bg-primary! group-hover:border-primary transition-all duration-300 shadow-sm"
+                            onClick={() => isShowOrderProduct(index)}
+                          >
+                            {isOpenOrderProduct === index ? (
+                              <FaAngleUp className="text-gray-700 text-sm group-hover:text-white" />
+                            ) : (
+                              <FaAngleDown className="text-gray-700 text-sm group-hover:text-white" />
+                            )}
+                          </Button>
+                        </TooltipMUI>
+                      </td>
 
-            {/* Table Body */}
-            <tbody className="divide-y">
-              <tr className="hover:bg-gray-50 border-b border-[rgba(0,0,0,0.1)]">
-                <td>
-                  <Button
-                    className="w-[35px]! h-[35px]! min-w-[35px]! rounded-full! bg-[#f1fdf1]!"
-                    onClick={() => isShowOrderProduct(0)}
-                  >
-                    {isOpenOrderProduct === 0 ? (
-                      <FaAngleUp className="text-[16px] text-[rgba(0,0,0,0.7)]" />
-                    ) : (
-                      <FaAngleDown className="text-[16px] text-[rgba(0,0,0,0.7)]" />
-                    )}
-                  </Button>
-                </td>
-                <td className="px-6 py-4 font-medium text-gray-900">
-                  <span className="text-primary">3874bhjjb937y1nb73y49</span>
-                </td>
-                <td className="px-6 py-4 font-medium text-gray-900">
-                  <span className="text-primary">3874bhjjb937y1nb73y49</span>
-                </td>
-                <td className="px-6 py-4 whitespace-nowrap">Show Yamato</td>
-                <td className="px-6 py-4">134567890</td>
-                <td>
-                  <span className="block w-[400px]">
-                    Dilli Haat Pitampura, Near Netaji Subhash Place Metro
-                    Station, Delhi, 110052, India
-                  </span>
-                </td>
-                <td className="px-6 py-4">123456</td>
-                <td className="px-6 py-4">$200.00</td>
-                <td className="px-6 py-4">show@gmail.com</td>
-                <td className="px-6 py-4">
-                  <span className="text-primary">3874bhjjb937y1nb73y49</span>
-                </td>
-                <td className="px-6 py-4">
-                  <Badge status="delivered" />
-                </td>
-                <td className="px-6 py-4 whitespace-nowrap">28-12-2025</td>
-              </tr>
+                      {/* Order ID */}
+                      <td className="px-4 py-4 align-top">
+                        <div>
+                          <p className="font-mono text-xs font-semibold text-primary bg-primary/5 px-2 py-1 rounded-md inline-block">
+                            #{order?._id?.slice(-8)}
+                          </p>
+                          <TooltipMUI title={order?._id} arrow>
+                            <p className="text-[10px] text-gray-400 mt-1 cursor-pointer">
+                              Click for full ID
+                            </p>
+                          </TooltipMUI>
+                        </div>
+                      </td>
 
-              {isOpenOrderProduct === 0 && (
-                <tr className="border-b border-[rgba(0,0,0,0.1)]">
-                  <td className="pl-20" colSpan="6">
-                    <div className="relative mt-5 overflow-x-auto bg-white">
-                      <table className="min-w-full text-sm text-left text-primary">
-                        {/* Table Head */}
-                        <thead className="bg-gray-100 text-xs uppercase text-gray-700">
-                          <tr className="border-b border-[rgba(0,0,0,0.1)]">
-                            <th className="px-6 py-3 whitespace-nowrap">
-                              Product Id
-                            </th>
-                            <th className="px-6 py-3 whitespace-nowrap">
-                              Product Title
-                            </th>
-                            <th className="px-6 py-3 whitespace-nowrap">
-                              Image
-                            </th>
-                            <th className="px-6 py-3 whitespace-nowrap">
-                              Quantity
-                            </th>
-                            <th className="px-6 py-3 whitespace-nowrap">
-                              Price
-                            </th>
-                            <th className="px-6 py-3 whitespace-nowrap">
-                              SubTotal
-                            </th>
-                          </tr>
-                        </thead>
+                      {/* Payment ID */}
+                      <td className="px-4 py-4 align-top">
+                        <div>
+                          {order?.paymentId ? (
+                            <TooltipMUI title={order?.paymentId} arrow>
+                              <p className="font-mono text-xs text-gray-600 bg-gray-100 px-2 py-1 rounded-md inline-block truncate max-w-[150px]">
+                                {order?.paymentId?.slice(-12)}
+                              </p>
+                            </TooltipMUI>
+                          ) : (
+                            <Chip
+                              icon={<BsCashCoin className="text-sm" />}
+                              label="COD"
+                              size="small"
+                              className="bg-amber-100 text-amber-700 font-semibold"
+                            />
+                          )}
+                        </div>
+                      </td>
 
-                        {/* Table Body */}
-                        <tbody className="divide-y">
-                          <tr className="hover:bg-gray-50 border-b border-[rgba(0,0,0,0.1)]">
-                            <td className="px-6 py-4 font-medium text-gray-900">
-                              <span className="text-gray-600">
-                                3874bhjjb937y1nb73y49
-                              </span>
-                            </td>
-                            <td className="px-6 py-4 font-medium text-gray-900">
-                              Men Pure Cotton Striped Casual Shirt
-                            </td>
+                      {/* Customer Name */}
+                      <td className="px-4 py-4 align-top">
+                        <p className="font-semibold text-gray-800 text-sm">
+                          {order?.userId?.name || "N/A"}
+                        </p>
+                      </td>
 
-                            <td className="px-6 py-4">
-                              <img
-                                src="https://encrypted-tbn2.gstatic.com/shopping?q=tbn:ANd9GcQFyvmaGbG3yOnp_yaTqXq7eKDJA5uoru9K-owHvFevVDxjq4jZdg5Tln2MAlgkLvoCWXdqgRgqhh9a4DvEuIYb6lVwdGLlc4cCumZRHJQ"
-                                alt=""
-                                className="w-10 h-10 object-cover rounded-md"
+                      {/* Phone Number */}
+                      <td className="px-4 py-4 align-top">
+                        <div className="flex items-center gap-1.5">
+                          <IoCallOutline className="text-xs text-gray-400" />
+                          <p className="text-sm text-gray-700 font-medium">
+                            {order?.userId?.mobile || "N/A"}
+                          </p>
+                        </div>
+                      </td>
+
+                      {/* Address - Now with proper wrapping and better styling */}
+                      <td className="px-4 py-4 align-top min-w-[280px] max-w-[320px]">
+                        <div className="flex items-start gap-2">
+                          <IoLocationOutline className="text-gray-400 text-sm mt-0.5 flex-shrink-0" />
+                          <div className="space-y-1">
+                            <p className="text-sm text-gray-700 leading-relaxed break-words whitespace-normal">
+                              {formatAddress(order?.delivery_address)}
+                            </p>
+                            {order?.delivery_address?.address_type && (
+                              <Chip
+                                label={order.delivery_address.address_type}
+                                size="small"
+                                className="bg-gray-100 text-gray-600 text-[10px] h-5"
                               />
-                            </td>
+                            )}
+                          </div>
+                        </div>
+                      </td>
 
-                            <td className="px-6 py-4 whitespace-nowrap">2</td>
+                      {/* Amount */}
+                      <td className="px-4 py-4 align-top">
+                        <p className="font-bold text-primary text-base">
+                          {order?.totalAmt?.toLocaleString("en-IN", {
+                            style: "currency",
+                            currency: "INR",
+                          })}
+                        </p>
+                        {order?.payment_status && (
+                          <span className="text-[10px] text-green-600 bg-green-50 px-1.5 py-0.5 rounded-full inline-block mt-1">
+                            {order.payment_status}
+                          </span>
+                        )}
+                      </td>
 
-                            <td className="px-6 py-4">$1300.00</td>
-                            <td className="px-6 py-4">$2600.00</td>
-                          </tr>
-                          <tr className="hover:bg-gray-50">
-                            <td className="px-6 py-4 font-medium text-gray-900">
-                              <span className="text-gray-600">
-                                3874bhjjb937y1nb73y49
-                              </span>
-                            </td>
-                            <td className="px-6 py-4 font-medium text-gray-900">
-                              Men Pure Cotton Striped Casual Shirt
-                            </td>
+                      {/* Email */}
+                      <td className="px-4 py-4 align-top">
+                        <div className="flex items-center gap-1.5">
+                          <IoMailOutline className="text-xs text-gray-400" />
+                          <p className="text-xs text-gray-600 truncate max-w-[140px]">
+                            {order?.userId?.email || "N/A"}
+                          </p>
+                        </div>
+                      </td>
 
-                            <td className="px-6 py-4">
-                              <img
-                                src="https://encrypted-tbn2.gstatic.com/shopping?q=tbn:ANd9GcQFyvmaGbG3yOnp_yaTqXq7eKDJA5uoru9K-owHvFevVDxjq4jZdg5Tln2MAlgkLvoCWXdqgRgqhh9a4DvEuIYb6lVwdGLlc4cCumZRHJQ"
-                                alt=""
-                                className="w-10 h-10 object-cover rounded-md"
-                              />
-                            </td>
+                      {/* User ID */}
+                      <td className="px-4 py-4 align-top">
+                        <TooltipMUI title={order?.userId?._id} arrow>
+                          <p className="font-mono text-xs text-gray-500 cursor-pointer">
+                            {order?.userId?._id?.slice(-8)}
+                          </p>
+                        </TooltipMUI>
+                      </td>
 
-                            <td className="px-6 py-4 whitespace-nowrap">2</td>
+                      {/* Status Badge */}
+                      <td className="px-4 py-4 align-top">
+                        <Badge status={order.order_status} />
+                      </td>
 
-                            <td className="px-6 py-4">$1300.00</td>
-                            <td className="px-6 py-4">$2600.00</td>
-                          </tr>
-                        </tbody>
-                      </table>
-                    </div>
-                  </td>
-                </tr>
-              )}
-              <tr className="hover:bg-gray-50">
-                <td>
-                  <Button
-                    className="w-[35px]! h-[35px]! min-w-[35px]! rounded-full! bg-[#f1fdf1]!"
-                    onClick={() => isShowOrderProduct(1)}
-                  >
-                    {isOpenOrderProduct === 1 ? (
-                      <FaAngleUp className="text-[16px] text-[rgba(0,0,0,0.7)]" />
-                    ) : (
-                      <FaAngleDown className="text-[16px] text-[rgba(0,0,0,0.7)]" />
+                      {/* Date */}
+                      <td className="px-4 py-4 align-top">
+                        <div className="flex items-center gap-1.5">
+                          <BsCalendar3 className="text-gray-400 text-xs" />
+                          <p className="text-sm text-gray-600 whitespace-nowrap">
+                            {order?.createdAt
+                              ? new Date(order.createdAt).toLocaleDateString(
+                                  "en-IN",
+                                  {
+                                    day: "2-digit",
+                                    month: "short",
+                                    year: "numeric",
+                                  },
+                                )
+                              : "N/A"}
+                          </p>
+                        </div>
+                      </td>
+                    </tr>
+
+                    {/* Expanded Order Products Section */}
+                    {isOpenOrderProduct === index && (
+                      <tr>
+                        <td colSpan={11} className="px-0 py-0">
+                          <div className="bg-gradient-to-r from-amber-50/40 to-orange-50/40 border-y border-amber-100">
+                            <div className="p-6">
+                              <div className="flex items-center justify-between mb-5 flex-wrap gap-3">
+                                <h4 className="font-bold text-gray-800 flex items-center gap-2 text-sm uppercase tracking-wider">
+                                  <TbPackage className="text-primary text-lg" />
+                                  Order Items Details
+                                  <span className="ml-2 bg-primary/10 text-primary px-2 py-0.5 rounded-full text-xs">
+                                    {order?.products?.length} items
+                                  </span>
+                                </h4>
+                                <div className="flex items-center gap-4 text-xs text-gray-500">
+                                  <span className="flex items-center gap-1">
+                                    <BsReceipt />
+                                    Order Total:{" "}
+                                    <strong className="text-primary">
+                                      {order?.totalAmt?.toLocaleString(
+                                        "en-IN",
+                                        {
+                                          style: "currency",
+                                          currency: "INR",
+                                        },
+                                      )}
+                                    </strong>
+                                  </span>
+                                </div>
+                              </div>
+
+                              <div className="bg-white rounded-xl overflow-hidden border border-gray-200 shadow-sm">
+                                <div className="overflow-x-auto">
+                                  <table className="min-w-[700px] w-full text-sm">
+                                    <thead className="bg-gray-50">
+                                      <tr>
+                                        <th className="px-5 py-3 text-left text-xs font-bold text-gray-600 uppercase tracking-wider">
+                                          PRODUCT
+                                        </th>
+                                        <th className="px-5 py-3 text-left text-xs font-bold text-gray-600 uppercase tracking-wider">
+                                          ID
+                                        </th>
+                                        <th className="px-5 py-3 text-left text-xs font-bold text-gray-600 uppercase tracking-wider">
+                                          TITLE
+                                        </th>
+                                        <th className="px-5 py-3 text-left text-xs font-bold text-gray-600 uppercase tracking-wider">
+                                          QTY
+                                        </th>
+                                        <th className="px-5 py-3 text-left text-xs font-bold text-gray-600 uppercase tracking-wider">
+                                          PRICE
+                                        </th>
+                                        <th className="px-5 py-3 text-left text-xs font-bold text-gray-600 uppercase tracking-wider">
+                                          SUBTOTAL
+                                        </th>
+                                      </tr>
+                                    </thead>
+                                    <tbody className="divide-y divide-gray-100">
+                                      {order?.products?.map((product, idx) => (
+                                        <tr
+                                          key={idx}
+                                          className="hover:bg-gray-50 transition-colors"
+                                        >
+                                          <td className="px-5 py-3 align-middle">
+                                            <img
+                                              src={product?.image}
+                                              alt={product?.productTitle}
+                                              className="w-12 h-12 object-cover rounded-lg shadow-sm border border-gray-200 bg-white"
+                                              onError={(e) => {
+                                                e.target.src =
+                                                  "https://placehold.co/400x400?text=No+Image";
+                                              }}
+                                            />
+                                          </td>
+                                          <td className="px-5 py-3 align-middle">
+                                            <p className="font-mono text-xs text-gray-400">
+                                              {product?._id?.slice(-8)}
+                                            </p>
+                                          </td>
+                                          <td className="px-5 py-3 align-middle">
+                                            <p className="font-medium text-gray-800 text-sm line-clamp-2 max-w-[250px]">
+                                              {product.productTitle}
+                                            </p>
+                                          </td>
+                                          <td className="px-5 py-3 align-middle">
+                                            <span className="inline-flex items-center justify-center w-8 h-8 bg-amber-100 text-primary font-bold rounded-lg text-sm">
+                                              {product?.quantity}
+                                            </span>
+                                          </td>
+                                          <td className="px-5 py-3 align-middle text-gray-700">
+                                            {product?.price?.toLocaleString(
+                                              "en-IN",
+                                              {
+                                                style: "currency",
+                                                currency: "INR",
+                                              },
+                                            )}
+                                          </td>
+                                          <td className="px-5 py-3 align-middle font-semibold text-gray-800">
+                                            {(
+                                              product?.price * product?.quantity
+                                            )?.toLocaleString("en-IN", {
+                                              style: "currency",
+                                              currency: "INR",
+                                            })}
+                                          </td>
+                                        </tr>
+                                      ))}
+                                    </tbody>
+                                    <tfoot className="bg-gray-50 border-t border-gray-200">
+                                      <tr>
+                                        <td
+                                          colSpan={5}
+                                          className="px-5 py-3 text-right font-semibold text-gray-700"
+                                        >
+                                          Total Amount:
+                                        </td>
+                                        <td className="px-5 py-3 font-bold text-primary text-base">
+                                          {order?.totalAmt?.toLocaleString(
+                                            "en-IN",
+                                            {
+                                              style: "currency",
+                                              currency: "INR",
+                                            },
+                                          )}
+                                        </td>
+                                      </tr>
+                                    </tfoot>
+                                  </table>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </td>
+                      </tr>
                     )}
-                  </Button>
-                </td>
-                <td className="px-6 py-4 font-medium text-gray-900">
-                  <span className="text-primary">3874bhjjb937y1nb73y49</span>
-                </td>
-                <td className="px-6 py-4 font-medium text-gray-900">
-                  <span className="text-primary">3874bhjjb937y1nb73y49</span>
-                </td>
-                <td className="px-6 py-4 whitespace-nowrap">Show Yamato</td>
-                <td className="px-6 py-4">134567890</td>
-                <td>
-                  <span className="block w-[400px]">
-                    Dilli Haat Pitampura, Near Netaji Subhash Place Metro
-                    Station, Delhi, 110052, India
-                  </span>
-                </td>
-                <td className="px-6 py-4">123456</td>
-                <td className="px-6 py-4">$200.00</td>
-                <td className="px-6 py-4">show@gmail.com</td>
-                <td className="px-6 py-4">
-                  <span className="text-gray-600">3874bhjjb937y1nb73y49</span>
-                </td>
-                <td className="px-6 py-4">
-                  <Badge status="delivered" />
-                </td>
-                <td className="px-6 py-4 whitespace-nowrap">28-12-2025</td>
-              </tr>
-
-              {isOpenOrderProduct === 1 && (
+                  </React.Fragment>
+                ))
+              ) : (
                 <tr>
-                  <td className="pl-20" colSpan="6">
-                    <div className="relative mt-5 overflow-x-auto bg-white">
-                      <table className="min-w-full text-sm text-left text-gray-600">
-                        {/* Table Head */}
-                        <thead className="bg-gray-100 text-xs uppercase text-gray-700">
-                          <tr>
-                            <th className="px-6 py-3 whitespace-nowrap">
-                              Product Id
-                            </th>
-                            <th className="px-6 py-3 whitespace-nowrap">
-                              Product Title
-                            </th>
-                            <th className="px-6 py-3 whitespace-nowrap">
-                              Image
-                            </th>
-                            <th className="px-6 py-3 whitespace-nowrap">
-                              Quantity
-                            </th>
-                            <th className="px-6 py-3 whitespace-nowrap">
-                              Price
-                            </th>
-                            <th className="px-6 py-3 whitespace-nowrap">
-                              SubTotal
-                            </th>
-                          </tr>
-                        </thead>
-
-                        {/* Table Body */}
-                        <tbody className="divide-y">
-                          <tr className="hover:bg-gray-50">
-                            <td className="px-6 py-4 font-medium text-gray-900">
-                              <span className="text-gray-600">
-                                3874bhjjb937y1nb73y49
-                              </span>
-                            </td>
-                            <td className="px-6 py-4 font-medium text-gray-900">
-                              Men Pure Cotton Striped Casual Shirt
-                            </td>
-
-                            <td className="px-6 py-4">
-                              <img
-                                src="https://encrypted-tbn2.gstatic.com/shopping?q=tbn:ANd9GcQFyvmaGbG3yOnp_yaTqXq7eKDJA5uoru9K-owHvFevVDxjq4jZdg5Tln2MAlgkLvoCWXdqgRgqhh9a4DvEuIYb6lVwdGLlc4cCumZRHJQ"
-                                alt=""
-                                className="w-10 h-10 object-cover rounded-md"
-                              />
-                            </td>
-
-                            <td className="px-6 py-4 whitespace-nowrap">2</td>
-
-                            <td className="px-6 py-4">$1300.00</td>
-                            <td className="px-6 py-4">$2600.00</td>
-                          </tr>
-                          <tr className="hover:bg-gray-50">
-                            <td className="px-6 py-4 font-medium text-gray-900">
-                              <span className="text-gray-600">
-                                3874bhjjb937y1nb73y49
-                              </span>
-                            </td>
-                            <td className="px-6 py-4 font-medium text-gray-900">
-                              Men Pure Cotton Striped Casual Shirt
-                            </td>
-
-                            <td className="px-6 py-4">
-                              <img
-                                src="https://encrypted-tbn2.gstatic.com/shopping?q=tbn:ANd9GcQFyvmaGbG3yOnp_yaTqXq7eKDJA5uoru9K-owHvFevVDxjq4jZdg5Tln2MAlgkLvoCWXdqgRgqhh9a4DvEuIYb6lVwdGLlc4cCumZRHJQ"
-                                alt=""
-                                className="w-10 h-10 object-cover rounded-md"
-                              />
-                            </td>
-
-                            <td className="px-6 py-4 whitespace-nowrap">2</td>
-
-                            <td className="px-6 py-4">$1300.00</td>
-                            <td className="px-6 py-4">$2600.00</td>
-                          </tr>
-                        </tbody>
-                      </table>
+                  <td colSpan={11} className="px-6 py-12 text-center">
+                    <div className="flex flex-col items-center justify-center">
+                      <TbTruckDelivery className="text-5xl text-gray-300 mb-3" />
+                      <p className="text-gray-500 font-medium">
+                        No orders found
+                      </p>
+                      <p className="text-gray-400 text-sm mt-1">
+                        Your order history will appear here once you place an
+                        order.
+                      </p>
                     </div>
                   </td>
                 </tr>
@@ -509,6 +638,28 @@ const Dashboard = () => {
             </tbody>
           </table>
         </div>
+        <style jsx>{`
+          .scrollbar-thin::-webkit-scrollbar {
+            height: 6px;
+          }
+          .scrollbar-thin::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 10px;
+          }
+          .scrollbar-thin::-webkit-scrollbar-thumb {
+            background: #c1c1c1;
+            border-radius: 10px;
+          }
+          .scrollbar-thin::-webkit-scrollbar-thumb:hover {
+            background: #a8a8a8;
+          }
+          .line-clamp-2 {
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+          }
+        `}</style>
       </div>
 
       {/* <div className="card my-4 sm:rounded-lg bg-white">
@@ -604,7 +755,9 @@ const Dashboard = () => {
                   boxShadow: "0 10px 25px rgba(0,0,0,0.15)",
                 }}
                 formatter={(value, name) =>
-                  name === "TotalSales" ? [`₹${value}`, "TotalSales"] : [value, "TotalUsers"]
+                  name === "TotalSales"
+                    ? [`₹${value}`, "TotalSales"]
+                    : [value, "TotalUsers"]
                 }
               />
 
