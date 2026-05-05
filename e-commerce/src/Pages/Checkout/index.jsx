@@ -93,8 +93,9 @@ const Checkout = () => {
               deleteData(`/api/cart/emptyCart/${user?._id}`).then((res) => {
                 context?.getCartItems();
               });
-              history("/");
+              history("/order/success");
             } else {
+              history("/order/failed");
               context?.alertBox(res?.message, "error");
             }
           });
@@ -135,7 +136,7 @@ const Checkout = () => {
           deleteData(`/api/cart/emptyCart/${user?._id}`).then((res) => {
             context?.getCartItems();
           });
-          history("/");
+          history("/order/success");
         } else {
           context?.alertBox(res?.message, "error");
         }

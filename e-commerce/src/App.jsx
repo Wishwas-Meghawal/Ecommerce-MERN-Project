@@ -27,6 +27,8 @@ import AddressForm from "./Pages/MyAccount/AddressForm";
 import { Scroll, Weight } from "lucide-react";
 import ScrollToTop from "./components/ScrollToTop/index.jsx";
 import SearchPage from "./Pages/Search/index.jsx";
+import OrderSuccess from "./Pages/Orders/success.jsx";
+import OrderFailed from "./Pages/Orders/failed.jsx";
 
 function App() {
   const [openProductDetailsModal, setOpenProductDetailsModal] = useState({
@@ -253,6 +255,8 @@ function App() {
             <Route path={"/my-account"} exact={true} element={<MyAccount />} />
             <Route path={"/my-list"} exact={true} element={<MyList />} />
             <Route path={"/my-orders"} exact={true} element={<Orders />} />
+            <Route path={"/order/success"} exact={true} element={<OrderSuccess />} />
+            <Route path={"/order/failed"} exact={true} element={<OrderFailed />} />
             <Route path={"/address"} exact={true} element={<AddressForm />} />
             <Route path={"/search"} exact={true} element={<SearchPage />} />
           </Routes>
