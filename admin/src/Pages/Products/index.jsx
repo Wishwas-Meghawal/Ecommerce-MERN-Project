@@ -700,7 +700,7 @@ const Products = () => {
                                     to={`/product/${product?._id}`}
                                     className="hover:text-blue-600 transition-colors"
                                   >
-                                    {product?.name}
+                                    {product?.name?.substr(0,30) + '...'}
                                   </Link>
                                 </Typography>
                                 <div className="flex items-center gap-2 mt-1">

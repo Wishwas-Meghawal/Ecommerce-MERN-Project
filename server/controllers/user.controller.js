@@ -420,10 +420,6 @@ export async function updateUserDetails(request, response) {
       });
     }
 
-    
-
-  
-
     const updateUser = await UserModel.findByIdAndUpdate(
       userId,
       {
@@ -433,17 +429,6 @@ export async function updateUserDetails(request, response) {
       },
       { new: true },
     );
-
-    //send verification email
-    if (email !== userExist.email) {
-      sendEmailFun(
-        email,
-        "Your OTP for Ecommerce App",
-        `Your OTP is ${verifyCode}. It expires in 10 minutes.`,
-        VerificationEmail(name, verifyCode),
-      );
-    }
-
     return response.json({
       message: "User Updated successfully",
       error: false,
@@ -572,13 +557,13 @@ export async function verifyForgotPasswordOtp(request, response) {
 
 export async function resetPassword(request, response) {
   try {
-    const { email, newPassword, confirmPassword } = request.body;
+    const { email, newPassword, confirmPassword,oldPassword } = request.body;
 
-    if (!email || !newPassword || !confirmPassword) {
+    if (!email || !newPassword || !confirmPassword || !oldPassword) {
       return response.status(400).json({
         error: true,
         success: false,
-        message: "provide required fields  newPassword, confirmPassword",
+        message: "provide required fields  newPassword, confirmPassword, oldPassword",
       });
     }
 
@@ -783,3 +768,91 @@ export async function getReviews(request, response) {
     });
   }
 }
+
+
+// get all users
+export async function getAllUsers(request, response){
+  try {
+    const users = await UserModel.find();
+
+    if(!users){
+      return response.status(400).json({
+        error: true,
+        success: false
+      })
+    }
+    return response.status(200).json({
+      error: false,
+      success: true,
+      users: users
+
+    })
+  } catch (error) {
+     return response.status(500).json({
+      message: 'Something is wrong',
+      error: true,
+      success: false,
+    });
+  }
+}
+
+// get all reviews
+export async function getAllReviews(request, response){
+  try {
+    const reviews = await ReviewModel.find();
+
+    if(!reviews){
+      return response.status(400).json({
+        error: true,
+        success : false
+      })
+    }
+
+    return response.status(200).json({
+      error: false,
+      success: true,
+      reviews: reviews
+    })
+  } catch (error) {
+    return response.status(500).json({
+      message: 'Something is wrong',
+      error: true,
+      success: false,
+    });
+  }
+}
+
+
+//delete multiple users
+export async function deleteMultipleUsers(request, response) {
+  const { ids } = request.body;
+
+  if (!ids || !Array.isArray(ids)) {
+    return response.status(400).json({
+      message: "Invalid Input",
+      error: true,
+      success: false,
+    });
+  }
+
+
+
+  try {
+    await UserModel.deleteMany({
+      _id: { $in: ids },
+    });
+
+    return response.status(200).json({
+      message: "Users deleted successfully",
+      error: false,
+      success: true,
+    });
+  } catch (error) {
+    return response.status(500).json({
+      message: error.message || "Error deleting users",
+      error: true,
+      success: false,
+    });
+  }
+}
+

@@ -5,7 +5,7 @@ import { FaRegUser } from "react-icons/fa";
 import { IoBagCheckOutline } from "react-icons/io5";
 import { IoIosHeartEmpty } from "react-icons/io";
 import { IoIosLogOut } from "react-icons/io";
-import { NavLink } from "react-router";
+import { Link, NavLink } from "react-router";
 import { MyContext } from "../../App";
 import CircularProgress from '@mui/material/CircularProgress';
 import { uploadImage } from "../../utils/api";
@@ -18,6 +18,7 @@ const AccountSidebar = () => {
 
   const [preview, setPreview] = useState([]);
   const [uploading, setUploading] = useState(false);
+   const [anchorEl, setAnchorEl] = useState(null);
 
   const context = useContext(MyContext);
 
@@ -73,6 +74,26 @@ const AccountSidebar = () => {
       
     }
   }
+
+   const logout = async () => {
+      setAnchorEl(null);
+  
+      try {
+        await fetchDataFromApi(`/api/user/logout`, {
+          withCredentials: true,
+        });
+      } catch (e) {
+        console.log("Logout API failed, continuing...");
+      }
+  
+      // ⭐ IMPORTANT: Always clear frontend
+      localStorage.removeItem("accessToken");
+      localStorage.removeItem("refreshToken");
+      context?.setIsLogin(false);
+      context?.setCartData([]);
+      context?.setMyListData([]);
+      history("/");
+    };
   return (
     <div className="card1 bg-white shadow-md rounded-md sticky top-[165px] z-[90]">
       <div className="w-full p-5 flex items-center justify-center flex-col">
@@ -154,10 +175,12 @@ const AccountSidebar = () => {
           </NavLink>
         </li>
         <li className="w-full">
-          <Button className="w-full py-2! justify-start! text-left! px-5! capitalize! text-[rgba(0,0,0,0.8)]!  rounded-none! flex items-center gap-2 ">
-            <IoIosLogOut className="text-[18px]" />
-            Logout{" "}
-          </Button>
+            <Button onClick={logout} className="w-full py-2! justify-start! text-left! px-5! capitalize! text-[rgba(0,0,0,0.8)]!  rounded-none! flex items-center gap-2 ">
+              <IoIosLogOut className="text-[18px]" />
+              Logout{" "}
+            </Button>
+          
+          
         </li>
       </ul>
     </div>

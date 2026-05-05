@@ -83,7 +83,7 @@ const Category = () => {
       </div>
 
       {/* Search & Filter Bar - unchanged */}
-      <div className="flex flex-col md:flex-row gap-4 mb-6">
+      {/* <div className="flex flex-col md:flex-row gap-4 mb-6">
         <div className="flex-1">
           <TextField
             fullWidth
@@ -117,7 +117,7 @@ const Category = () => {
             Filter
           </Button>
         </div>
-      </div>
+      </div> */}
 
       {/* Material UI Table with Improved Styling */}
       <Paper

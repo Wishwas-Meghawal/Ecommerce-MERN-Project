@@ -10,7 +10,7 @@ import { createContext } from "react";
 import Login from "./Pages/Login";
 import SignUp from "./Pages/SignUp";
 import Products from "./Pages/Products";
-import Users from "./Components/Users";
+import Users from "./Pages/Users";
 import HomeSliderBanners from "./Pages/HomeSliderBanners";
 import Category from "./Pages/Category";
 import SubCatList from "./Pages/Category/SubCatList";

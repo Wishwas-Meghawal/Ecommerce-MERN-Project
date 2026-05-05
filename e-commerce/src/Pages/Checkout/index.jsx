@@ -56,85 +56,94 @@ const Checkout = () => {
   };
 
   const checkout = (e) => {
+    const user = context?.userData;
     e.preventDefault();
 
-    var options = {
-      key: VITE_APP_RAZORPAY_KEY_ID,
-      key_secret: VITE_APP_RAZORPAY_KEY_SECRET,
-      amount: parseInt(totalAmount * 100),
-      currency: "INR",
-      order_receipt: context?.usrData?.name,
-      name: "CLASSYSHOP",
-      description: "Test Transaction",
-      handler: function (response) {
-        const paymentId = response.razorpay_payment_id;
+    if (user?.address_details?.length !== 0) {
+      var options = {
+        key: VITE_APP_RAZORPAY_KEY_ID,
+        key_secret: VITE_APP_RAZORPAY_KEY_SECRET,
+        amount: parseInt(totalAmount * 100),
+        currency: "INR",
+        order_receipt: context?.usrData?.name,
+        name: "CLASSYSHOP",
+        description: "Test Transaction",
+        handler: function (response) {
+          const paymentId = response.razorpay_payment_id;
 
-        const user = context?.userData;
+          const user = context?.userData;
 
-        const payLoad = {
-          userId: user?._id,
-          products: context?.cartData,
-          paymentId: paymentId,
-          payment_status: "COMPLETED",
-          delivery_address: selectedAddress,
-          totalAmt: totalAmount,
-          date: new Date().toLocaleDateString("en-US", {
-            month: "short",
-            day: "2-digit",
-            year: "numeric",
-          }),
-        };
+          const payLoad = {
+            userId: user?._id,
+            products: context?.cartData,
+            paymentId: paymentId,
+            payment_status: "COMPLETED",
+            delivery_address: selectedAddress,
+            totalAmt: totalAmount,
+            date: new Date().toLocaleDateString("en-US", {
+              month: "short",
+              day: "2-digit",
+              year: "numeric",
+            }),
+          };
 
-        postData(`/api/order/create`, payLoad).then((res) => {
-          context?.alertBox(res?.message, "success");
-          if (res?.error === false) {
-            deleteData(`/api/cart/emptyCart/${user?._id}`).then((res) => {
-              context?.getCartItems();
-            });
-            history("/");
-          } else {
-            context?.alertBox(res?.message, "error");
-          }
-        });
-      },
-      theme: {
-        color: "#ff5252",
-      },
-    };
-    var pay = new window.Razorpay(options);
-    pay.open();
+          postData(`/api/order/create`, payLoad).then((res) => {
+            context?.alertBox(res?.message, "success");
+            if (res?.error === false) {
+              deleteData(`/api/cart/emptyCart/${user?._id}`).then((res) => {
+                context?.getCartItems();
+              });
+              history("/");
+            } else {
+              context?.alertBox(res?.message, "error");
+            }
+          });
+        },
+        theme: {
+          color: "#ff5252",
+        },
+      };
+      var pay = new window.Razorpay(options);
+      pay.open();
+    } else {
+      context.alertBox("Please add address", "error");
+    }
   };
 
+  const cashOnDelivery = () => {
+    const user = context?.userData;
+    console.log(user?.address_details)
 
-  const cashOnDelivery = () =>{
-    const user  = context?.userData;
+    if (user?.address_details?.length !== 0) {
+      const payLoad = {
+        userId: user?._id,
+        products: context?.cartData,
+        paymentId: "",
+        payment_status: "CASH ON DELIVERY",
+        delivery_address: selectedAddress,
+        totalAmt: totalAmount,
+        date: new Date().toLocaleDateString("en-US", {
+          month: "short",
+          day: "2-digit",
+          year: "numeric",
+        }),
+      };
 
-    const payLoad = {
-          userId: user?._id,
-          products: context?.cartData,
-          paymentId: '',
-          payment_status: "CASH ON DELIVERY",
-          delivery_address: selectedAddress,
-          totalAmt: totalAmount,
-          date: new Date().toLocaleDateString("en-US", {
-            month: "short",
-            day: "2-digit",
-            year: "numeric",
-          }),
-        };
-
-         postData(`/api/order/create`, payLoad).then((res) => {
-          context?.alertBox(res?.message, "success");
-          if (res?.error === false) {
-            deleteData(`/api/cart/emptyCart/${user?._id}`).then((res) => {
-              context?.getCartItems();
-            });
-            history("/");
-          } else {
-            context?.alertBox(res?.message, "error");
-          }
-        });
-  }
+      postData(`/api/order/create`, payLoad).then((res) => {
+        context?.alertBox(res?.message, "success");
+        if (res?.error === false) {
+          deleteData(`/api/cart/emptyCart/${user?._id}`).then((res) => {
+            context?.getCartItems();
+          });
+          history("/");
+        } else {
+          context?.alertBox(res?.message, "error");
+        }
+      });
+    } else {
+      context.alertBox("Please add address", "error");
+    }
+  };
 
   return (
     <section className="py-10">
@@ -418,7 +427,10 @@ const Checkout = () => {
                     <BsFillBagCheckFill className="text-[20px]" />
                     Secure Checkout
                   </Button>
-                  <Button  className="btn-dark btn-lg w-full gap-2" onClick={cashOnDelivery}>
+                  <Button
+                    className="btn-dark btn-lg w-full gap-2"
+                    onClick={cashOnDelivery}
+                  >
                     <GiTakeMyMoney className="text-[20px]" />
                     Cash On Delivery
                   </Button>

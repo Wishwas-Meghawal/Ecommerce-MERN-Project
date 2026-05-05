@@ -75,39 +75,76 @@ const MyAccount = () => {
 
   const valideValue = Object.values(formFields).every((el) => el);
 
-  const handleSubmit = (e) => {
+  // const handleSubmit = async(e) => {
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
     setIsLoading(true);
 
-    // Basic validation
-    if (formFields.name === "") {
-      context.alertBox("Name is required", "error");
-      return false;
-    }
-    if (formFields.email === "") {
-      context.alertBox("Email is required", "error");
-      return false;
-    }
-    if (formFields.mobile === "") {
-      context.alertBox("Mobile is required", "error");
-      return false;
-    }
+    try {
+      if (formFields.name === "") {
+        context.alertBox("Name is required", "error");
+        return;
+      }
 
-    editData(`/api/user/${userId}`, formFields, { withCredentials: true }).then(
-      (response) => {
-        console.log("Registration Response:", response);
-        if (response?.error !== true) {
-          setIsLoading(false);
-          context.alertBox(response?.data?.message, "success");
-        } else {
-          context.alertBox(response?.message, "error");
-          // localStorage.removeItem("accessToken");
-          // localStorage.removeItem("refreshToken");
-          setIsLoading(false);
-        }
-      },
-    );
+      if (formFields.email === "") {
+        context.alertBox("Email is required", "error");
+        return;
+      }
+
+      if (formFields.mobile === "") {
+        context.alertBox("Mobile is required", "error");
+        return;
+      }
+
+      const response = await editData(`/api/user/${userId}`, formFields);
+
+      context.alertBox(response?.data?.message, "success");
+    } catch (error) {
+      console.log(error);
+
+      context.alertBox(
+        error?.response?.data?.message || "Something went wrong",
+        "error",
+      );
+    } finally {
+      setIsLoading(false);
+    }
   };
+  //   e.preventDefault();
+  //   setIsLoading(true);
+
+  //   // Basic validation
+  //   if (formFields.name === "") {
+  //     context.alertBox("Name is required", "error");
+  //     setIsLoading(false);
+  //     return ;
+  //   }
+  //   if (formFields.email === "") {
+  //     context.alertBox("Email is required", "error");
+  //     setIsLoading(false);
+  //     return ;
+  //   }
+  //   if (formFields.mobile === "") {
+  //     context.alertBox("Mobile is required", "error");
+  //     setIsLoading(false);
+  //     return ;
+  //   }
+
+  //   editData(`/api/user/${userId}`, formFields, { withCredentials: true }).then(
+  //     (response) => {
+  //       if (response?.error !== true) {
+  //         setIsLoading(false);
+  //         context.alertBox(response?.data?.message, "success");
+  //       } else {
+  //         context.alertBox(response?.message, "error");
+  //         // localStorage.removeItem("accessToken");
+  //         // localStorage.removeItem("refreshToken");
+  //         setIsLoading(false);
+  //       }
+  //     },
+  //   );
+  // };
 
   const valideValue2 = Object.values(changePassword).every((el) => el);
 
@@ -246,24 +283,20 @@ const MyAccount = () => {
 
               <form className="mt-5" onSubmit={handleSubmitChangePassword}>
                 <div className="grid grid-cols-2 gap-5">
-
-                  {
-                    context?.userData?.signUpWithGoogle === false &&
+                  {context?.userData?.signUpWithGoogle === false && (
                     <div className="col">
-                    <TextField
-                      label="Old Password"
-                      variant="outlined"
-                      size="small"
-                      className="w-full"
-                      name="oldPassword"
-                      value={changePassword.oldPassword}
-                      disabled={isLoading2 === true ? true : false}
-                      onChange={onChangeInput}
-                    />
-                  </div>
-                  }
-
-                  
+                      <TextField
+                        label="Old Password"
+                        variant="outlined"
+                        size="small"
+                        className="w-full"
+                        name="oldPassword"
+                        value={changePassword.oldPassword}
+                        disabled={isLoading2 === true ? true : false}
+                        onChange={onChangeInput}
+                      />
+                    </div>
+                  )}
 
                   <div className="col">
                     <TextField
@@ -294,10 +327,7 @@ const MyAccount = () => {
                 <br />
 
                 <div className="flex items-center gap-4">
-                  <Button
-                    type="submit"
-                    className="btn-org btn-lg w-[200px]"
-                  >
+                  <Button type="submit" className="btn-org btn-lg w-[200px]">
                     {isLoading2 === true ? (
                       <CircularProgress color="inherit" />
                     ) : (

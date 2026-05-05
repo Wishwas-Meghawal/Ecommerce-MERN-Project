@@ -121,7 +121,7 @@ const Header = () => {
                 onClick={handleClickMyAcc}
               >
                 <img
-                  src="https://images.unsplash.com/photo-1701615004837-40d8573b6652?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTF8fHVzZXJ8ZW58MHx8MHx8fDA%3D"
+                  src={context.userData?.avatar}
                   alt=""
                   className="w-full h-full object-cover"
                 />
@@ -176,7 +176,7 @@ const Header = () => {
                   <div className="flex items-center gap-3">
                     <div className="rounded-full w-[35px] h-[35px] overflow-hidden cursor-pointer">
                       <img
-                        src="https://images.unsplash.com/photo-1701615004837-40d8573b6652?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTF8fHVzZXJ8ZW58MHx8MHx8fDA%3D"
+                        src={context.userData?.avatar}
                         alt=""
                         className="w-full h-full object-cover"
                       />

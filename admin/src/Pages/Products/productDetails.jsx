@@ -521,7 +521,7 @@ const ProductDetails = () => {
 
                       {/* Simple Stats Row - Matching image gallery style */}
                       <div className="grid grid-cols-2 gap-3 mt-4">
-                        <div className="relative overflow-hidden rounded-xl bg-gradient-to-br from-gray-50 to-white border-2 border-gray-200/80 hover:border-blue-400/50 hover:shadow-xl transition-all duration-300 p-3 text-center">
+                        {/* <div className="relative overflow-hidden rounded-xl bg-gradient-to-br from-gray-50 to-white border-2 border-gray-200/80 hover:border-blue-400/50 hover:shadow-xl transition-all duration-300 p-3 text-center">
                           <p className="text-xs text-gray-500 mb-1">
                             Total Sold
                           </p>
@@ -531,7 +531,7 @@ const ProductDetails = () => {
                           <span className="text-[10px] text-green-600">
                             +12%
                           </span>
-                        </div>
+                        </div> */}
                         <div className="relative overflow-hidden rounded-xl bg-gradient-to-br from-gray-50 to-white border-2 border-gray-200/80 hover:border-purple-400/50 hover:shadow-xl transition-all duration-300 p-3 text-center">
                           <p className="text-xs text-gray-500 mb-1">
                             Avg Rating

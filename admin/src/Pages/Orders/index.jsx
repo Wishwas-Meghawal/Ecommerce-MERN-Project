@@ -139,7 +139,7 @@ const Orders = () => {
           </div>
         </div>
 
-        <div className="flex gap-3">
+        {/* <div className="flex gap-3">
           <Button
             variant="contained"
             className="bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800"
@@ -152,11 +152,11 @@ const Orders = () => {
           >
             Export Orders
           </Button>
-        </div>
+        </div> */}
       </div>
 
       {/* Stats Cards */}
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
+      {/* <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
         <div className="p-4 bg-gradient-to-r from-blue-50 to-blue-100 rounded-xl border border-blue-200">
           <div className="flex items-center justify-between">
             <div>
@@ -206,10 +206,10 @@ const Orders = () => {
             </div>
           </div>
         </div>
-      </div>
+      </div> */}
 
       {/* Search & Filter Bar */}
-      <div className="flex flex-col md:flex-row gap-4 mb-6">
+      {/* <div className="flex flex-col md:flex-row gap-4 mb-6">
         <div className="flex-1">
           <TextField
             fullWidth
@@ -253,7 +253,7 @@ const Orders = () => {
             Shipping
           </Button>
         </div>
-      </div>
+      </div> */}
 
       <div className="overflow-x-auto scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100">
         <table className="min-w-[1200px] w-full text-sm">

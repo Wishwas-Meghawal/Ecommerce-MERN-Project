@@ -1,13 +1,23 @@
 import * as React from "react";
 import { TextField, InputAdornment, IconButton, Paper } from "@mui/material";
 import { AiOutlineSearch, AiOutlineClose } from "react-icons/ai";
+import { useState } from "react";
+import { useRef } from "react";
 
-function SearchBox({
-  value,
-  placeholder = "Search products, brands, categories...",
-}) {
+const SearchBox = (props) => {
+  const [searchQuery, setSearchQuery] = useState("");
+  const searchInput = useRef();
+
+  const onChangeInput = (e) => {
+    setSearchQuery(e.target.value);
+    props.setSearchQuery(e.target.value)
+    if (searchInput.current.value === "") {
+      props.setPageOrder(1);
+    }
+  };
   return (
-    <div className="group
+    <div
+      className="group
         w-full
         flex
         items-center
@@ -21,21 +31,25 @@ function SearchBox({
         transition-all
         duration-300
         hover:border-black
-        focus-within:border-black">
-
-      <AiOutlineSearch className="
+        focus-within:border-black"
+    >
+      <AiOutlineSearch
+        className="
           text-gray-400
           text-[22px]
           mr-3
           transition-colors
           duration-300
           group-focus-within:text-primary
-        " />
+        "
+      />
       <TextField
         variant="standard"
         fullWidth
-        placeholder={placeholder}
-        value={value}
+        placeholder="Search products, brands, categories..."
+        value={searchQuery}
+        inputRef={searchInput}
+        onChange={onChangeInput}
         InputProps={{
           disableUnderline: true,
         }}
@@ -45,24 +59,8 @@ function SearchBox({
             padding: 0,
           },
         }}
-      />
-
-     {value && (
-        <IconButton
-          size="small"
-          onClick={() => onChange("")}
-          className="
-            ml-2
-            text-gray-400
-            hover:text-red-500
-            transition
-          "
-        >
-          <AiOutlineClose />
-        </IconButton>
-      )}
-
+      />  
     </div>
   );
-}
+};
 export default SearchBox;
