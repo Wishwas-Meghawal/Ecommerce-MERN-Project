@@ -1338,7 +1338,7 @@ export async function sortBy(request, response) {
 
 export async function searchProductController(request, response){
   try {
-    const query = request.query.q;
+    const {query,page, limit} = request.body;
     if(!query){
       return response.status(400).json({
         error: true,
@@ -1347,7 +1347,7 @@ export async function searchProductController(request, response){
       });
     }
 
-    const items = await ProductModel.find({
+    const products = await ProductModel.find({
       $or: [
         {name: {$regex: query, $options: "i"}},
         {brand: {$regex: query, $options: "i"}},
@@ -1358,10 +1358,15 @@ export async function searchProductController(request, response){
     })
     .populate("category")
 
+    const totalItems = await products?.length;
+
     return response.status(200).json({
       error:false,
       success: true,
-      products: items,
+      products: products,
+      totalItems: totalItems,
+      page: parseInt(page),
+      totalPages: 1,
     })
   } catch (error) {
     return response.status(500).json({

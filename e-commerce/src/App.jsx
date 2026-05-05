@@ -26,6 +26,7 @@ import { fetchDataFromApi, postData } from "./utils/api.js";
 import AddressForm from "./Pages/MyAccount/AddressForm";
 import { Scroll, Weight } from "lucide-react";
 import ScrollToTop from "./components/ScrollToTop/index.jsx";
+import SearchPage from "./Pages/Search/index.jsx";
 
 function App() {
   const [openProductDetailsModal, setOpenProductDetailsModal] = useState({
@@ -52,7 +53,9 @@ function App() {
 
   const [addressMode, setAddressMode] = useState("add");
 
-  const [addressId, setAddressId] = useState("")
+  const [addressId, setAddressId] = useState("");
+
+  const [searchData, setSearchData] = useState([]);
 
   const apiUrl = import.meta.env.VITE_API_URL;
 
@@ -215,6 +218,8 @@ function App() {
     setAddressMode,
     addressId,
     setAddressId,
+    searchData,
+    setSearchData,
   };
 
   return (
@@ -249,6 +254,7 @@ function App() {
             <Route path={"/my-list"} exact={true} element={<MyList />} />
             <Route path={"/my-orders"} exact={true} element={<Orders />} />
             <Route path={"/address"} exact={true} element={<AddressForm />} />
+            <Route path={"/search"} exact={true} element={<SearchPage />} />
           </Routes>
           <ScrollToTop />
           <Footer />

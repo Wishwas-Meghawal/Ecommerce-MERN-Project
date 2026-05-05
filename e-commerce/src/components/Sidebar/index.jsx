@@ -27,7 +27,7 @@ const Sidebar = (props) => {
     thirdsubCatId: [],
     minPrice: "",
     maxPrice: "",
-    rating: '',
+    rating: "",
     page: 1,
     limit: 25,
   });
@@ -36,6 +36,9 @@ const Sidebar = (props) => {
   const location = useLocation();
 
   const handleCheckBoxChange = (field, value) => {
+
+    context?.setSearchData([]);
+
     const cuurentValues = filters[field] || [];
     const updatedValues = cuurentValues?.includes(value)
       ? cuurentValues.filter((item) => item !== value)
@@ -67,6 +70,7 @@ const Sidebar = (props) => {
       filters.subCatId = [];
       filters.thirdsubCatId = [];
       filters.rating = [];
+      context?.setSearchData([]);
     }
     if (url.includes("subCatId")) {
       const subCategoryId = queryParameters.get("subCatId");
@@ -76,6 +80,7 @@ const Sidebar = (props) => {
       filters.subCatId = subCatArr;
       filters.thirdsubCatId = [];
       filters.rating = [];
+      context?.setSearchData([]);
     }
     if (url.includes("thirdLavelCatId")) {
       const thirdSubCategoryId = queryParameters.get("thirdLavelCatId");
@@ -85,23 +90,34 @@ const Sidebar = (props) => {
       filters.subCatId = [];
       filters.thirdsubCatId = thirdSubCatArr;
       filters.rating = [];
+      context?.setSearchData([]);
     }
 
     filters.page = 1;
-    
+
     setTimeout(() => {
       filtersData();
     }, 200);
+
+    
   }, [location]);
 
   const filtersData = () => {
     props.setIsLoading(true);
-    postData(`/api/product/filters`, filters).then((res) => {
-      props.setProductsData(res);       
+
+    if (context?.searchData?.products?.length > 0) {
+      props.setProductsData(context?.searchData);
       props.setIsLoading(false);
-      props.setTotalPages(res?.totalPages); 
+      props.setTotalPages(context?.searchData?.totalPages);
       window.scrollTo(0, 0);
-    });
+    } else {
+      postData(`/api/product/filters`, filters).then((res) => {
+        props.setProductsData(res);
+        props.setIsLoading(false);
+        props.setTotalPages(res?.totalPages);
+        window.scrollTo(0, 0);
+      });
+    }
   };
 
   useEffect(() => {
@@ -181,12 +197,7 @@ const Sidebar = (props) => {
             checked={filters?.rating?.includes(5)}
             onChange={() => handleCheckBoxChange("rating", 5)}
           />
-          <Rating 
-            name="rating"
-            value={5}
-            size="small"
-            readOnly
-          />
+          <Rating name="rating" value={5} size="small" readOnly />
         </div>
         <div className="flex items-center">
           <FormControlLabel
@@ -195,7 +206,7 @@ const Sidebar = (props) => {
             checked={filters?.rating?.includes(4.5)}
             onChange={() => handleCheckBoxChange("rating", 4.5)}
           />
-          <Rating 
+          <Rating
             name="rating"
             value={4.5}
             precision={0.5}
@@ -210,12 +221,7 @@ const Sidebar = (props) => {
             checked={filters?.rating?.includes(4)}
             onChange={() => handleCheckBoxChange("rating", 4)}
           />
-          <Rating 
-            name="rating"
-            value={4}
-            size="small"
-            readOnly
-          />
+          <Rating name="rating" value={4} size="small" readOnly />
         </div>
         <div className="flex items-center">
           <FormControlLabel
@@ -224,7 +230,7 @@ const Sidebar = (props) => {
             checked={filters?.rating?.includes(3.5)}
             onChange={() => handleCheckBoxChange("rating", 3.5)}
           />
-          <Rating 
+          <Rating
             name="rating"
             value={3.5}
             precision={0.5}
@@ -239,12 +245,7 @@ const Sidebar = (props) => {
             checked={filters?.rating?.includes(3)}
             onChange={() => handleCheckBoxChange("rating", 3)}
           />
-          <Rating 
-            name="rating"
-            value={3}
-            size="small"
-            readOnly
-          />
+          <Rating name="rating" value={3} size="small" readOnly />
         </div>
         <div className="flex items-center">
           <FormControlLabel
@@ -253,7 +254,7 @@ const Sidebar = (props) => {
             checked={filters?.rating?.includes(2.5)}
             onChange={() => handleCheckBoxChange("rating", 2.5)}
           />
-          <Rating 
+          <Rating
             name="rating"
             value={2.5}
             precision={0.5}
@@ -268,12 +269,7 @@ const Sidebar = (props) => {
             checked={filters?.rating?.includes(2)}
             onChange={() => handleCheckBoxChange("rating", 2)}
           />
-          <Rating 
-            name="rating"
-            value={2}
-            size="small"
-            readOnly
-          />
+          <Rating name="rating" value={2} size="small" readOnly />
         </div>
         <div className="flex items-center">
           <FormControlLabel
@@ -282,7 +278,7 @@ const Sidebar = (props) => {
             checked={filters?.rating?.includes(1.5)}
             onChange={() => handleCheckBoxChange("rating", 1.5)}
           />
-          <Rating 
+          <Rating
             name="rating"
             value={1.5}
             precision={0.5}
@@ -297,12 +293,7 @@ const Sidebar = (props) => {
             checked={filters?.rating?.includes(1)}
             onChange={() => handleCheckBoxChange("rating", 1)}
           />
-          <Rating 
-            name="rating"
-            value={1}
-            size="small"
-            readOnly
-          />
+          <Rating name="rating" value={1} size="small" readOnly />
         </div>
       </div>
     </aside>
