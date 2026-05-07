@@ -59,26 +59,6 @@ const ProductListing = () => {
 
   return (
     <section className="py-4 pb-0">
-      <div className="container">
-        <Breadcrumbs aria-label="breadcrumb">
-          <Link
-            underline="hover"
-            color="inherit"
-            href="/"
-            className="link transition"
-          >
-            Home
-          </Link>
-          <Link
-            underline="hover"
-            color="inherit"
-            href="/"
-            className="link transition"
-          >
-            Fashion
-          </Link>
-        </Breadcrumbs>
-      </div>
       <div className="bg-white p-2 mt-4">
         <div className="container flex gap-3">
           <div className="sidebarWrapper w-[20%]  bg-white">

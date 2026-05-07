@@ -69,37 +69,6 @@ const ProductDetails = () => {
 
   return (
     <>
-      <div className="py-4 pb-0">
-        <div className="container">
-          <Breadcrumbs aria-label="breadcrumb">
-            <Link
-              underline="hover"
-              color="inherit"
-              href="/"
-              className="link transition text-[14px]"
-            >
-              Home
-            </Link>
-            <Link
-              underline="hover"
-              color="inherit"
-              href="/"
-              className="link transition text-[14px]"
-            >
-              Fashion
-            </Link>
-            <Link
-              underline="hover"
-              color="inherit"
-              href="/"
-              className="link transition text-[14px]"
-            >
-              THE BEAR HOUSE
-            </Link>
-          </Breadcrumbs>
-        </div>
-      </div>
-
       <section className="bg-white py-2">
         {isLoading === true ? (
           <div className="flex items-center justify-center min-h-[300px] bg-gradient-to-br from-gray-50 to-gray-100 rounded-2xl">

@@ -193,9 +193,25 @@ const AddProduct = () => {
 
   const onChangeInput = (e) => {
     const { name, value } = e.target;
-    setFormFields(() => {
-      return { ...formFields, [name]: value };
-    });
+
+    const updatedFields = {
+      ...formFields,
+      [name]: value,
+    };
+
+    const price = Number(updatedFields.price);
+    const oldPrice = Number(updatedFields.oldPrice);
+
+    // Auto calculate discount
+    if (price > 0 && oldPrice > 0 && oldPrice > price) {
+      updatedFields.discount = Math.round(
+        ((oldPrice - price) / oldPrice) * 100,
+      );
+    } else {
+      updatedFields.discount = "";
+    }
+
+    setFormFields(updatedFields);
   };
 
   // Product Rams Handle
@@ -266,14 +282,14 @@ const AddProduct = () => {
       return false;
     }
 
-    if (formFields?.price === "" || formFields?.price <= 0) {
+    if (Number(formFields?.price) <= 0) {
       context.alertBox("Please Enter Valid Price", "error");
       return false;
     }
 
     if (
       formFields?.oldPrice !== "" &&
-      formFields?.oldPrice < formFields?.price
+      Number(formFields?.oldPrice) <= Number(formFields?.price)
     ) {
       context.alertBox("Old Price Must Be Greater Than Price", "error");
       return false;
@@ -667,7 +683,7 @@ const AddProduct = () => {
                   <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                     <div className="space-y-2">
                       <label className="text-sm font-medium text-gray-700">
-                        Product Price ($)
+                        Product Price (₹)
                       </label>
                       <TextField
                         type="number"
@@ -681,7 +697,7 @@ const AddProduct = () => {
                         InputProps={{
                           startAdornment: (
                             <span className="text-gray-500 pr-2 font-medium">
-                              $
+                              ₹
                             </span>
                           ),
                         }}
@@ -691,7 +707,7 @@ const AddProduct = () => {
 
                     <div className="space-y-2">
                       <label className="text-sm font-medium text-gray-700">
-                        Product Old Price ($)
+                        Product Old Price (₹)
                       </label>
                       <TextField
                         type="number"
@@ -705,7 +721,7 @@ const AddProduct = () => {
                         InputProps={{
                           startAdornment: (
                             <span className="text-gray-500 pr-2 font-medium">
-                              $
+                              ₹
                             </span>
                           ),
                         }}
@@ -725,8 +741,8 @@ const AddProduct = () => {
                         fullWidth
                         name="discount"
                         value={formFields.discount}
-                        onChange={onChangeInput}
                         InputProps={{
+                          readOnly: true,
                           endAdornment: (
                             <span className="text-gray-500 pl-2 font-medium">
                               %

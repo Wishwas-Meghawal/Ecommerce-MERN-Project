@@ -310,14 +310,14 @@ const EditProduct = () => {
       return false;
     }
 
-    if (formFields?.price === "" || formFields?.price <= 0) {
+    if (Number(formFields?.price) <= 0) {
       context.alertBox("Please Enter Valid Price", "error");
       return false;
     }
 
     if (
       formFields?.oldPrice !== "" &&
-      formFields?.oldPrice < formFields?.price
+      Number(formFields?.oldPrice) <= Number(formFields?.price)
     ) {
       context.alertBox("Old Price Must Be Greater Than Price", "error");
       return false;
@@ -714,7 +714,7 @@ const EditProduct = () => {
                   <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                     <div className="space-y-2">
                       <label className="text-sm font-medium text-gray-700">
-                        Product Price ($)
+                        Product Price (₹)
                       </label>
                       <TextField
                         type="number"
@@ -728,7 +728,7 @@ const EditProduct = () => {
                         InputProps={{
                           startAdornment: (
                             <span className="text-gray-500 pr-2 font-medium">
-                              $
+                              ₹
                             </span>
                           ),
                         }}
@@ -738,7 +738,7 @@ const EditProduct = () => {
 
                     <div className="space-y-2">
                       <label className="text-sm font-medium text-gray-700">
-                        Product Old Price ($)
+                        Product Old Price (₹)
                       </label>
                       <TextField
                         type="number"
@@ -752,7 +752,7 @@ const EditProduct = () => {
                         InputProps={{
                           startAdornment: (
                             <span className="text-gray-500 pr-2 font-medium">
-                              $
+                              ₹
                             </span>
                           ),
                         }}
