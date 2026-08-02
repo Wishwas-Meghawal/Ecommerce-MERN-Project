@@ -23,7 +23,13 @@ const AdsBannerSlider = (props) => {
             <FiChevronRight />
             </button>
             <Swiper
-                slidesPerView={props.items}
+                slidesPerView={1.2}
+                breakpoints={{
+                  0: { slidesPerView: 1.2, spaceBetween: 10 },
+                  480: { slidesPerView: 2, spaceBetween: 10 },
+                  768: { slidesPerView: Math.min(3, props.items), spaceBetween: 10 },
+                  1024: { slidesPerView: props.items, spaceBetween: 10 },
+                }}
                 spaceBetween={10}
                 loop={true}
                 speed={800}

@@ -176,10 +176,10 @@ const AddAddress = () => {
   return (
     <form
       className="w-full"
-      style={{ padding: "24px" }}
+      style={{ padding: "16px" }}
       onSubmit={handleSubmit}
     >
-      <div className="flex items-center gap-4 pb-4">
+      <div className="flex flex-col sm:flex-row items-center gap-4 pb-4">
         <div className="col w-[100%]">
           <TextField
             className="w-full"
@@ -201,7 +201,7 @@ const AddAddress = () => {
         </div>
       </div>
 
-      <div className="flex items-center gap-4 pb-4">
+      <div className="flex flex-col sm:flex-row items-center gap-4 pb-4">
         <div className="col w-full">
           <TextField
             className="w-full"
@@ -223,8 +223,8 @@ const AddAddress = () => {
         </div>
       </div>
 
-      <div className="flex items-center gap-4 pb-4">
-        <div className="col w-[50%]">
+      <div className="flex flex-col sm:flex-row items-center gap-4 pb-4">
+        <div className="col w-full sm:w-[50%]">
           <TextField
             className="w-full"
             label="State *"
@@ -243,7 +243,7 @@ const AddAddress = () => {
             }}
           />
         </div>
-        <div className="col w-[50%]">
+        <div className="col w-full sm:w-[50%]">
           <TextField
             className="w-full"
             label="Country *"
@@ -276,7 +276,7 @@ const AddAddress = () => {
         Postcode/ZIP *
       </h6>
 
-      <div className="flex items-center gap-4 pb-4">
+      <div className="flex flex-col sm:flex-row items-center gap-4 pb-4">
         <div className="col w-[100%]">
           <TextField
             className="w-full"
@@ -298,7 +298,7 @@ const AddAddress = () => {
         </div>
       </div>
 
-      <div className="flex items-center gap-4 pb-4">
+      <div className="flex flex-col sm:flex-row items-center gap-4 pb-4">
         <div className="w-[100%]">
           <div className="mui-phone-wrapper">
             <PhoneInput
@@ -316,7 +316,7 @@ const AddAddress = () => {
         </div>
         </div>
 
-<div className="flex items-center gap-4 pb-4">
+<div className="flex flex-col sm:flex-row items-center gap-4 pb-4">
         <div className="col w-[100%]">
           <TextField
             className="w-full"
@@ -338,8 +338,8 @@ const AddAddress = () => {
         </div>
       </div>
 
-      <div className="flex items-center gap-4 pb-4">
-        <div className="col w-[50%]">
+      <div className="flex flex-col sm:flex-row items-center gap-4 pb-4">
+        <div className="col w-full sm:w-[50%]">
           <FormControl>
             <FormLabel id="demo-row-radio-buttons-group-label">
               <h6

@@ -170,7 +170,7 @@ const CartItems = (props) => {
           sx={{ color: "#f59e0b" }}
         />
 
-        <div className="flex items-center gap-4 mt-1">
+        <div className="flex flex-wrap items-center gap-2 sm:gap-4 mt-1">
           {props?.item?.size !== "" && (
             <>
               {props?.productSizeData?.length !== 0 && (
@@ -326,7 +326,7 @@ const CartItems = (props) => {
           </div>
         </div>
 
-        <div className="mb-3 mt-2 flex items-center gap-4">
+        <div className="mb-3 mt-2 flex flex-wrap items-center gap-2 sm:gap-4">
           <span className="text-red-500 font-semibold text-[14px]">
             &#x20b9;{props?.item?.price}
           </span>

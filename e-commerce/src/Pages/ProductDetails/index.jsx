@@ -8,7 +8,7 @@ import ProductsSlider from "../../components/ProductsSlider";
 import ProductDetailsComponent from "../../components/ProductDetails";
 import { fetchDataFromApi } from "../../utils/api";
 import CircularProgress from "@mui/material/CircularProgress";
-import Reviews from "./reviews";
+import Reviews from "./Reviews";
 import { useContext } from "react";
 import { MyContext } from "../../App";
 import { useRef } from "react";
@@ -90,12 +90,12 @@ const ProductDetails = () => {
           </div>
         ) : (
           <>
-            <div className="container flex gap-4">
-              <div className="productZoomContainer w-[45%] mt-1">
+            <div className="container flex flex-col md:flex-row gap-4">
+              <div className="productZoomContainer w-full md:w-[45%] mt-1">
                 <ProductZoom images={productData?.images} />
               </div>
 
-              <div className="productContent w-[65%] px-4">
+              <div className="productContent w-full md:w-[55%] lg:w-[65%] px-0 md:px-4">
                 <ProductDetailsComponent
                   item={productData}
                   reviewsCount={reviewsCount}
@@ -106,9 +106,9 @@ const ProductDetails = () => {
 
             <div className="container  pt-10">
               {/* TAB BUTTONS */}
-              <div className="flex items-center gap-8 mb-5">
+              <div className="flex items-center gap-5 sm:gap-8 mb-5 overflow-x-auto">
                 <span
-                  className={`link text-[18px] cursor-pointer font-[500] ${
+                  className={`link text-[16px] sm:text-[18px] cursor-pointer font-[500] whitespace-nowrap ${
                     activeTab === 0 && "text-primary"
                   }`}
                   onClick={() => setActiveTab(0)}
@@ -124,7 +124,7 @@ const ProductDetails = () => {
                   Product Details
                 </span> */}
                 <span
-                  className={`link text-[18px] cursor-pointer font-[500] ${
+                  className={`link text-[16px] sm:text-[18px] cursor-pointer font-[500] whitespace-nowrap ${
                     activeTab === 1 && "text-primary"
                   }`}
                   onClick={() => setActiveTab(1)}
@@ -135,7 +135,7 @@ const ProductDetails = () => {
               </div>
 
               {activeTab === 0 && (
-                <div className="shadow-md w-full px-8 py-5 rounded-md">
+                <div className="shadow-md w-full px-4 sm:px-8 py-5 rounded-md">
                   {productData?.description}
                 </div>
               )}

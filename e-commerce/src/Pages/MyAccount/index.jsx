@@ -190,15 +190,15 @@ const MyAccount = () => {
   };
 
   return (
-    <section className="py-10 w-full">
-      <div className="container flex gap-5">
-        <div className="col1 w-[20%]">
+    <section className="py-6 md:py-10 w-full">
+      <div className="container flex flex-col md:flex-row gap-5">
+        <div className="col1 w-full md:w-[30%] lg:w-[20%]">
           <AccountSidebar />
         </div>
 
-        <div className="col2 w-[50%]">
-          <div className="card bg-white p-5 shadow-md rounded-md mb-5">
-            <div className="flex items-center justify-between">
+        <div className="col2 w-full md:w-[70%] lg:w-[50%]">
+          <div className="card bg-white p-4 sm:p-5 shadow-md rounded-md mb-5">
+            <div className="flex flex-wrap items-center justify-between gap-2">
               <h2 className="pb-3">My Profile</h2>
               <Button
                 className="btn-org btn-sm"
@@ -212,8 +212,8 @@ const MyAccount = () => {
             <hr />
 
             <form className="mt-5" onSubmit={handleSubmit}>
-              <div className="flex items-center gap-2">
-                <div className="w-[50%]">
+              <div className="flex flex-col sm:flex-row items-center gap-2">
+                <div className="w-full sm:w-[50%]">
                   <TextField
                     label="Full Name"
                     variant="outlined"
@@ -225,7 +225,7 @@ const MyAccount = () => {
                     onChange={onChangeInput}
                   />
                 </div>
-                <div className="w-[50%]">
+                <div className="w-full sm:w-[50%]">
                   <div className="mui-phone-wrapper">
                     <PhoneInput
                       defaultCountry="in"
@@ -262,7 +262,7 @@ const MyAccount = () => {
                 <Button
                   type="submit"
                   disabled={!valideValue}
-                  className="btn-org btn-lg w-[200px]"
+                  className="btn-org btn-lg w-full sm:w-[200px]"
                 >
                   {isLoading === true ? (
                     <CircularProgress color="inherit" />
@@ -275,14 +275,14 @@ const MyAccount = () => {
           </div>
 
           <Collapse isOpened={isChangePasswordFormshow}>
-            <div className="card bg-white p-5 shadow-md rounded-md">
+            <div className="card bg-white p-4 sm:p-5 shadow-md rounded-md">
               <div className="flex items-center justify-between">
                 <h2 className="pb-3">Change Password</h2>
               </div>
               <hr />
 
               <form className="mt-5" onSubmit={handleSubmitChangePassword}>
-                <div className="grid grid-cols-2 gap-5">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
                   {context?.userData?.signUpWithGoogle === false && (
                     <div className="col">
                       <TextField
@@ -327,7 +327,7 @@ const MyAccount = () => {
                 <br />
 
                 <div className="flex items-center gap-4">
-                  <Button type="submit" className="btn-org btn-lg w-[200px]">
+                  <Button type="submit" className="btn-org btn-lg w-full sm:w-[200px]">
                     {isLoading2 === true ? (
                       <CircularProgress color="inherit" />
                     ) : (

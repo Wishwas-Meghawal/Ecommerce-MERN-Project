@@ -164,7 +164,7 @@ const Login = () => {
   return (
     <section className="py-10 ">
       <div className="container">
-        <div className=" card w-[400px] m-auto bg-white rounded-xl shadow-lg p-8">
+        <div className=" card w-full max-w-[400px] m-auto bg-white rounded-xl shadow-lg p-5 sm:p-8">
           {/* Title */}
           <h2 className="text-[20px] font-semibold text-center mb-6">
             Login to your account

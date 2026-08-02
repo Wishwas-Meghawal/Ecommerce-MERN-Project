@@ -46,8 +46,8 @@ const CartPage = () => {
 
   return (
     <section className="section py-10 pb-10">
-      <div className="container w-[80%] max-w-[80%] flex gap-5">
-        <div className="leftPart w-[70%]">
+      <div className="container w-full md:w-[90%] lg:w-[80%] max-w-full md:max-w-[90%] lg:max-w-[80%] flex flex-col md:flex-row gap-5 px-4 md:px-0">
+        <div className="leftPart w-full md:w-[65%] lg:w-[70%]">
           <div className="shadow-md rounded-md  bg-white">
             <div className="py-2 px-3 border-b border-[rgba(0,0,0,0.1)]">
               <h2>Your Cart</h2>
@@ -130,8 +130,8 @@ const CartPage = () => {
           </div>
         </div>
 
-        <div className="rightPart w-[30%]">
-          <div className="shadow-md rounded-md bg-white p-5 sticky top-[165px] z-[90]">
+        <div className="rightPart w-full md:w-[35%] lg:w-[30%]">
+          <div className="shadow-md rounded-md bg-white p-5 md:sticky md:top-[165px] z-[90]">
             <h3 className="pb-3">CART TOTALS</h3>
             <hr />
             <p className="flex items-center justify-between">
@@ -172,7 +172,7 @@ const CartPage = () => {
             </p>
             <br />
 
-            <Link to="/checkout" className="w-[50%] d-block">
+            <Link to="/checkout" className="w-full d-block">
               <Button className="btn-org btn-lg w-full flex gap-2">
                 <BsFillBagCheckFill className="text-[20px]" />
                 Checkout

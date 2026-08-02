@@ -487,15 +487,15 @@ const ProductItem = (props) => {
                 </Button>
               ) : (
                 <div className="mt-3 flex items-center  justify-center">
-                  <div className="flex items-center w-[300px] justify-between overflow-hidden rounded-full border border-gray-200 bg-white ">
+                  <div className="flex items-center w-full max-w-[300px] justify-between overflow-hidden rounded-full border border-gray-200 bg-white ">
                     {/* Minus */}
                     <Button
                       disableRipple
                       disableElevation
                       onClick={minusQty}
                       sx={{
-                        minWidth: "48px",
-                        height: "42px",
+                        minWidth: "36px",
+                        height: "38px",
                         color: "#ef4444",
                         borderRadius: 0, // 👈 important
                         transition: "all 0.25s ease",
@@ -534,8 +534,8 @@ const ProductItem = (props) => {
                       disableElevation
                       onClick={addQty}
                       sx={{
-                        minWidth: "48px",
-                        height: "42px",
+                        minWidth: "36px",
+                        height: "38px",
                         color: "#ef4444",
                         borderRadius: 0, // 👈 important
                         transition: "all 0.25s ease",

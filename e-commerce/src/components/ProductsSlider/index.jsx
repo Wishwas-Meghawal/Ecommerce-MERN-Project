@@ -25,7 +25,14 @@ const ProductsSlider = (props) => {
           <FiChevronRight />
         </button>
         <Swiper
-          slidesPerView={props.items}
+          slidesPerView={2}
+          breakpoints={{
+            0: { slidesPerView: 1.4, spaceBetween: 10 },
+            480: { slidesPerView: 2.2, spaceBetween: 10 },
+            768: { slidesPerView: 3, spaceBetween: 10 },
+            1024: { slidesPerView: 4, spaceBetween: 10 },
+            1280: { slidesPerView: props.items, spaceBetween: 10 },
+          }}
           spaceBetween={10}
           loop={true}
           speed={800}
