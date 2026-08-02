@@ -24,11 +24,11 @@ const ProductZoom = (props) => {
   };
 
   return (
-    <div className="flex gap-2 sm:gap-4">
+    <div className="flex gap-4">
       {/* LEFT THUMBNAILS */}
-      <div className=" relative w-[18%] sm:w-[15%] flex flex-col items-center">
+      <div className=" relative w-[15%] flex flex-col items-center">
         {/* TOP BUTTON */}
-        <button ref={prevRef} className="thumb-nav-btn mb-2 hidden sm:flex">
+        <button ref={prevRef} className="thumb-nav-btn mb-2">
           <FiChevronUp />
         </button>
 
@@ -36,7 +36,7 @@ const ProductZoom = (props) => {
           ref={zoomSliderSml}
           direction="vertical"
           slidesPerView={5}
-          spaceBetween={8}
+          spaceBetween={10}
           modules={[Navigation]}
           onSwiper={(swiper) => {
             setTimeout(() => {
@@ -46,7 +46,7 @@ const ProductZoom = (props) => {
               swiper.navigation.update();
             });
           }}
-          className="thumb-swiper h-[300px] sm:h-[500px] overflow-hidden"
+          className="thumb-swiper h-[500px] overflow-hidden"
         >
           {props?.images?.map((item, index) => {
             return (
@@ -68,13 +68,13 @@ const ProductZoom = (props) => {
         </Swiper>
 
         {/* BOTTOM BUTTON */}
-        <button ref={nextRef} className="thumb-nav-btn mt-2 hidden sm:flex">
+        <button ref={nextRef} className="thumb-nav-btn mt-2">
           <FiChevronDown />
         </button>
       </div>
 
       {/* RIGHT ZOOM IMAGE */}
-      <div className="w-[82%] sm:w-[85%] h-[300px] sm:h-[500px] overflow-hidden  ">
+      <div className="w-[85%] h-[500px] overflow-hidden  ">
         <Swiper
           ref={zoomSliderBig}
           slidesPerView={1}

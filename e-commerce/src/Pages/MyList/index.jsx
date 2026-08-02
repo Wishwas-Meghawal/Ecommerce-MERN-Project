@@ -10,13 +10,13 @@ import { MdHome } from "react-icons/md";
 const MyList = () => {
   const context = useContext(MyContext);
   return (
-    <section className="py-6 md:py-10 w-full">
-      <div className="container flex flex-col md:flex-row gap-5">
-        <div className="col1 w-full md:w-[30%] lg:w-[20%]">
+    <section className="py-10 w-full">
+      <div className="container flex gap-5">
+        <div className="col1 w-[20%]">
           <AccountSidebar />
         </div>
 
-        <div className="col2 w-full md:w-[70%]">
+        <div className="col2 w-[70%]">
           <div className="shadow-md rounded-md  bg-white">
             <div className="py-2 px-3 border-b border-[rgba(0,0,0,0.1)]">
               <h2>My List</h2>

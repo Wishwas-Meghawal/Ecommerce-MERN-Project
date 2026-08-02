@@ -23,14 +23,7 @@ const HomeCatSlider = (props) => {
           <FiChevronRight />
         </button>
         <Swiper
-          slidesPerView={3}
-          breakpoints={{
-            0: { slidesPerView: 3, spaceBetween: 8 },
-            480: { slidesPerView: 4, spaceBetween: 10 },
-            768: { slidesPerView: 5, spaceBetween: 10 },
-            1024: { slidesPerView: 6, spaceBetween: 10 },
-            1280: { slidesPerView: 8, spaceBetween: 10 },
-          }}
+          slidesPerView={8}
           spaceBetween={10}
           loop={true}
           speed={800}

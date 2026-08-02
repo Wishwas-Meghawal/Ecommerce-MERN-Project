@@ -353,21 +353,11 @@ input[type="number"]::-webkit-outer-spin-button{
 
 .cartPanel .MuiPaper-root {
   width: 400px;
-  max-width: 92vw;
   overflow: hidden;
 }
 .addressPanel .MuiPaper-root {
   width: 500px;
-  max-width: 92vw;
   overflow: hidden;
-}
-
-@media (max-width: 480px) {
-  .cartPanel .MuiPaper-root,
-  .addressPanel .MuiPaper-root {
-    width: 100vw;
-    max-width: 100vw;
-  }
 }
 
 /* hr */

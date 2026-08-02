@@ -149,10 +149,10 @@ const Checkout = () => {
   return (
     <section className="py-10">
       <form onSubmit={checkout}>
-        <div className="container flex flex-col lg:flex-row gap-5 px-4 lg:px-0">
-          <div className="leftCol w-full lg:w-[68%]">
-            <div className="card bg-white shadow-md rounded-md p-3 sm:p-5 w-full">
-              <div className="flex flex-wrap items-center justify-between gap-3">
+        <div className="container flex gap-5">
+          <div className="leftCol w-[70%]">
+            <div className="card bg-white shadow-md rounded-md p-5 w-full">
+              <div className="flex items-center justify-between">
                 <h2>Select Delivery Address</h2>
                 <Button
                   variant="outlined"
@@ -160,7 +160,7 @@ const Checkout = () => {
                     context?.setOpenAddressPanel(true);
                     context?.setAddressMode("add");
                   }}
-                  className="h-[40px] px-4 sm:px-6 rounded-2xl  text-white font-semibold text-[13px] sm:text-[15px]  transition-all duration-300 flex items-center gap-2 tracking-wide"
+                  className="h-[40px] px-6 rounded-2xl  text-white font-semibold text-[15px]  transition-all duration-300 flex items-center gap-2 tracking-wide"
                 >
                   <span className="w-8 h-8 rounded-full bg-white/20 flex items-center justify-center">
                     <FiPlus className="text-[18px]" />
@@ -169,16 +169,16 @@ const Checkout = () => {
                 </Button>
               </div>
 
-              <div className="w-full bg-white p-3 sm:p-6 mt-3">
+              <div className="w-full bg-white p-6 mt-3">
                 {context?.userData?.address_details?.length !== 0 ? (
                   context?.userData?.address_details?.map((address, index) => {
                     return (
                       <div key={index} className="space-y-5">
                         <div
-                          className={`border border-[rgba(0,0,0,0.1)]  rounded-sm  p-3 sm:p-5 mb-3 transition-all duration-300 shadow-sm ${isChecked === index && "bg-[#fff2f2]"}`}
+                          className={`border border-[rgba(0,0,0,0.1)]  rounded-sm  p-5 mb-3 transition-all duration-300 shadow-sm ${isChecked === index && "bg-[#fff2f2]"}`}
                         >
                           {/* Top */}
-                          <div className="flex flex-wrap items-start justify-between gap-4">
+                          <div className="flex items-start justify-between gap-4">
                             <div className="flex gap-4 w-full">
                               {/* Radio */}
                               <div>
@@ -212,7 +212,7 @@ const Checkout = () => {
                                   )}
                                   {address.addressType}
                                 </span>
-                                <h3 className="text-[17px] sm:text-[20px] font-bold text-gray-800 mb-2">
+                                <h3 className="text-[20px] font-bold text-gray-800 mb-2">
                                   {context?.userData?.name}
                                 </h3>
 
@@ -339,7 +339,7 @@ const Checkout = () => {
 
           <div className="rightCol w-full lg:w-[32%]">
             <div className="relative overflow-hidden rounded-md border border-gray-200 bg-white/90 backdrop-blur-xl shadow-[0_20px_60px_rgba(0,0,0,0.08)] transition-all duration-300 hover:shadow-[0_25px_70px_rgba(0,0,0,0.12)]">
-              <div className="p-4 sm:p-6">
+              <div className="p-6">
                 {/* Header */}
                 <div className="mb-5 flex items-center justify-between">
                   <div>

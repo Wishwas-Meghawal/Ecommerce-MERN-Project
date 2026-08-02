@@ -336,9 +336,9 @@ const Footer = () => {
         className="productDetailslModal"
       >
         <DialogContent>
-          <div className="flex flex-col md:flex-row items-start md:items-center w-full productDetailsModalContainer relative">
+          <div className="flex items-center w-full productDetailsModalContainer relative">
             <Button
-              className="w-10! h-10! min-w-10! rounded-full! text-black! absolute! top-0 right-0 bg-[#f1f1f1]! z-10"
+              className="w-10! h-10! min-w-10! rounded-full! text-black! absolute! top-0 right-0 bg-[#f1f1f1]!"
               onClick={context?.handleCloseProductDetailsModal}
             >
               <IoCloseSharp className="text-[20px] " />
@@ -346,13 +346,13 @@ const Footer = () => {
 
             {context?.openProductDetailsModal?.item?.length !== 0 && (
               <>
-                <div className="col1 w-full md:w-[40%] pt-8 md:pt-0">
+                <div className="col1 w-[40%]">
                   <ProductZoom
                     images={context?.openProductDetailsModal?.item?.images}
                   />
                 </div>
 
-                <div className="col2 w-full md:w-[60%] py-4 md:py-8 px-2 md:px-8">
+                <div className="col2 w-[60%] py-8 px-8">
                   <ProductDetailsComponent
                     item={context?.openProductDetailsModal?.item}
                   />
