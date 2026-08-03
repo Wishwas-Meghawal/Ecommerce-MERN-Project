@@ -38,7 +38,6 @@ const Login = () => {
       postData("/api/user/forgot-password", {
         email: formFields.email,
       }).then((response) => {
-        console.log("OTP Verification Response:", response);
         if (response?.error !== true) {
           context.alertBox(response?.message, "success");
           history("/verify");
@@ -59,7 +58,6 @@ const Login = () => {
   const valideValue = Object.values(formFields).every((el) => el);
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log("Login button clicked");  // 👈 ADD THIS
     setIsLoading(true);
 
     // Basic validation
@@ -74,13 +72,11 @@ const Login = () => {
 
     postData("/api/user/login", formFields, { withCredentials: true }).then(
       (response) => {
-        console.log("Registration Response:", response);
         if (response?.error !== true) {
           setIsLoading(false);
 
           context.alertBox(response?.message, "success");
 
-          console.log("FULL LOGIN RESPONSE:", response);
 
           localStorage.setItem(
             "accessToken",
@@ -164,7 +160,7 @@ const Login = () => {
   return (
     <section className="py-10 ">
       <div className="container">
-        <div className=" card w-[400px] m-auto bg-white rounded-xl shadow-lg p-8">
+        <div className=" card w-full max-w-[400px] m-auto bg-white rounded-xl shadow-lg p-5 sm:p-8">
           {/* Title */}
           <h2 className="text-[20px] font-semibold text-center mb-6">
             Login to your account

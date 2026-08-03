@@ -54,9 +54,9 @@ const Orders = () => {
 
   return (
     <section className="py-8 lg:py-12 w-full bg-gradient-to-br from-slate-50 to-gray-100">
-      <div className="container flex gap-6 lg:gap-8 max-w-7xl mx-auto px-4 lg:px-5">
-        {/* Sidebar - Fixed width */}
-        <div className="col1 w-[280px] flex-shrink-0">
+      <div className="container flex flex-col lg:flex-row gap-6 lg:gap-8 max-w-7xl mx-auto px-4 lg:px-5">
+        {/* Sidebar - Fixed width on desktop, full width on mobile */}
+        <div className="col1 w-full lg:w-[280px] lg:flex-shrink-0">
           <AccountSidebar />
         </div>
 

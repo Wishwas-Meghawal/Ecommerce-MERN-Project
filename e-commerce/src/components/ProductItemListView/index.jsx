@@ -11,16 +11,15 @@ import { useContext } from "react";
 import { MyContext } from "../../App";
 
 const ProductItemListView = (props) => {
-  console.log(props);
   const context = useContext(MyContext);
   return (
-    <div className="flex  bg-white border border-gray-200 rounded-lg p-4 gap-6 hover:shadow-lg transition relative">
+    <div className="flex flex-col sm:flex-row bg-white border border-gray-200 rounded-lg p-4 gap-4 sm:gap-6 hover:shadow-lg transition relative">
       {/* 🔴 Discount Badge */}
       <span className="absolute top-3 left-3 bg-gradient-to-r from-red-500 to-pink-500 text-white text-xs px-3 py-1 rounded-full shadow-md z-10">
         {props?.item?.discount}% OFF
       </span>
       {/* IMAGE */}
-      <div className="w-[25%] shrink-0 overflow-hidden rounded-md bg-gray-100">
+      <div className="w-full sm:w-[25%] h-[180px] sm:h-auto shrink-0 overflow-hidden rounded-md bg-gray-100">
         <Link to={`/product/${props?.item?._id}`}>
           <img
             src={props?.item?.images[0]}
@@ -31,7 +30,7 @@ const ProductItemListView = (props) => {
       </div>
 
       {/* CONTENT */}
-      <div className="flex flex-col justify-between flex-1 w-[75%]">
+      <div className="flex flex-col justify-between flex-1 w-full sm:w-[75%]">
         <div>
           <span className="text-xs uppercase text-gray-500">
             {props?.item?.brand}

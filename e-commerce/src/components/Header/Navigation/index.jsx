@@ -23,21 +23,22 @@ const Navigation = () => {
   }, [context?.catData]);
   return (
     <>
-      <nav>
-        <div className="container flex items-center justify-end gap-7">
-          <div className="col-1 w-[20%]">
+      <nav className="hidden md:block">
+        <div className="container flex items-center justify-end gap-3 lg:gap-7">
+          <div className="col-1 w-[30%] lg:w-[20%]">
             <Button
               className="!text-black gap-2 w-full"
               onClick={openCategoryPanel}
             >
               <RiMenu2Fill className="text-[18px] font-bold" />
-              Shop By Categories
+              <span className="hidden lg:inline">Shop By Categories</span>
+              <span className="lg:hidden">Categories</span>
               <LiaAngleDownSolid className="text-[13px] ml-auto" />
             </Button>
           </div>
 
-          <div className="col-2 w-[60%]">
-            <ul className="flex items-center gap-5 nav">
+          <div className="col-2 w-[45%] lg:w-[60%] overflow-x-auto">
+            <ul className="flex items-center gap-3 lg:gap-5 nav flex-nowrap">
               <li className="list-none">
                 <Link to="/" className="link transition text-[1px] font-[500]">
                   <Button
@@ -113,7 +114,7 @@ const Navigation = () => {
             </ul>
           </div>
 
-          <div className="col-3 w-[20%] flex justify-end">
+          <div className="col-3 w-[25%] hidden lg:flex justify-end">
             <div className="flex items-center gap-2 px-3 py-1.5 bg-white border border-gray-200 rounded-lg hover:shadow-sm transition-all duration-300">
               <div className="relative">
                 <div className="w-6 h-6 rounded bg-gradient-to-br from-green-500 to-emerald-600 flex items-center justify-center">

@@ -69,15 +69,15 @@ const Home = () => {
 
       <section className="bg-white py-8">
         <div className="container">
-          <div className="flex items-center justify-between">
+          <div className="flex flex-col md:flex-row md:items-center justify-between gap-2">
             <div className="leftSec">
-              <h2 className="text-[20px] font-semibold">Propular Products</h2>
-              <p className="text-[14px] font-normal">
+              <h2 className="text-[18px] md:text-[20px] font-semibold">Propular Products</h2>
+              <p className="text-[13px] md:text-[14px] font-normal">
                 Do not miss the current offers until the end of March.
               </p>
             </div>
 
-            <div className="rightSec w-[60%]">
+            <div className="rightSec w-full md:w-[60%]">
               <Tabs
                 value={value}
                 onChange={handleChange}
@@ -109,21 +109,21 @@ const Home = () => {
 
       <section className="py-16 pt-2  bg-white">
         <div className="container">
-          <div className="freeShipping w-[80%] m-auto p-4 border-2 border-primary flex items-center justify-between rounded-md">
-            <div className="col1 flex items-center gap-4">
-              <LiaShippingFastSolid className="text-[50px]" />
-              <span className="text-[20px] font-semibold uppercase">
+          <div className="freeShipping w-full md:w-[80%] m-auto p-4 border-2 border-primary flex flex-col md:flex-row items-center justify-between gap-3 md:gap-0 text-center md:text-left rounded-md">
+            <div className="col1 flex items-center gap-3 md:gap-4">
+              <LiaShippingFastSolid className="text-[36px] md:text-[50px]" />
+              <span className="text-[16px] md:text-[20px] font-semibold uppercase">
                 Free Shipping
               </span>
             </div>
 
             <div className="col2">
-              <p className="mb-0 font-medium">
+              <p className="mb-0 font-medium text-[13px] md:text-[16px]">
                 Free Delivery On Your First Order and over $200{" "}
               </p>
             </div>
 
-            <p className="font-bold text-[30px]">- Only $200*</p>
+            <p className="font-bold text-[22px] md:text-[30px]">- Only $200*</p>
           </div>
 
           <AdsBannerSlider items={4} />

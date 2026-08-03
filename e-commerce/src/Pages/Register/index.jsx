@@ -54,7 +54,6 @@ const Register = () => {
     }
 
     postData("/api/user/register", formFields).then((response) => {
-      console.log("Registration Response:", response);
       if (response?.error !== true) {
         setIsLoading(false);
         context.alertBox(response?.message, "success");
@@ -125,8 +124,8 @@ const Register = () => {
   };
 
   return (
-    <section className="py-10 flex items-center justify-center bg-[#faf6f5]">
-      <div className="w-[420px] bg-white rounded-xl shadow-lg p-8">
+    <section className="py-10 px-4 flex items-center justify-center bg-[#faf6f5]">
+      <div className="w-full max-w-[420px] bg-white rounded-xl shadow-lg p-5 sm:p-8">
         {/* Title */}
         <h2 className="text-[20px] font-semibold text-center mb-6">
           Register with a new account

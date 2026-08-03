@@ -17,11 +17,15 @@ import Pagination from "@mui/material/Pagination";
 import ProductLoading from "../../components/ProductLoading";
 
 import {Menu, MenuItem } from "@mui/material";
+import Drawer from "@mui/material/Drawer";
+import { IoFilterOutline } from "react-icons/io5";
+import { IoCloseSharp } from "react-icons/io5";
 import { postData } from "../../utils/api";
 
 const ProductListing = () => {
   const [itemView, setItemView] = useState("grid");
   const [isLoading, setIsLoading] = useState(false);
+  const [isOpenMobileFilter, setIsOpenMobileFilter] = useState(false);
 
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
@@ -53,15 +57,14 @@ const ProductListing = () => {
         handleClose();
       })
       .catch((err) => {
-        console.log(err);
       });
   };
 
   return (
     <section className="py-4 pb-0">
       <div className="bg-white p-2 mt-4">
-        <div className="container flex gap-3">
-          <div className="sidebarWrapper w-[20%]  bg-white">
+        <div className="container flex flex-col md:flex-row gap-3">
+          <div className="sidebarWrapper hidden md:block md:w-[28%] lg:w-[20%] bg-white">
             <Sidebar
               productsData={productsData}
               setProductsData={setProductsData}
@@ -72,23 +75,53 @@ const ProductListing = () => {
             />
           </div>
 
-          <div className="rightContent w-[80%] py-3">
+          <Drawer
+            anchor="left"
+            open={isOpenMobileFilter}
+            onClose={() => setIsOpenMobileFilter(false)}
+          >
+            <div className="w-[85vw] max-w-[320px] p-3">
+              <div className="flex items-center justify-between mb-2">
+                <h3 className="text-[16px] font-semibold">Filters</h3>
+                <IoCloseSharp
+                  className="text-[22px] cursor-pointer"
+                  onClick={() => setIsOpenMobileFilter(false)}
+                />
+              </div>
+              <Sidebar
+                productsData={productsData}
+                setProductsData={setProductsData}
+                isLoading={isLoading}
+                setIsLoading={setIsLoading}
+                page={page}
+                setTotalPages={setTotalPages}
+              />
+            </div>
+          </Drawer>
+
+          <div className="rightContent w-full md:w-[72%] lg:w-[80%] py-3">
             {/* Top Bar */}
-            <div className="flex items-center justify-between bg-[#f5f5f5] px-4 py-3 rounded-md mb-4 sticky top-[150px] z-99">
+            <div className="flex flex-wrap items-center justify-between gap-2 bg-[#f5f5f5] px-3 md:px-4 py-3 rounded-md mb-4 md:sticky md:top-[150px] z-99">
               <div className=" col1 flex items-center gap-2 itemViewActions">
                 <Button
-                  className={`w-[40px]! h-[40px]! min-w-[40px]! rounded-full! bg-white flex items-center justify-center shadow ${itemView === "list" && "active"}`}
+                  className="md:hidden !w-[40px] !h-[40px] !min-w-[40px] !rounded-full !bg-white shadow"
+                  onClick={() => setIsOpenMobileFilter(true)}
+                >
+                  <IoFilterOutline className="text-red-500 text-xl" />
+                </Button>
+                <Button
+                  className={`hidden sm:flex w-[40px]! h-[40px]! min-w-[40px]! rounded-full! bg-white items-center justify-center shadow ${itemView === "list" && "active"}`}
                   onClick={() => setItemView("list")}
                 >
                   <LuMenu className="text-red-500 text-xl" />
                 </Button>
                 <Button
-                  className={`w-[40px]! h-[40px]! min-w-[40px]! rounded-full! bg-white flex items-center justify-center shadow ${itemView === "grid" && "active"}`}
+                  className={`hidden sm:flex w-[40px]! h-[40px]! min-w-[40px]! rounded-full! bg-white items-center justify-center shadow ${itemView === "grid" && "active"}`}
                   onClick={() => setItemView("grid")}
                 >
                   <HiViewGrid className="text-red-500 text-xl" />
                 </Button>
-                <p className="text-sm text-gray-700 pl-3 text-[rgba(0,0,0,0.7)]">
+                <p className="text-[12px] sm:text-sm text-gray-700 pl-1 sm:pl-3 text-[rgba(0,0,0,0.7)]">
                   There are
                   <span className="font-semibold ml-2 mr-1 text-gray-800">
                     {productsData?.products?.length !== 0 ? productsData?.products?.length : "0"}
@@ -99,7 +132,7 @@ const ProductListing = () => {
 
               <div className=" col2 ml-auto flex items-center gap-2">
                 {/* <SortByDropdown productsData={productsData} setProductsData={setProductsData} /> */}
-                <span className="text-sm text-gray-600">Sort by :</span>
+                <span className="hidden sm:inline text-sm text-gray-600">Sort by :</span>
 
                 {/* Button */}
                 <Button
@@ -191,10 +224,10 @@ const ProductListing = () => {
 
             {/* Product Grid */}
             <div
-              className={`grid gap-4 transition-all duration-300 ${
+              className={`grid gap-3 md:gap-4 transition-all duration-300 ${
                 itemView === "grid"
-                  ? "grid-cols-4 md:grid-cols-4"
-                  : "grid-cols-1 md:grid-cols-1"
+                  ? "grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4"
+                  : "grid-cols-1"
               }`}
             >
               {itemView === "grid" ? (
