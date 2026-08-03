@@ -25,6 +25,7 @@ const Verify = () => {
         email: localStorage.getItem("userEmail"),
         otp: otp,
       }).then((response) => {
+        console.log("OTP Verification Response:", response);
         if (response?.error !== true) {
           context.alertBox(response?.message, "success");
           localStorage.removeItem("userEmail");
@@ -38,6 +39,7 @@ const Verify = () => {
         email: localStorage.getItem("userEmail"),
         otp: otp,
       }).then((response) => {
+        console.log("OTP Verification Response:", response);
         if (response?.error !== true) {
           context.alertBox(response?.message, "success");
           history("/forgot-password");
@@ -50,7 +52,7 @@ const Verify = () => {
   return (
     <section className="py-10">
       <div className="container">
-        <div className=" card shadow-md w-full max-w-[400px] m-auto bg-white rounded-xl  py-5 px-6 sm:px-10">
+        <div className=" card shadow-md w-[400px] m-auto bg-white rounded-xl  py-5 px-10">
           <div className="text-center flex items-center justify-center">
             <img src="/verify2.png" alt="" width="80px" />
           </div>

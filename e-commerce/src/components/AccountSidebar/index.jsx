@@ -5,10 +5,10 @@ import { FaRegUser } from "react-icons/fa";
 import { IoBagCheckOutline } from "react-icons/io5";
 import { IoIosHeartEmpty } from "react-icons/io";
 import { IoIosLogOut } from "react-icons/io";
-import { Link, NavLink, useNavigate } from "react-router";
+import { Link, NavLink } from "react-router";
 import { MyContext } from "../../App";
 import CircularProgress from '@mui/material/CircularProgress';
-import { uploadImage, fetchDataFromApi } from "../../utils/api";
+import { uploadImage } from "../../utils/api";
 import { PiMapPinLine } from "react-icons/pi";
 
 
@@ -21,7 +21,6 @@ const AccountSidebar = () => {
    const [anchorEl, setAnchorEl] = useState(null);
 
   const context = useContext(MyContext);
-  const history = useNavigate();
 
   useEffect(() => {
     const userAvatar = [];
@@ -41,6 +40,7 @@ const AccountSidebar = () => {
       setPreview([]);
       const files = e.target.files;
       setUploading(true);
+      console.log(files);
 
       for (let i = 0; i < files.length; i++) {
         if(
@@ -70,6 +70,7 @@ const AccountSidebar = () => {
       });
       
     } catch (error) {
+      console.log(error);
       
     }
   }
@@ -82,6 +83,7 @@ const AccountSidebar = () => {
           withCredentials: true,
         });
       } catch (e) {
+        console.log("Logout API failed, continuing...");
       }
   
       // ⭐ IMPORTANT: Always clear frontend
@@ -93,7 +95,7 @@ const AccountSidebar = () => {
       history("/");
     };
   return (
-    <div className="card1 bg-white shadow-md rounded-md md:sticky md:top-[165px] z-[90]">
+    <div className="card1 bg-white shadow-md rounded-md sticky top-[165px] z-[90]">
       <div className="w-full p-5 flex items-center justify-center flex-col">
         <div className="w-[110px] h-[110px]  rounded-full overflow-hidden relative group flex items-center justify-center bg-gray-300">
 

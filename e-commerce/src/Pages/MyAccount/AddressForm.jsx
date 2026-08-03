@@ -50,16 +50,16 @@ const AddressForm = () => {
 
   return (
     <>
-      <section className="py-6 md:py-12 bg-gray-50 min-h-screen">
-        <div className="container mx-auto flex flex-col md:flex-row gap-5 md:gap-8">
+      <section className="py-12 bg-gray-50 min-h-screen">
+        <div className="container mx-auto flex gap-8">
           {/* Sidebar */}
-          <div className="w-full md:w-[32%] lg:w-[22%]">
+          <div className="w-[22%]">
             <AccountSidebar />
           </div>
 
           {/* Main Content */}
-          <div className="w-full md:w-[68%] lg:w-[55%]">
-            <div className="bg-white p-4 sm:p-8 rounded-2xl shadow-lg border border-gray-100 transition-all duration-300 hover:shadow-xl">
+          <div className="w-[55%]">
+            <div className="bg-white p-8 rounded-2xl shadow-lg border border-gray-100 transition-all duration-300 hover:shadow-xl">
               {/* Header */}
               <div className="flex items-center justify-between mb-6">
                 <div>

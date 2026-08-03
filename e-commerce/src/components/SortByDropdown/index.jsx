@@ -30,6 +30,7 @@ const SortByDropdown = (props) => {
         handleClose();
       })
       .catch((err) => {
+        console.log(err);
       });
   };
 

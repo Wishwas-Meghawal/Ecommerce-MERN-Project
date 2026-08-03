@@ -283,7 +283,7 @@ const ProductDetailsComponent = (props) => {
       </p>
 
       {/* Cart */}
-      <div className="flex items-center flex-wrap mt-4 gap-4 mb-6">
+      <div className="flex items-center mt-4 gap-4 mb-6">
         {/* Quantity Control */}
         <div className="qtyBoxWrapper w-[80px] h-[40px]">
           <QtyBox handleSelectQty={handleSelectQty} />

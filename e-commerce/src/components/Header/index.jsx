@@ -20,8 +20,6 @@ import { IoBagCheckOutline } from "react-icons/io5";
 import { IoIosHeartEmpty } from "react-icons/io";
 import { IoIosLogOut } from "react-icons/io";
 import { fetchDataFromApi } from "../../utils/api";
-import { RiMenu2Fill } from "react-icons/ri";
-import MobileMenu from "./MobileMenu";
 
 const StyledBadge = styled(Badge)(({ theme }) => ({
   "& .MuiBadge-badge": {
@@ -34,7 +32,6 @@ const StyledBadge = styled(Badge)(({ theme }) => ({
 
 const Header = () => {
   const [anchorEl, setAnchorEl] = useState(null);
-  const [isOpenMobileMenu, setIsOpenMobileMenu] = useState(false);
   const open = Boolean(anchorEl);
 
   const handleClick = (event) => {
@@ -56,6 +53,7 @@ const Header = () => {
         withCredentials: true,
       });
     } catch (e) {
+      console.log("Logout API failed, continuing...");
     }
 
     // ⭐ IMPORTANT: Always clear frontend
@@ -68,16 +66,16 @@ const Header = () => {
   };
   return (
     <header className="bg-white sticky -top-[47px] z-[100]">
-      <div className="top-strip py-2 border-t border-gray-200 border-b hidden sm:block">
+      <div className="top-strip py-2 border-t border-gray-200 border-b">
         <div className="container">
           <div className="flex items-center justify-between">
-            <div className="col1 w-full sm:w-[50%]">
-              <p className="text-[11px] sm:text-[12px] font-medium">
+            <div className="col1 w-[50%]">
+              <p className="text-[12px] font-medium">
                 Get up to 50% new season styles , limited time only
               </p>
             </div>
 
-            <div className="col2 hidden sm:flex items-center justify-end">
+            <div className="col2 flex items-center justify-end">
               <ul className="flex items-center gap-2">
                 <li className="list-none">
                   <Link
@@ -101,27 +99,20 @@ const Header = () => {
         </div>
       </div>
 
-      <div className="header py-3 md:py-4 border-b border-gray-200">
-        <div className="container flex items-center justify-between gap-2 md:gap-4">
-          <Button
-            className="!min-w-[40px] !text-black md:!hidden"
-            onClick={() => setIsOpenMobileMenu(true)}
-          >
-            <RiMenu2Fill className="text-[22px]" />
-          </Button>
-
-          <div className="col1 w-[110px] md:w-[20%] lg:w-[25%] shrink-0">
+      <div className="header py-4 border-b border-gray-200">
+        <div className="container flex items-center justify-between">
+          <div className="col1 w-[25%]">
             <Link to={"/"}>
-              <img src="/logo.jpg" className="max-h-[38px] md:max-h-none" />
+              <img src="/logo.jpg" />
             </Link>
           </div>
-          <div className="col2 hidden md:block md:w-[40%] lg:w-[45%]">
+          <div className="col2 w-[45%]">
             <Search />
           </div>
-          <div className="col3 flex items-center md:pl-7">
-            <ul className="flex items-center gap-1 sm:gap-3 justify-end w-full">
+          <div className="col3  flex items-center pl-7">
+            <ul className="flex items-center gap-3 justify-end w-full">
               {context.isLogin === false ? (
-                <li className="list-none hidden md:block">
+                <li className="list-none">
                   <Link
                     to="/login"
                     className="link transition text-[15px]  font-medium"
@@ -137,7 +128,7 @@ const Header = () => {
                   </Link>
                 </li>
               ) : (
-                <div className="hidden md:contents">
+                <>
                   <Button
                     className="text-black! myAccountWrap flex items-center gap-3 cursor-pointer"
                     onClick={handleClick}
@@ -224,9 +215,9 @@ const Header = () => {
                       <span className="text-[14px]">Logout</span>
                     </MenuItem>
                   </Menu>
-                </div>
+                </>
               )}
-              <li className="hidden sm:block">
+              <li>
                 <Tooltip title="Compare">
                   <IconButton aria-label="cart">
                     <StyledBadge badgeContent={4} color="secondary">
@@ -275,18 +266,9 @@ const Header = () => {
             </ul>
           </div>
         </div>
-
-        <div className="container mt-3 block md:hidden">
-          <Search />
-        </div>
       </div>
 
       <Navigation />
-
-      <MobileMenu
-        isOpenMobileMenu={isOpenMobileMenu}
-        setIsOpenMobileMenu={setIsOpenMobileMenu}
-      />
     </header>
   );
 };
